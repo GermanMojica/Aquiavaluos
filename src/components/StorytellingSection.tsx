@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Calendar, Briefcase, Award, TrendingUp, ShieldAlert } from 'lucide-react'
 
 export default function StorytellingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -19,10 +18,9 @@ export default function StorytellingSection() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: '+=300%', // Scroll distance of 3 screens
+        end: '+=240%', // Scroll distance reduced
         pin: true,
         scrub: 1.2,
-        anticipatePin: 1,
         invalidateOnRefresh: true,
       }
     })
@@ -81,16 +79,19 @@ export default function StorytellingSection() {
       ease: 'power2.inOut'
     }, '-=0.6')
 
-    // Horizontal scroll of milestones container
-    // We scroll it leftward based on the number of panels
-    tl.to('.milestones-scroll-wrapper', {
-      xPercent: -65, // Moves the timeline to show subsequent items
-      ease: 'none',
-      duration: 2.5
-    })
+    // Horizontal scrub for marquee is not needed since marquee will animate infinitely
+    // Stagger clients
+    tl.from('.client-logo-item', {
+      opacity: 0,
+      y: 40,
+      scale: 0.9,
+      stagger: 0.1,
+      duration: 1.5,
+      ease: 'power2.out'
+    }, '-=0.4')
 
     // Hold screen 3 state
-    tl.to({}, { duration: 0.8 })
+    tl.to({}, { duration: 1.5 })
 
     // --- SCREEN 3 TO SCREEN 4 TRANSITION ---
     // Fade out screen 3
@@ -118,17 +119,16 @@ export default function StorytellingSection() {
       ease: 'power3.out'
     }, '-=0.4')
 
-    // Hold final screen 4 state
-    tl.to({}, { duration: 0.8 })
+    // Removed the final empty hold so that scrolling immediately unpins here.
 
   }, { scope: containerRef })
 
-  const milestones = [
-    { year: '2009', title: 'Inicio de Operaciones', desc: 'Fundación de la empresa con enfoque en avalúos urbanos y consultorías residenciales en Bogotá.', icon: Calendar },
-    { year: '2014', title: 'Expansión Regional', desc: 'Apertura de operaciones técnicas en Antioquia, Valle del Cauca y la costa norte del país.', icon: TrendingUp },
-    { year: '2018', title: 'Consolidación Empresarial', desc: 'Homologación de nuestra metodología técnica ante la red bancaria y fondos inmobiliarios nacionales.', icon: Briefcase },
-    { year: '2022', title: 'Certificaciones y Calidad', desc: 'Certificación del Sistema de Gestión bajo la norma ISO 9001:2015, garantizando rigor normativo y calidad técnica.', icon: Award },
-    { year: '2026', title: 'Cobertura Nacional Completa', desc: 'Red consolidada de peritos avaluadores y soluciones tecnológicas avanzadas de valoración en todo el territorio colombiano.', icon: ShieldAlert }
+  const clients = [
+    { src: '/images/clients/GRUPO-_SURA.png', alt: 'Grupo Sura', w: 160, h: 60 },
+    { src: '/images/clients/camara.webp', alt: 'Cámara de Comercio', w: 150, h: 55 },
+    { src: '/images/clients/dian.webp', alt: 'DIAN', w: 120, h: 50 },
+    { src: '/images/clients/alcaldia.webp', alt: 'Alcaldía', w: 140, h: 55 },
+    { src: '/images/clients/afinia.webp', alt: 'Afinia', w: 140, h: 55 },
   ]
 
   const finalMessage = "Hoy ayudamos a empresas, entidades financieras y propietarios a tomar decisiones respaldadas por información confiable."
@@ -241,57 +241,61 @@ export default function StorytellingSection() {
           </div>
         </div>
 
-        {/* ----------------- PANTALLA 3 ----------------- */}
+        {/* ----------------- PANTALLA 3 (CLIENTES) ----------------- */}
         <div className="screen-3 absolute inset-0 flex flex-col justify-center px-6 md:px-12 opacity-0 pointer-events-none z-30 overflow-hidden">
           <div className="max-w-6xl w-full mx-auto text-left mb-10 shrink-0">
             <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
-              [ TIMELINE HISTÓRICO ]
+              [ NUESTROS CLIENTES ]
             </span>
-            <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
-              Hitos de nuestra evolución
+            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+              Confianza que <span className="text-brand-secondary">respalda resultados.</span>
             </h3>
-            <p className="text-xs text-brand-gray-cool mt-1">Haga scroll para desplazar la línea temporal.</p>
+            <p className="text-sm text-brand-gray-cool mt-3 max-w-2xl font-mono leading-relaxed">
+              Empresas del sector financiero, entidades públicas y conglomerados privados confían en ARQUIAVALÚOS para sus decisiones de valoración técnica.
+            </p>
           </div>
 
-          {/* Sliding horizontal container */}
-          <div className="w-full relative py-12 flex items-center overflow-x-visible">
-            {/* The line behind */}
-            <div className="absolute top-1/2 left-0 right-[-100vw] h-[1px] bg-brand-primary/15 dark:bg-brand-primary/15 z-0" />
-            
-            <div className="milestones-scroll-wrapper flex gap-12 relative z-10 w-[250%] pl-8">
-              {milestones.map((milestone, idx) => {
-                const IconComponent = milestone.icon
-                return (
-                  <div 
-                    key={idx} 
-                    className="w-[300px] shrink-0 bg-white dark:bg-white border border-brand-primary/10 dark:border-brand-primary/10 p-6 relative backdrop-blur-sm shadow-sm"
-                  >
-                    {/* Technical details on card */}
-                    <div className="absolute top-2 right-2 text-[8px] font-mono text-brand-secondary/30">[ STEP_0{idx+1} ]</div>
-                    
-                    {/* Circle on the timeline line */}
-                    <div className="absolute left-1/2 -bottom-[50px] -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-white border-2 border-brand-secondary flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
-                    </div>
+          <div className="w-full relative py-8">
+            <div className="clients-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+              {clients.map((client, idx) => (
+                <div
+                  key={idx}
+                  className="client-logo-item relative flex items-center justify-center py-8 px-6 border border-brand-primary/10 bg-white shadow-sm"
+                >
+                  <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/30" />
+                  <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/30" />
+                  <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/30" />
+                  <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/30" />
 
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 border border-brand-secondary/20 flex items-center justify-center text-brand-secondary bg-brand-secondary/5">
-                        <IconComponent className="w-5 h-5" />
-                      </div>
-                      <span className="text-2xl font-bold font-mono text-brand-primary dark:text-brand-primary tracking-wider">
-                        {milestone.year}
-                      </span>
-                    </div>
-                    
-                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider mt-4">
-                      {milestone.title}
-                    </h4>
-                    <p className="text-xs text-brand-gray-cool mt-2 leading-relaxed">
-                      {milestone.desc}
-                    </p>
+                  <Image
+                    src={client.src}
+                    alt={client.alt}
+                    width={client.w}
+                    height={client.h}
+                    style={{ height: 'auto' }}
+                    className="object-contain max-h-12 max-w-full opacity-80"
+                  />
+                </div>
+              ))}
+            </div>
+            
+            {/* Stats strip inline */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-brand-primary/10 pt-10 mt-12 max-w-6xl mx-auto">
+              {[
+                { label: 'Avalúos realizados', target: '5000+' },
+                { label: 'Entidades financieras', target: '40+' },
+                { label: 'Municipios cubiertos', target: '120+' },
+                { label: 'Años de experiencia', target: '15+' },
+              ].map((stat, idx) => (
+                <div key={idx} className="client-logo-item text-center space-y-1">
+                  <div className="text-3xl lg:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary">
+                    {stat.target}
                   </div>
-                )
-              })}
+                  <span className="text-[10px] font-mono text-brand-secondary uppercase tracking-widest block">
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

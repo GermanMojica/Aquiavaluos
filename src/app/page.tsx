@@ -7,12 +7,12 @@ import Hero from '@/components/Hero'
 import CredibilityBar from '@/components/CredibilityBar'
 import StorytellingSection from '@/components/StorytellingSection'
 import ServicesBento from '@/components/ServicesBento'
+import BlueprintTransition from '@/components/BlueprintTransition'
 import Sectors from '@/components/Sectors'
 import ProcessTimeline from '@/components/ProcessTimeline'
 import WhyChooseUs from '@/components/WhyChooseUs'
 import Testimonials from '@/components/Testimonials'
 import Partners from '@/components/Partners'
-import ClientsShowcase from '@/components/ClientsShowcase'
 import CTA from '@/components/CTA'
 import Footer from '@/components/Footer'
 import RequestValuationDrawer from '@/components/RequestValuationDrawer'
@@ -39,14 +39,14 @@ export default function Home() {
         {/* 2. Barra de Credibilidad */}
         <CredibilityBar />
 
-        {/* 3. ¿Quiénes Somos? (Storytelling scroll inmersivo & Sergio Delgado & Hitos) */}
+        {/* 3. ¿Quiénes Somos? (Storytelling scroll inmersivo & Sergio Delgado & Clientes) */}
         <StorytellingSection />
-
-        {/* 3b. Clientes destacados */}
-        <ClientsShowcase />
 
         {/* 4. Servicios Principales (Bento Grid) */}
         <ServicesBento />
+
+        {/* 4.5 Transición Inmersiva CAD Blueprint */}
+        <BlueprintTransition />
 
         {/* 5. Sectores que Atendemos */}
         <Sectors />

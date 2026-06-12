@@ -121,7 +121,7 @@ export default function ServicesBento() {
             return (
               <div
                 key={idx}
-                className={`bento-cell ${service.colSpan} ${service.height} relative group overflow-hidden border border-brand-primary/10 dark:border-brand-primary/10 p-8 flex flex-col justify-between transition-all duration-500 bg-white dark:bg-brand-primary/5 hover:border-brand-secondary/40 hover:shadow-lg`}
+                className={`bento-cell ${service.colSpan} ${service.height} relative group overflow-hidden border border-brand-primary/10 p-8 flex flex-col justify-between transition-all duration-500 bg-white hover:border-brand-secondary/40 hover:shadow-lg`}
                 style={{ backgroundColor: service.bgAccent !== 'rgba(0, 0, 0, 0)' ? service.bgAccent : undefined }}
               >
                 {/* Architectural Grid fine lines inside Cell */}
