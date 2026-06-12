@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "skills": {
+    "3d-web-experience": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/3d-web-experience/SKILL.md",
+      "computedHash": "abf349a30764951de0ff17fe6e4b0d3a5332d3682b3b97109d7a23f813406d1a"
+    },
+    "gsap-core": {
+      "source": "greensock/gsap-skills",
+      "sourceType": "github",
+      "skillPath": "skills/gsap-core/SKILL.md",
+      "computedHash": "c4a01101d9e1aafbf4b49f75d74f9349790d8741981ba0237c990093863035a6"
+    },
+    "gsap-framer-scroll-animation": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/gsap-framer-scroll-animation/SKILL.md",
+      "computedHash": "e6a4caf23b818ffc5185d51339e941ca783944b6693da877fc1206693b2dff66"
+    },
+    "implement_lenis_scroll": {
+      "source": "jerrar670/surf-website",
+      "sourceType": "github",
+      "skillPath": ".agent/skills/implement_lenis_scroll/SKILL.md",
+      "computedHash": "595d911a46b2953b97ad2d77bf3bd59b335a5a728355a8ef1091f3615c08c0db"
+    },
+    "landing-page-copywriter": {
+      "source": "onewave-ai/claude-skills",
+      "sourceType": "github",
+      "skillPath": "landing-page-copywriter/SKILL.md",
+      "computedHash": "f86f1a5d1f6138f935b1d2760c958a7f8179a8584e8526fbd176bdcf7ab48304"
+    },
+    "motion-design": {
+      "source": "lottiefiles/motion-design-skill",
+      "sourceType": "github",
+      "skillPath": "skills/motion-design/SKILL.md",
+      "computedHash": "9fcf9130cc46ee8fd1d8e09a9263347a9d76efbcbfa46591cc4cefaf19bbb453"
+    },
+    "nextjs-react-typescript": {
+      "source": "mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "nextjs-react-typescript/SKILL.md",
+      "computedHash": "eb995cc826bf48498e0e90969fc7dadfa2ec634002c26cfcfde565134cefa738"
+    },
+    "scroll-experience": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/scroll-experience/SKILL.md",
+      "computedHash": "585612d4791ec9d05843661ce0995d2e65ae18585f5c55287412ee5eb7ca40a7"
+    },
+    "ux-designer": {
+      "source": "shubhamsaboo/awesome-llm-apps",
+      "sourceType": "github",
+      "skillPath": "awesome_agent_skills/ux-designer/SKILL.md",
+      "computedHash": "1178ae59d9dd5ca71122674d85bd78d746b3b95f76c58c65cb0fd48dd54bea45"
+    }
+  }
+}
