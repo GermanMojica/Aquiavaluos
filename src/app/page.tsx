@@ -11,7 +11,8 @@ import Sectors from '@/components/Sectors'
 import ProcessTimeline from '@/components/ProcessTimeline'
 import WhyChooseUs from '@/components/WhyChooseUs'
 import Testimonials from '@/components/Testimonials'
-import FAQ from '@/components/FAQ'
+import Partners from '@/components/Partners'
+import ClientsShowcase from '@/components/ClientsShowcase'
 import CTA from '@/components/CTA'
 import Footer from '@/components/Footer'
 import RequestValuationDrawer from '@/components/RequestValuationDrawer'
@@ -23,7 +24,7 @@ export default function Home() {
   const closeDrawer = () => setDrawerOpen(false)
 
   return (
-    <div className="relative flex flex-col min-h-screen overflow-x-hidden select-none bg-brand-gray-light dark:bg-brand-bg-dark text-brand-dark dark:text-brand-gray-light">
+    <div className="relative flex flex-col min-h-screen overflow-x-hidden select-none bg-white dark:bg-white text-brand-primary dark:text-brand-primary">
       {/* Premium Interactive Cursor */}
       <CustomCursor />
 
@@ -41,6 +42,9 @@ export default function Home() {
         {/* 3. ¿Quiénes Somos? (Storytelling scroll inmersivo & Sergio Delgado & Hitos) */}
         <StorytellingSection />
 
+        {/* 3b. Clientes destacados */}
+        <ClientsShowcase />
+
         {/* 4. Servicios Principales (Bento Grid) */}
         <ServicesBento />
 
@@ -56,8 +60,8 @@ export default function Home() {
         {/* 8. Testimonios */}
         <Testimonials />
 
-        {/* 9. Preguntas Frecuentes (Accordion moderno) */}
-        <FAQ />
+        {/* 8b. Aliados y Gremios */}
+        <Partners />
 
         {/* 10. CTA Final */}
         <CTA onOpenDrawer={openDrawer} />

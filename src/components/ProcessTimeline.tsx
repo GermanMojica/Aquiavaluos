@@ -76,7 +76,7 @@ export default function ProcessTimeline() {
     <section
       id="proceso"
       ref={containerRef}
-      className="py-24 bg-white dark:bg-brand-bg-dark relative"
+      className="py-24 bg-white dark:bg-white relative"
     >
       {/* Background technical layout */}
       <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
@@ -101,7 +101,7 @@ export default function ProcessTimeline() {
           {/* Vertical Drawing SVG Line */}
           <div className="absolute left-6 sm:left-[39px] top-0 bottom-0 w-[2px] z-0">
             {/* Background static line */}
-            <div className="absolute inset-0 bg-brand-primary/10 dark:bg-white/10" />
+            <div className="absolute inset-0 bg-brand-primary/10 dark:bg-brand-primary/10" />
             
             {/* Animated drawing SVG path */}
             <svg className="w-full h-full text-brand-secondary" fill="none">
@@ -129,18 +129,18 @@ export default function ProcessTimeline() {
                   className="timeline-step flex flex-col sm:flex-row gap-4 sm:gap-8 items-start relative z-10"
                 >
                   {/* Circle point */}
-                  <div className="absolute -left-12 sm:-left-20 top-0.5 w-[26px] h-[26px] rounded-full bg-white dark:bg-brand-bg-dark border-2 border-brand-primary/20 flex items-center justify-center group">
+                  <div className="absolute -left-12 sm:-left-20 top-0.5 w-[26px] h-[26px] rounded-full bg-white dark:bg-white border-2 border-brand-primary/20 flex items-center justify-center group">
                     <div className="w-1.5 h-1.5 rounded-full bg-brand-primary group-hover:bg-brand-secondary transition-colors" />
                   </div>
 
                   {/* Icon Panel */}
-                  <div className="w-12 h-12 border border-brand-primary/10 dark:border-white/10 flex items-center justify-center text-brand-primary dark:text-white bg-brand-gray-light dark:bg-brand-primary/10 shrink-0">
+                  <div className="w-12 h-12 border border-brand-primary/10 dark:border-brand-primary/10 flex items-center justify-center text-brand-primary dark:text-brand-primary bg-brand-gray-light dark:bg-brand-primary/10 shrink-0">
                     <IconComponent className="w-5 h-5" />
                   </div>
 
                   {/* Text Details */}
                   <div className="space-y-2 text-left">
-                    <h3 className="text-lg font-bold font-mono text-brand-primary dark:text-white uppercase tracking-wider">
+                    <h3 className="text-lg font-bold font-mono text-brand-primary dark:text-brand-primary uppercase tracking-wider">
                       {step.title}
                     </h3>
                     <p className="text-xs text-brand-gray-cool leading-relaxed max-w-xl">

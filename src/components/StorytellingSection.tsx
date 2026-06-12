@@ -19,7 +19,7 @@ export default function StorytellingSection() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top top',
-        end: '+=400%', // Scroll distance of 4 screens
+        end: '+=300%', // Scroll distance of 3 screens
         pin: true,
         scrub: 1.2,
         anticipatePin: 1,
@@ -119,7 +119,7 @@ export default function StorytellingSection() {
     }, '-=0.4')
 
     // Hold final screen 4 state
-    tl.to({}, { duration: 1 })
+    tl.to({}, { duration: 0.8 })
 
   }, { scope: containerRef })
 
@@ -138,16 +138,15 @@ export default function StorytellingSection() {
     <section
       id="quienes-somos"
       ref={containerRef}
-      className="relative h-[500vh] bg-brand-dark overflow-hidden"
+      className="relative h-screen bg-white dark:bg-white overflow-hidden text-brand-primary dark:text-brand-primary"
     >
-      {/* Sticky Screen Box */}
+      {/* Content Canvas */}
       <div
-        ref={stickyRef}
-        className="sticky top-0 left-0 right-0 h-screen overflow-hidden flex items-center justify-center"
+        className="relative w-full h-full overflow-hidden flex items-center justify-center"
       >
         {/* CAD Grid Backdrop */}
-        <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
-        <div className="absolute inset-0 bg-cad-grid-fine opacity-5 pointer-events-none" />
+        <div className="absolute inset-0 bg-cad-grid opacity-25 dark:opacity-25 pointer-events-none" />
+        <div className="absolute inset-0 bg-cad-grid-fine opacity-15 dark:opacity-15 pointer-events-none" />
         <div className="absolute top-0 right-0 p-6 text-[9px] font-mono text-brand-secondary tracking-widest pointer-events-none">
           [ SECCIÓN: TRAYECTORIA CORPORATIVA ]
         </div>
@@ -158,7 +157,7 @@ export default function StorytellingSection() {
             <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ QUIÉNES SOMOS ]
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-mono tracking-tight leading-tight text-white">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary">
               Más de 15 años transformando experiencia y conocimiento en confianza.
             </h2>
             <div className="w-12 h-[1px] bg-brand-secondary mx-auto mt-8 animate-pulse" />
@@ -170,17 +169,17 @@ export default function StorytellingSection() {
           <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
             {/* Left Column: Image Reveal */}
             <div className="md:col-span-5 flex justify-center">
-              <div className="relative w-full aspect-square max-w-[380px] bg-brand-primary/25 border border-white/10 overflow-hidden">
+              <div className="relative w-full aspect-square max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md">
                 {/* Fine blueprint details */}
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
                 <div className="executive-mask absolute inset-0 transition-all" style={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0% 100%)' }}>
                   <Image
-                    src="/sergio_delgado.png"
+                    src="/images/founder_portrait.png"
                     alt="Sergio Delgado - Gerente General de ARQUIAVALÚOS"
                     fill
                     sizes="(max-width: 768px) 100vw, 380px"
-                    className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    className="object-cover transition-all duration-700"
                     priority
                   />
                 </div>
@@ -193,7 +192,7 @@ export default function StorytellingSection() {
                 <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
                   [ PERFIL EJECUTIVO ]
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold font-mono text-white mt-1">
+                <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
                   Sergio Delgado
                 </h3>
                 <p className="text-xs font-mono text-brand-gray-cool uppercase tracking-widest">
@@ -207,7 +206,7 @@ export default function StorytellingSection() {
                     <span className="text-xs font-mono text-brand-secondary">01</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider">Experiencia Profesional</h4>
+                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Experiencia Profesional</h4>
                     <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
                       Más de 15 años de trayectoria liderando avalúos comerciales, industriales, rurales e infraestructura estratégica para las principales bancas del país.
                     </p>
@@ -219,7 +218,7 @@ export default function StorytellingSection() {
                     <span className="text-xs font-mono text-brand-secondary">02</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider">Trayectoria y Liderazgo</h4>
+                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Trayectoria y Liderazgo</h4>
                     <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
                       Consultor y asesor en estructuración de activos reales para fondos inmobiliarios internacionales, empresas multinacionales y el sector público en Colombia.
                     </p>
@@ -231,7 +230,7 @@ export default function StorytellingSection() {
                     <span className="text-xs font-mono text-brand-secondary">03</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider">Especialización Técnica</h4>
+                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Especialización Técnica</h4>
                     <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
                       Avaluador inscrito y certificado en el RAA y la RNA. Experto en estándares internacionales de valoración IVS y metodologías NIIF aplicadas al sector corporativo.
                     </p>
@@ -248,7 +247,7 @@ export default function StorytellingSection() {
             <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ TIMELINE HISTÓRICO ]
             </span>
-            <h3 className="text-2xl sm:text-3xl font-bold font-mono text-white mt-1">
+            <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
               Hitos de nuestra evolución
             </h3>
             <p className="text-xs text-brand-gray-cool mt-1">Haga scroll para desplazar la línea temporal.</p>
@@ -257,7 +256,7 @@ export default function StorytellingSection() {
           {/* Sliding horizontal container */}
           <div className="w-full relative py-12 flex items-center overflow-x-visible">
             {/* The line behind */}
-            <div className="absolute top-1/2 left-0 right-[-100vw] h-[1px] bg-white/10 z-0" />
+            <div className="absolute top-1/2 left-0 right-[-100vw] h-[1px] bg-brand-primary/15 dark:bg-brand-primary/15 z-0" />
             
             <div className="milestones-scroll-wrapper flex gap-12 relative z-10 w-[250%] pl-8">
               {milestones.map((milestone, idx) => {
@@ -265,13 +264,13 @@ export default function StorytellingSection() {
                 return (
                   <div 
                     key={idx} 
-                    className="w-[300px] shrink-0 bg-brand-primary/10 border border-white/10 p-6 relative backdrop-blur-sm"
+                    className="w-[300px] shrink-0 bg-white dark:bg-white border border-brand-primary/10 dark:border-brand-primary/10 p-6 relative backdrop-blur-sm shadow-sm"
                   >
                     {/* Technical details on card */}
                     <div className="absolute top-2 right-2 text-[8px] font-mono text-brand-secondary/30">[ STEP_0{idx+1} ]</div>
                     
                     {/* Circle on the timeline line */}
-                    <div className="absolute left-1/2 -bottom-[50px] -translate-x-1/2 w-4 h-4 rounded-full bg-brand-dark border-2 border-brand-secondary flex items-center justify-center">
+                    <div className="absolute left-1/2 -bottom-[50px] -translate-x-1/2 w-4 h-4 rounded-full bg-white dark:bg-white border-2 border-brand-secondary flex items-center justify-center">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary animate-pulse" />
                     </div>
 
@@ -279,12 +278,12 @@ export default function StorytellingSection() {
                       <div className="w-10 h-10 border border-brand-secondary/20 flex items-center justify-center text-brand-secondary bg-brand-secondary/5">
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      <span className="text-2xl font-bold font-mono text-white tracking-wider">
+                      <span className="text-2xl font-bold font-mono text-brand-primary dark:text-brand-primary tracking-wider">
                         {milestone.year}
                       </span>
                     </div>
                     
-                    <h4 className="text-sm font-mono font-bold text-white uppercase tracking-wider mt-4">
+                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider mt-4">
                       {milestone.title}
                     </h4>
                     <p className="text-xs text-brand-gray-cool mt-2 leading-relaxed">
@@ -303,7 +302,7 @@ export default function StorytellingSection() {
             <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ COMPROMISO ARQUIAVALÚOS ]
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-mono tracking-tight leading-tight text-white">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary">
               {finalMessageChars.map((char, index) => (
                 <span 
                   key={index} 
@@ -313,7 +312,9 @@ export default function StorytellingSection() {
                 </span>
               ))}
             </h2>
-            <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-8 animate-pulse" />
+            <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6 animate-pulse" />
+
+
           </div>
         </div>
       </div>

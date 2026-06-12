@@ -11,8 +11,8 @@
   --color-brand-gray-medium: #E2E8F0;
   --color-brand-gray-cool: #64748B;
   
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: var(--font-plus-jakarta), "Inter", sans-serif;
+  --font-mono: var(--font-space-grotesk), monospace;
 }
 
 :root {
@@ -22,8 +22,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #030712;
-    --foreground: #f8fafc;
+    --background: #fdfdfd;
+    --foreground: #1a3e70;
   }
 }
 

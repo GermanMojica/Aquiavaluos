@@ -3,12 +3,14 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Landmark, HardHat, Building, Home, Coins, UserCheck } from 'lucide-react'
 
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger)
     // Fade up cells with GSAP on viewport entrance
     gsap.from('.sector-node', {
       opacity: 0,
@@ -37,19 +39,19 @@ export default function Sectors() {
     <section
       id="sectores"
       ref={containerRef}
-      className="py-24 bg-brand-primary text-white relative overflow-hidden"
+      className="py-24 bg-slate-50 dark:bg-slate-50 text-brand-primary relative overflow-hidden"
     >
       {/* Background CAD grid */}
-      <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,148,206,0.15)_0%,transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,148,206,0.08)_0%,transparent_60%)] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="text-left mb-16 max-w-2xl border-b border-white/10 pb-8">
+        <div className="text-left mb-16 max-w-2xl border-b border-brand-primary/10 pb-8">
           <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
             [ ALCANCE DEL SERVICIO ]
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-white mt-1">
+          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
             Sectores que Atendemos
           </h2>
           <p className="text-sm text-brand-gray-cool leading-relaxed mt-3">
@@ -64,7 +66,7 @@ export default function Sectors() {
             return (
               <div
                 key={idx}
-                className="sector-node group relative border border-white/10 p-6 bg-white/5 hover:border-brand-secondary/40 hover:bg-white/10 transition-all duration-300"
+                className="sector-node group relative border border-brand-primary/10 dark:border-brand-primary/10 p-6 bg-white dark:bg-white hover:border-brand-secondary/40 hover:bg-slate-100/50 dark:hover:bg-slate-100/50 transition-all duration-300 shadow-sm"
               >
                 {/* Tech code in corners */}
                 <div className="absolute top-2 right-2 text-[8px] font-mono text-brand-secondary/40">
@@ -79,10 +81,10 @@ export default function Sectors() {
                     <IconComponent className="w-6 h-6" />
                   </div>
                   <div className="space-y-2 text-left">
-                    <h3 className="text-base font-bold font-mono text-white group-hover:text-brand-secondary transition-colors">
+                    <h3 className="text-base font-bold font-mono text-brand-primary dark:text-brand-primary group-hover:text-brand-secondary transition-colors">
                       {sector.name}
                     </h3>
-                    <p className="text-xs text-brand-gray-cool/80 leading-relaxed">
+                    <p className="text-xs text-brand-gray-cool leading-relaxed">
                       {sector.desc}
                     </p>
                   </div>

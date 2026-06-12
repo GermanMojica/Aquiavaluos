@@ -44,7 +44,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section className="py-24 bg-white dark:bg-brand-bg-dark relative overflow-hidden">
+    <section className="py-24 bg-white dark:bg-white relative overflow-hidden">
       {/* Background grids */}
       <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
       <div className="absolute inset-0 bg-cad-grid-fine opacity-5 pointer-events-none" />
@@ -54,7 +54,7 @@ export default function Testimonials() {
           <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
             [ CASOS DE RESPALDO ]
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-white mt-1">
+          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
             Testimonios Corporativos
           </h2>
         </div>
@@ -72,12 +72,12 @@ export default function Testimonials() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              <p className="text-base sm:text-lg text-brand-primary/80 dark:text-white/80 italic font-medium leading-relaxed max-w-2xl mx-auto text-center">
+              <p className="text-base sm:text-lg text-brand-primary/80 dark:text-brand-primary/80 italic font-medium leading-relaxed max-w-2xl mx-auto text-center">
                 "{testimonials[activeIdx].text}"
               </p>
               
               <div className="space-y-1">
-                <h4 className="text-sm font-bold font-mono text-brand-primary dark:text-white uppercase tracking-wider">
+                <h4 className="text-sm font-bold font-mono text-brand-primary dark:text-brand-primary uppercase tracking-wider">
                   {testimonials[activeIdx].author}
                 </h4>
                 <p className="text-[11px] font-mono text-brand-secondary uppercase tracking-widest">
@@ -92,7 +92,7 @@ export default function Testimonials() {
         <div className="flex justify-center items-center gap-6 pt-4">
           <button
             onClick={handlePrev}
-            className="p-2 border border-brand-primary/10 hover:border-brand-secondary text-brand-primary dark:text-white hover:text-brand-secondary rounded-full transition-colors cursor-pointer"
+            className="p-2 border border-brand-primary/10 hover:border-brand-secondary text-brand-primary dark:text-brand-primary hover:text-brand-secondary rounded-full transition-colors cursor-pointer"
             aria-label="Testimonio anterior"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -104,7 +104,7 @@ export default function Testimonials() {
                 key={idx}
                 onClick={() => setActiveIdx(idx)}
                 className={`w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${
-                  activeIdx === idx ? 'bg-brand-secondary w-6' : 'bg-brand-primary/20 dark:bg-white/20'
+                  activeIdx === idx ? 'bg-brand-secondary w-6' : 'bg-brand-primary/20 dark:bg-brand-primary/20'
                 }`}
                 aria-label={`Ir al testimonio ${idx + 1}`}
               />
@@ -113,7 +113,7 @@ export default function Testimonials() {
 
           <button
             onClick={handleNext}
-            className="p-2 border border-brand-primary/10 hover:border-brand-secondary text-brand-primary dark:text-white hover:text-brand-secondary rounded-full transition-colors cursor-pointer"
+            className="p-2 border border-brand-primary/10 hover:border-brand-secondary text-brand-primary dark:text-brand-primary hover:text-brand-secondary rounded-full transition-colors cursor-pointer"
             aria-label="Siguiente testimonio"
           >
             <ChevronRight className="w-5 h-5" />

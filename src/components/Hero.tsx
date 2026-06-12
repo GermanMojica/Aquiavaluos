@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ArrowUpRight, ShieldCheck, Milestone } from 'lucide-react'
@@ -72,8 +73,8 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
     // Mouse interactive depth effect (parallax)
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e
-      const xPos = (clientX / window.innerWidth - 0.5) * 40
-      const yPos = (clientY / window.innerHeight - 0.5) * 40
+      const xPos = (clientX / window.innerWidth - 0.5) * 30
+      const yPos = (clientY / window.innerHeight - 0.5) * 30
 
       gsap.to('.parallax-bg-svg', {
         x: xPos,
@@ -90,59 +91,70 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen bg-brand-bg-dark text-white flex items-center pt-24 overflow-hidden"
+      className="relative min-h-screen bg-white text-brand-primary flex items-center pt-28 overflow-hidden"
     >
-      {/* Background CAD Grids */}
-      <div className="absolute inset-0 bg-cad-grid opacity-25 pointer-events-none" />
-      <div className="absolute inset-0 bg-cad-grid-fine opacity-15 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.15)_0%,transparent_70%)] pointer-events-none" />
+      {/* Background CAD Grids (Light Mode Tailored) */}
+      <div className="absolute inset-0 bg-cad-grid opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid-fine opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.06)_0%,transparent_70%)] pointer-events-none" />
 
-      {/* Decorative Technical Vector (SVG) */}
-      <div className="absolute right-0 bottom-0 top-0 w-full lg:w-1/2 opacity-35 lg:opacity-60 pointer-events-none z-0 flex items-center justify-center select-none parallax-bg-svg">
-        <svg
-          ref={technicalBgRef}
-          viewBox="0 0 800 800"
-          className="w-full max-w-[800px] h-auto text-brand-secondary/40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-        >
-          {/* Concentric circles */}
-          <circle cx="400" cy="400" r="300" className="blueprint-line opacity-30" strokeDasharray="5 5" />
-          <circle cx="400" cy="400" r="220" className="blueprint-line opacity-40" />
-          <circle cx="400" cy="400" r="140" className="blueprint-line opacity-50" strokeDasharray="10 5" />
-          
-          {/* Dynamic rotating gear-like technical element */}
-          <g className="blueprint-rotate">
-            <rect x="300" y="300" width="200" height="200" rx="10" className="blueprint-line opacity-20" />
-            <rect x="350" y="350" width="100" height="100" className="blueprint-line opacity-35" />
-            <line x1="200" y1="400" x2="600" y2="400" className="blueprint-line opacity-40" />
-            <line x1="400" y1="200" x2="400" y2="600" className="blueprint-line opacity-40" />
-            <circle cx="400" cy="200" r="6" fill="#0094CE" />
-            <circle cx="400" cy="600" r="6" fill="#0094CE" />
-            <circle cx="200" cy="400" r="6" fill="#0094CE" />
-            <circle cx="600" cy="400" r="6" fill="#0094CE" />
-          </g>
+      {/* Decorative Technical Vector (SVG) + Real Image Overlay */}
+      <div className="absolute right-0 bottom-0 top-0 w-full lg:w-1/2 opacity-20 lg:opacity-100 pointer-events-none z-0 flex items-center justify-center select-none parallax-bg-svg px-6 lg:pl-12">
+        <div className="relative w-full h-[55%] lg:h-[75%] max-w-[580px] overflow-hidden border border-brand-primary/10 bg-brand-gray-light shadow-xl">
+          <Image
+            src="/images/hero_background.png"
+            alt="ARQUIAVALÚOS Infraestructura y Valoración"
+            fill
+            sizes="(max-width: 1024px) 100vw, 580px"
+            className="object-cover opacity-85 transition-all duration-700"
+            priority
+          />
+          {/* Subtle grid pattern overlay */}
+          <div className="absolute inset-0 bg-cad-grid-fine opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none" />
 
-          {/* Isometric wireframe grid */}
-          <path d="M100 650 L400 450 L700 650 M400 450 L400 150 M100 350 L400 150 L700 350" className="blueprint-line opacity-30" />
-          <path d="M100 350 L100 650 M700 350 L700 650" className="blueprint-line opacity-20" />
-          <line x1="100" y1="500" x2="400" y2="300" className="blueprint-line opacity-20" />
-          <line x1="700" y1="500" x2="400" y2="300" className="blueprint-line opacity-20" />
-          
-          {/* Coordinates and notes */}
-          <text x="50" y="100" className="fill-brand-secondary font-mono text-xs opacity-75">COORD: 4.6243° N, 74.0636° W</text>
-          <text x="50" y="120" className="fill-white font-mono text-[10px] opacity-40">ALTITUD: 2.640m (BOGOTÁ, CO)</text>
-          <text x="600" y="100" className="fill-brand-secondary font-mono text-xs opacity-75">SCALE: 1:500</text>
-          <text x="600" y="120" className="fill-white font-mono text-[10px] opacity-40">SYS: WGS84 - SIRGAS</text>
-        </svg>
+          {/* Technical SVG overlay */}
+          <svg
+            ref={technicalBgRef}
+            viewBox="0 0 800 800"
+            className="absolute inset-0 w-full h-full text-brand-secondary/40 z-10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            {/* Concentric circles */}
+            <circle cx="400" cy="400" r="300" className="blueprint-line opacity-30" strokeDasharray="5 5" />
+            <circle cx="400" cy="400" r="220" className="blueprint-line opacity-40" />
+            <circle cx="400" cy="400" r="140" className="blueprint-line opacity-50" strokeDasharray="10 5" />
+            
+            {/* Dynamic rotating gear-like technical element */}
+            <g className="blueprint-rotate">
+              <rect x="300" y="300" width="200" height="200" rx="10" className="blueprint-line opacity-20" stroke="#1A3E70" />
+              <rect x="350" y="350" width="100" height="100" className="blueprint-line opacity-35" stroke="#0094CE" />
+              <line x1="200" y1="400" x2="600" y2="400" className="blueprint-line opacity-40" stroke="#0094CE" />
+              <line x1="400" y1="200" x2="400" y2="600" className="blueprint-line opacity-40" stroke="#0094CE" />
+              <circle cx="400" cy="200" r="6" fill="#0094CE" />
+              <circle cx="400" cy="600" r="6" fill="#0094CE" />
+              <circle cx="200" cy="400" r="6" fill="#0094CE" />
+              <circle cx="600" cy="400" r="6" fill="#0094CE" />
+            </g>
+
+            {/* Isometric wireframe lines */}
+            <path d="M100 650 L400 450 L700 650 M400 450 L400 150 M100 350 L400 150 L700 350" className="blueprint-line opacity-30" />
+            
+            {/* Coordinates and notes */}
+            <text x="50" y="100" className="fill-brand-primary font-mono text-xs opacity-75">COORD: 4.6243° N, 74.0636° W</text>
+            <text x="50" y="120" className="fill-brand-primary font-mono text-[10px] opacity-50">ALTITUD: 2.640m (BOGOTÁ, CO)</text>
+            <text x="620" y="100" className="fill-brand-secondary font-mono text-xs opacity-75">SCALE: 1:500</text>
+          </svg>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Content Column */}
         <div className="lg:col-span-7 space-y-8 text-left">
           {/* Top Badge */}
-          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1.5 bg-brand-primary/40 border border-brand-secondary/30 rounded-full">
+          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-secondary/30 rounded-full">
             <span className="w-2 h-2 rounded-full bg-brand-secondary animate-pulse" />
             <span className="text-xs font-mono tracking-wider text-brand-secondary uppercase">
               Certificación y Rigor Técnico RAA / RNA
@@ -150,7 +162,7 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] max-w-2xl font-mono">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] max-w-2xl font-mono text-brand-primary">
             {['Avalúos', 'certificados', 'con', 'respaldo', 'técnico,', 'normativo', 'y', 'experiencia.'].map((word, idx) => (
               <span key={idx} className="hero-title-word inline-block mr-3">
                 {word === 'respaldo' || word === 'técnico,' ? (
@@ -163,7 +175,7 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
           </h1>
 
           {/* Subtitle */}
-          <p className="hero-subtitle text-base sm:text-lg text-brand-gray-cool/80 max-w-xl leading-relaxed">
+          <p className="hero-subtitle text-base sm:text-lg text-brand-gray-cool max-w-xl leading-relaxed">
             Más de 15 años ayudando a empresas, entidades financieras y propietarios a tomar decisiones informadas y respaldadas por valoraciones de alta precisión en todo el territorio colombiano.
           </p>
 
@@ -178,65 +190,65 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
             </button>
             <a
               href="tel:+573001234567"
-              className="border border-white/20 hover:border-white/50 text-white font-mono text-sm px-8 py-4.5 tracking-wider transition-colors"
+              className="border border-brand-primary/20 hover:border-brand-primary text-brand-primary font-mono text-sm px-8 py-4.5 tracking-wider transition-colors"
             >
               HABLAR CON UN EXPERTO
             </a>
           </div>
 
           {/* Quick Credibility Elements */}
-          <div className="hero-btn pt-6 grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-white/5 max-w-xl">
+          <div className="hero-btn pt-6 grid grid-cols-2 sm:grid-cols-3 gap-6 border-t border-brand-primary/10 max-w-xl">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-brand-secondary shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-mono uppercase text-white tracking-wider">Acreditación RAA</h4>
+                <h4 className="text-xs font-mono uppercase text-brand-primary tracking-wider">Acreditación RAA</h4>
                 <p className="text-[10px] text-brand-gray-cool">Registro Abierto de Avaluadores</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-brand-secondary shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-mono uppercase text-white tracking-wider">Norma ISO 9001</h4>
+                <h4 className="text-xs font-mono uppercase text-brand-primary tracking-wider">Norma ISO 9001</h4>
                 <p className="text-[10px] text-brand-gray-cool">Sistema de Gestión Calidad</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
               <Milestone className="w-5 h-5 text-brand-secondary shrink-0 mt-0.5" />
               <div>
-                <h4 className="text-xs font-mono uppercase text-white tracking-wider">Alcance Nacional</h4>
+                <h4 className="text-xs font-mono uppercase text-brand-primary tracking-wider">Alcance Nacional</h4>
                 <p className="text-[10px] text-brand-gray-cool">Cobertura en toda Colombia</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Technical Data Sidebar */}
+        {/* Technical Data Sidebar (Dashboard Cards - Light Mode styled) */}
         <div className="lg:col-span-5 hidden lg:block space-y-6 relative z-10">
-          <div className="hero-card-stat p-6 bg-brand-primary/10 border border-white/10 backdrop-blur-md relative overflow-hidden">
+          <div className="hero-card-stat p-6 bg-white/90 border border-brand-primary/10 shadow-md backdrop-blur-md relative overflow-hidden">
             <div className="absolute top-0 right-0 p-2 text-[8px] font-mono text-brand-secondary">[ SYSTEM: ACTIVE ]</div>
             <span className="text-xs font-mono text-brand-secondary tracking-widest block mb-1">
               [ VOLUMEN DE VALORACIÓN ]
             </span>
-            <div className="text-3xl font-bold font-mono">+$8.5 Billones</div>
+            <div className="text-3xl font-bold font-mono text-brand-primary">+$8.5 Billones</div>
             <p className="text-[10px] text-brand-gray-cool mt-1">Activos inmobiliarios e industriales valorados a nivel nacional.</p>
           </div>
 
-          <div className="hero-card-stat p-6 bg-brand-primary/10 border border-white/10 backdrop-blur-md relative overflow-hidden">
+          <div className="hero-card-stat p-6 bg-white/90 border border-brand-primary/10 shadow-md backdrop-blur-md relative overflow-hidden">
             <div className="absolute top-0 right-0 p-2 text-[8px] font-mono text-brand-secondary">[ PRECISION: 99.8% ]</div>
             <span className="text-xs font-mono text-brand-secondary tracking-widest block mb-1">
               [ RESPALDO FINANCIERO ]
             </span>
-            <div className="text-3xl font-bold font-mono">100% Bancos</div>
+            <div className="text-3xl font-bold font-mono text-brand-primary">100% Bancos</div>
             <p className="text-[10px] text-brand-gray-cool mt-1">Aceptación y homologación en todas las entidades bancarias del país.</p>
           </div>
         </div>
       </div>
       
       {/* Scroll Down Hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
-        <span className="text-[9px] font-mono tracking-widest text-white uppercase">SCROLL PARA EXPLORAR</span>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+        <span className="text-[9px] font-mono tracking-widest text-brand-primary uppercase">SCROLL PARA EXPLORAR</span>
         <div className="w-[1px] h-8 bg-brand-secondary relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 bg-white h-1/2 animate-bounce" />
+          <div className="absolute top-0 left-0 right-0 bg-brand-primary h-1/2 animate-bounce" />
         </div>
       </div>
     </section>

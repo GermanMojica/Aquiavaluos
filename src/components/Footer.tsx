@@ -59,8 +59,7 @@ export default function Footer() {
                 { name: 'Servicios', href: '#servicios' },
                 { name: 'Sectores', href: '#sectores' },
                 { name: 'Proceso', href: '#proceso' },
-                { name: 'Diferenciales', href: '#diferenciales' },
-                { name: 'FAQ', href: '#faq' }
+                { name: 'Diferenciales', href: '#diferenciales' }
               ].map((link) => (
                 <li key={link.name}>
                   <a

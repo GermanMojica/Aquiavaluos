@@ -3,12 +3,14 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Building2, Trees, Landmark, Factory, Scale, BookOpen } from 'lucide-react'
 
 export default function ServicesBento() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger)
     // Fade up cells with GSAP on viewport entrance
     gsap.from('.bento-cell', {
       opacity: 0,
@@ -92,7 +94,7 @@ export default function ServicesBento() {
     <section
       id="servicios"
       ref={containerRef}
-      className="py-24 bg-white dark:bg-brand-bg-dark relative"
+      className="py-24 bg-white dark:bg-white relative"
     >
       {/* Background grids */}
       <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
@@ -104,7 +106,7 @@ export default function ServicesBento() {
           <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
             [ PORTFOLIO TÉCNICO ]
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-white mt-1">
+          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
             Servicios de Valoración Integral
           </h2>
           <p className="text-sm text-brand-gray-cool mt-3 leading-relaxed">
@@ -119,7 +121,7 @@ export default function ServicesBento() {
             return (
               <div
                 key={idx}
-                className={`bento-cell ${service.colSpan} ${service.height} relative group overflow-hidden border border-brand-primary/10 dark:border-white/10 p-8 flex flex-col justify-between transition-all duration-500 bg-white dark:bg-brand-primary/5 hover:border-brand-secondary/40 hover:shadow-lg`}
+                className={`bento-cell ${service.colSpan} ${service.height} relative group overflow-hidden border border-brand-primary/10 dark:border-brand-primary/10 p-8 flex flex-col justify-between transition-all duration-500 bg-white dark:bg-brand-primary/5 hover:border-brand-secondary/40 hover:shadow-lg`}
                 style={{ backgroundColor: service.bgAccent !== 'rgba(0, 0, 0, 0)' ? service.bgAccent : undefined }}
               >
                 {/* Architectural Grid fine lines inside Cell */}
@@ -129,10 +131,10 @@ export default function ServicesBento() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(0,148,206,0.03)_0%,transparent_50%)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
                 {/* Corner blueprint markers */}
-                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-primary/15 dark:border-white/15" />
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-primary/15 dark:border-white/15" />
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-primary/15 dark:border-white/15" />
-                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-primary/15 dark:border-white/15" />
+                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-primary/15 dark:border-brand-primary/15" />
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-primary/15 dark:border-brand-primary/15" />
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-primary/15 dark:border-brand-primary/15" />
+                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-primary/15 dark:border-brand-primary/15" />
 
                 {/* Top: technical code */}
                 <div className="flex items-center justify-between z-10">
@@ -146,12 +148,12 @@ export default function ServicesBento() {
 
                 {/* Center / Content */}
                 <div className="space-y-4 z-10">
-                  <div className="w-12 h-12 border border-brand-secondary/20 flex items-center justify-center text-brand-primary dark:text-white bg-brand-secondary/5 group-hover:bg-brand-secondary group-hover:text-white transition-all duration-300">
+                  <div className="w-12 h-12 border border-brand-secondary/20 flex items-center justify-center text-brand-primary dark:text-brand-primary bg-brand-secondary/5 group-hover:bg-brand-secondary group-hover:text-white transition-all duration-300">
                     <IconComponent className="w-6 h-6" />
                   </div>
                   
                   <div className="space-y-2">
-                    <h3 className="text-lg font-bold font-mono text-brand-primary dark:text-white group-hover:text-brand-secondary transition-colors">
+                    <h3 className="text-lg font-bold font-mono text-brand-primary dark:text-brand-primary group-hover:text-brand-secondary transition-colors">
                       {service.title}
                     </h3>
                     <p className="text-xs text-brand-gray-cool leading-relaxed max-w-md">
