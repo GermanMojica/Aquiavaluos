@@ -10,22 +10,22 @@ import { Landmark, HardHat, Building, Home, Coins, UserCheck } from 'lucide-reac
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger)
-    gsap.from('.sector-card', {
-      opacity: 0,
-      y: 50,
-      scale: 0.95,
-      stagger: 0.12,
-      duration: 0.8,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top 75%',
-        toggleActions: 'play none none none'
-      }
-    })
-  }, { scope: containerRef })
+  // useGSAP(() => {
+  //   gsap.registerPlugin(ScrollTrigger)
+  //   gsap.from('.sector-card', {
+  //     opacity: 0,
+  //     y: 50,
+  //     scale: 0.95,
+  //     stagger: 0.12,
+  //     duration: 0.8,
+  //     ease: 'power2.out',
+  //     scrollTrigger: {
+  //       trigger: containerRef.current,
+  //       start: 'top 75%',
+  //       toggleActions: 'play none none none'
+  //     }
+  //   })
+  // }, { scope: containerRef })
 
   const sectors = [
     {
@@ -107,12 +107,10 @@ export default function Sectors() {
               >
                 {/* Image */}
                 <div className="relative h-48 w-full overflow-hidden">
-                  <Image
+                  <img
                     src={sector.image}
                     alt={sector.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Dark gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/80 via-brand-primary/20 to-transparent" />
