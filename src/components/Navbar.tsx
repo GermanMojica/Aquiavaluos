@@ -38,15 +38,42 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group relative z-50">
-          <div className="relative h-10 w-44 flex items-center">
-            <Image
-              src="/images/cropped-logo.webp"
-              alt="ARQUIAVALÚOS"
-              fill
-              sizes="176px"
-              className="object-contain"
-              priority
-            />
+          <div 
+            className={`relative flex items-center transition-all duration-500 ease-in-out ${
+              scrolled ? 'w-10 h-10' : 'w-44 h-10'
+            }`}
+          >
+            {/* Full Logo - Visible when NOT scrolled */}
+            <div 
+              className={`absolute inset-0 transition-all duration-500 ease-in-out origin-left ${
+                scrolled ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+              }`}
+            >
+              <Image
+                src="/images/cropped-logo.webp"
+                alt="ARQUIAVALÚOS"
+                fill
+                sizes="176px"
+                className="object-contain object-left"
+                priority
+              />
+            </div>
+
+            {/* Icon Logo - Visible when SCROLLED */}
+            <div 
+              className={`absolute inset-0 transition-all duration-500 ease-in-out origin-left ${
+                scrolled ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'
+              }`}
+            >
+              <Image
+                src="/images/logos/favicon.webp"
+                alt="AV Icon"
+                fill
+                sizes="40px"
+                className="object-contain object-left"
+                priority
+              />
+            </div>
           </div>
         </a>
 
