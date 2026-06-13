@@ -18,7 +18,7 @@ export default function BlueprintTransition() {
   const initPaths = useCallback((selector: string, container: HTMLElement) => {
     const paths = container.querySelectorAll<SVGPathElement>(selector)
     paths.forEach(p => {
-      if (p.getTotalLength) {
+      if (typeof p.getTotalLength === 'function') {
         const len = p.getTotalLength()
         p.style.strokeDasharray = `${len}`
         p.style.strokeDashoffset = `${len}`
@@ -34,7 +34,7 @@ export default function BlueprintTransition() {
     /* Reduced-motion guard */
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       el.querySelectorAll<SVGPathElement>('.bp-line, .bp-det').forEach(p => {
-        if (p.getTotalLength) {
+        if (typeof p.getTotalLength === 'function') {
           p.style.strokeDasharray = 'none'
           p.style.strokeDashoffset = '0'
         }
