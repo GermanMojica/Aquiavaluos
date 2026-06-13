@@ -94,8 +94,8 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
       className="relative min-h-screen bg-white text-brand-primary flex items-center pt-28 overflow-hidden"
     >
       {/* Background CAD Grids (Light Mode Tailored) */}
-      <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none z-0" />
-      <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none z-0" />
+      <div className="parallax-bg-svg absolute inset-0 bg-cad-grid opacity-20 pointer-events-none z-0" />
+      <div className="parallax-bg-svg absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none z-0" />
       
       {/* Full Background Video */}
       <div className="absolute inset-0 bg-white z-0">

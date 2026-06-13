@@ -39,16 +39,11 @@ export default function Partners() {
 
     // Marquee infinito con GSAP
     if (trackRef.current) {
-      const totalWidth = trackRef.current.scrollWidth / 2
-
       const tl = gsap.to(trackRef.current, {
-        x: -totalWidth,
+        xPercent: -25,
         duration: 25,
         ease: 'none',
         repeat: -1,
-        modifiers: {
-          x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth)
-        }
       })
 
       // Pausar animación al hacer hover
@@ -80,30 +75,34 @@ export default function Partners() {
         </div>
 
         {/* Carrusel / Marquee Animado */}
-        <div className="relative w-full overflow-hidden flex items-center h-32 mask-image-fade">
+        <div className="relative w-full overflow-hidden flex items-center h-24 md:h-32 mask-image-fade">
           <div 
             ref={trackRef}
-            className="flex items-center gap-16 md:gap-24 w-max px-8"
+            className="flex items-center w-max"
           >
-            {duplicatedGuilds.map((guild, idx) => (
-              <div 
-                key={idx} 
-                className="relative h-20 w-40 flex items-center justify-center shrink-0 filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
-              >
-                {/* Decoración en esquinas estilo plano */}
-                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+            {[...Array(4)].map((_, setIdx) => (
+              <div key={setIdx} className="flex items-center gap-10 md:gap-24 px-4 md:px-8">
+                {guilds.map((guild, idx) => (
+                  <div 
+                    key={`${setIdx}-${idx}`} 
+                    className="relative h-14 w-28 md:h-20 md:w-40 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
+                  >
+                    {/* Decoración en esquinas estilo plano */}
+                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
 
-                <Image 
-                  src={guild.src} 
-                  alt={guild.alt}
-                  width={guild.width}
-                  height={guild.height}
-                  style={{ height: 'auto' }}
-                  className="object-contain max-h-full max-w-full drop-shadow-md"
-                />
+                    <Image 
+                      src={guild.src} 
+                      alt={guild.alt}
+                      width={guild.width}
+                      height={guild.height}
+                      style={{ height: 'auto' }}
+                      className="object-contain max-h-full max-w-full drop-shadow-md"
+                    />
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -111,8 +110,8 @@ export default function Partners() {
       </div>
 
       {/* Gradientes laterales para suavizar la entrada/salida de los logos */}
-      <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-20" />
-      <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 left-0 w-12 md:w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 right-0 w-12 md:w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-20" />
     </section>
   )
 }

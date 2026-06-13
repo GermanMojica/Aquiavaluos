@@ -166,11 +166,11 @@ export default function StorytellingSection() {
         </div>
 
         {/* ----------------- PANTALLA 2 ----------------- */}
-        <div className="screen-2 absolute inset-0 flex items-center justify-center p-6 opacity-0 pointer-events-none z-20">
-          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+        <div className="screen-2 absolute inset-0 flex items-center justify-center p-4 sm:p-6 opacity-0 pointer-events-none z-20">
+          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-8 md:gap-12 items-center">
             {/* Left Column: Image Reveal */}
             <div className="md:col-span-5 flex justify-center">
-              <div className="relative w-full aspect-square max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md">
+              <div className="relative w-full aspect-square max-w-[200px] sm:max-w-[280px] md:max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md">
                 {/* Fine blueprint details */}
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
@@ -188,52 +188,52 @@ export default function StorytellingSection() {
             </div>
 
             {/* Right Column: Profile details */}
-            <div className="md:col-span-7 space-y-6 text-left">
+            <div className="md:col-span-7 space-y-4 sm:space-y-6 text-left">
               <div className="screen-2-text">
-                <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
+                <span className="text-[10px] sm:text-xs font-mono text-brand-secondary tracking-widest uppercase block">
                   [ PERFIL EJECUTIVO ]
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
                   Sergio Delgado
                 </h3>
-                <p className="text-xs font-mono text-brand-gray-cool uppercase tracking-widest">
+                <p className="text-[10px] sm:text-xs font-mono text-brand-gray-cool uppercase tracking-widest">
                   Gerente General & Fundador
                 </p>
               </div>
 
-              <div className="space-y-4 pt-2">
-                <div className="screen-2-text flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-xs font-mono text-brand-secondary">01</span>
+              <div className="space-y-3 sm:space-y-4 pt-1 sm:pt-2">
+                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">01</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Experiencia Profesional</h4>
-                    <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
+                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Experiencia Profesional</h4>
+                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
                       Más de 15 años de trayectoria liderando avalúos comerciales, industriales, rurales e infraestructura estratégica para las principales bancas del país.
                     </p>
                   </div>
                 </div>
 
-                <div className="screen-2-text flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-xs font-mono text-brand-secondary">02</span>
+                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">02</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Trayectoria y Liderazgo</h4>
-                    <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
-                      Consultor y asesor en estructuración de activos reales para fondos inmobiliarios internacionales, empresas multinacionales y el sector público en Colombia.
+                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Trayectoria y Liderazgo</h4>
+                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
+                      Consultor y asesor en estructuración de activos reales para fondos inmobiliarios internacionales, multinacionales y el sector público.
                     </p>
                   </div>
                 </div>
 
-                <div className="screen-2-text flex items-start gap-4">
-                  <div className="w-8 h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-xs font-mono text-brand-secondary">03</span>
+                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">03</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Especialización Técnica</h4>
-                    <p className="text-xs text-brand-gray-cool mt-1 leading-relaxed">
-                      Avaluador inscrito y certificado en el RAA y la RNA. Experto en estándares internacionales de valoración IVS y metodologías NIIF aplicadas al sector corporativo.
+                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Especialización Técnica</h4>
+                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
+                      Avaluador certificado RAA/RNA. Experto en estándares internacionales IVS y metodologías NIIF corporativas.
                     </p>
                   </div>
                 </div>
@@ -243,25 +243,25 @@ export default function StorytellingSection() {
         </div>
 
         {/* ----------------- PANTALLA 3 (CLIENTES) ----------------- */}
-        <div className="screen-3 absolute inset-0 flex flex-col justify-center px-6 md:px-12 opacity-0 pointer-events-none z-30 overflow-hidden">
-          <div className="max-w-6xl w-full mx-auto text-left mb-10 shrink-0">
-            <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
+        <div className="screen-3 absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 opacity-0 pointer-events-none z-30 overflow-hidden">
+          <div className="max-w-6xl w-full mx-auto text-left mb-6 sm:mb-10 shrink-0">
+            <span className="text-[10px] sm:text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ NUESTROS CLIENTES ]
             </span>
-            <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
               Confianza que <span className="text-brand-secondary">respalda resultados.</span>
             </h3>
-            <p className="text-sm text-brand-gray-cool mt-3 max-w-2xl font-mono leading-relaxed">
-              Empresas del sector financiero, entidades públicas y conglomerados privados confían en ARQUIAVALÚOS para sus decisiones de valoración técnica.
+            <p className="text-xs sm:text-sm text-brand-gray-cool mt-2 sm:mt-3 max-w-2xl font-mono leading-relaxed">
+              Empresas del sector financiero, entidades públicas y conglomerados confían en ARQUIAVALÚOS para sus decisiones de valoración.
             </p>
           </div>
 
-          <div className="w-full relative py-8">
-            <div className="clients-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+          <div className="w-full relative py-4 sm:py-8">
+            <div className="clients-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-6xl mx-auto">
               {clients.map((client, idx) => (
                 <div
                   key={idx}
-                  className="client-logo-item relative flex items-center justify-center py-8 px-6 border border-brand-primary/10 bg-white shadow-sm"
+                  className="client-logo-item relative flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm"
                 >
                   <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/30" />
                   <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/30" />
@@ -274,7 +274,7 @@ export default function StorytellingSection() {
                     width={client.w}
                     height={client.h}
                     style={{ height: 'auto' }}
-                    className="object-contain max-h-12 max-w-full opacity-80"
+                    className="object-contain max-h-8 sm:max-h-12 max-w-full opacity-80"
                   />
                 </div>
               ))}
