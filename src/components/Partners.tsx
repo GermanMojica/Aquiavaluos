@@ -1,53 +1,118 @@
 'use client'
 
+import { useRef } from 'react'
 import Image from 'next/image'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default function Partners() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+
   const guilds = [
-    { src: '/images/logos/gremio-1.webp', alt: 'Gremio 1', width: 80, height: 35 },
-    { src: '/images/logos/gremio-2.webp', alt: 'Gremio 2', width: 80, height: 35 },
-    { src: '/images/logos/gremio-3.webp', alt: 'Gremio 3', width: 80, height: 35 },
-    { src: '/images/logos/gremio-4.webp', alt: 'Gremio 4', width: 80, height: 35 },
-    { src: '/images/logos/gremio-5.webp', alt: 'Gremio 5', width: 80, height: 35 }
+    { src: '/images/logos/gremio-1.webp', alt: 'Gremio 1', width: 160, height: 70 },
+    { src: '/images/logos/gremio-2.webp', alt: 'Gremio 2', width: 160, height: 70 },
+    { src: '/images/logos/gremio-3.webp', alt: 'Gremio 3', width: 160, height: 70 },
+    { src: '/images/logos/gremio-4.webp', alt: 'Gremio 4', width: 160, height: 70 },
+    { src: '/images/logos/gremio-5.webp', alt: 'Gremio 5', width: 160, height: 70 }
   ]
 
+  // Duplicamos los elementos para crear el efecto infinito (seamless loop)
+  const duplicatedGuilds = [...guilds, ...guilds]
+
+  useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger)
+
+    // Animación de aparición (Fade Up)
+    gsap.from('.partners-header', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    })
+
+    // Marquee infinito con GSAP
+    if (trackRef.current) {
+      const totalWidth = trackRef.current.scrollWidth / 2
+
+      const tl = gsap.to(trackRef.current, {
+        x: -totalWidth,
+        duration: 25,
+        ease: 'none',
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth)
+        }
+      })
+
+      // Pausar animación al hacer hover
+      trackRef.current.addEventListener('mouseenter', () => tl.pause())
+      trackRef.current.addEventListener('mouseleave', () => tl.play())
+    }
+  }, { scope: containerRef })
+
   return (
-    <section className="py-12 bg-slate-50 dark:bg-slate-50 border-t border-brand-primary/10 relative overflow-hidden">
-      {/* CAD grids */}
+    <section 
+      ref={containerRef}
+      className="py-20 bg-slate-50 dark:bg-slate-50 border-t border-b border-brand-primary/10 relative overflow-hidden"
+    >
+      {/* CAD grids para estética técnica */}
       <div className="absolute inset-0 bg-cad-grid opacity-15 pointer-events-none" />
       <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.04)_0%,transparent_70%)] pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-6">
-        {/* Guilds Sub-section */}
-        <div className="space-y-6">
-          <div className="text-center">
-            <span className="text-[10px] font-mono text-brand-secondary uppercase tracking-widest">
-              [ AFILIACIONES Y VÍNCULOS ]
-            </span>
-            <h3 className="text-base font-bold font-mono text-brand-primary dark:text-brand-primary uppercase tracking-wider mt-1">
-              Gremios y Asociaciones del Sector
-            </h3>
-          </div>
+      <div className="max-w-full mx-auto relative z-10 flex flex-col items-center">
+        {/* Header Animado */}
+        <div className="partners-header text-center mb-12 px-6">
+          <span className="text-xs font-mono text-brand-secondary uppercase tracking-widest block mb-2">
+            [ RESPALDO INSTITUCIONAL ]
+          </span>
+          <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary uppercase tracking-wider">
+            Gremios y Asociaciones del Sector
+          </h3>
+          <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6" />
+        </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {guilds.map((guild, idx) => (
+        {/* Carrusel / Marquee Animado */}
+        <div className="relative w-full overflow-hidden flex items-center h-32 mask-image-fade">
+          <div 
+            ref={trackRef}
+            className="flex items-center gap-16 md:gap-24 w-max px-8"
+          >
+            {duplicatedGuilds.map((guild, idx) => (
               <div 
                 key={idx} 
-                className="relative h-10 w-24 flex items-center justify-center filter grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300"
+                className="relative h-20 w-40 flex items-center justify-center shrink-0 filter grayscale opacity-50 hover:opacity-100 hover:grayscale-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
               >
+                {/* Decoración en esquinas estilo plano */}
+                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+
                 <Image 
                   src={guild.src} 
                   alt={guild.alt}
                   width={guild.width}
                   height={guild.height}
                   style={{ height: 'auto' }}
-                  className="object-contain max-h-full max-w-full"
+                  className="object-contain max-h-full max-w-full drop-shadow-md"
                 />
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Gradientes laterales para suavizar la entrada/salida de los logos */}
+      <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-20" />
     </section>
   )
 }

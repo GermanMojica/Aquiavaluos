@@ -24,8 +24,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
     { name: 'Quiénes Somos', href: '#quienes-somos' },
     { name: 'Servicios', href: '#servicios' },
     { name: 'Sectores', href: '#sectores' },
-    { name: 'Proceso', href: '#proceso' },
-    { name: 'Diferenciales', href: '#diferenciales' }
+    { name: 'Proceso', href: '#proceso' }
   ]
 
   return (

@@ -125,7 +125,7 @@ export default function BlueprintTransition() {
   return (
     <section
       ref={sectionRef}
-      id="blueprint-transition"
+      id="servicios"
       className="relative w-full h-screen overflow-hidden"
       style={{ background: '#f6f9fc' }}
     >

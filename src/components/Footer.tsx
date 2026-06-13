@@ -1,6 +1,7 @@
 'use client'
 
 import { Grid, Mail, Phone, MapPin, Globe } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -35,15 +36,18 @@ export default function Footer() {
             </p>
 
             {/* Accreditation indicators */}
-            <div className="flex gap-4 pt-2">
-              <div className="border border-white/10 px-3 py-1.5 bg-white/5 font-mono text-[9px] text-brand-gray-cool tracking-wider">
-                [ ISO 9001:2015 ]
+            <div className="flex flex-wrap gap-6 pt-4">
+              <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
+                <Image src="/images/logos/raa.webp" alt="Registro Abierto de Avaluadores (RAA)" width={90} height={35} className="object-contain max-h-full max-w-full" />
               </div>
-              <div className="border border-white/10 px-3 py-1.5 bg-white/5 font-mono text-[9px] text-brand-gray-cool tracking-wider">
-                [ REGISTRO RAA ]
+              <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
+                <Image src="/images/logos/rna.webp" alt="Registro Nacional de Avaluadores (RNA)" width={90} height={35} className="object-contain max-h-full max-w-full" />
               </div>
-              <div className="border border-white/10 px-3 py-1.5 bg-white/5 font-mono text-[9px] text-brand-gray-cool tracking-wider">
-                [ AFILIADO RNA ]
+              <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
+                <Image src="/images/logos/iso9001.png" alt="Certificación ISO 9001" width={100} height={40} className="object-contain max-h-full max-w-full" />
+              </div>
+              <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
+                <Image src="/images/logos/Certifiediqnet.png" alt="IQNet Certified" width={100} height={40} className="object-contain max-h-full max-w-full" />
               </div>
             </div>
           </div>

@@ -94,24 +94,27 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
       className="relative min-h-screen bg-white text-brand-primary flex items-center pt-28 overflow-hidden"
     >
       {/* Background CAD Grids (Light Mode Tailored) */}
-      <div className="absolute inset-0 bg-cad-grid opacity-40 pointer-events-none" />
-      <div className="absolute inset-0 bg-cad-grid-fine opacity-25 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none z-0" />
+      
+      {/* Full Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/hero_background.png"
+          alt="ARQUIAVALÚOS"
+          fill
+          className="object-cover opacity-55"
+          priority
+        />
+        {/* Gradient overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/70 to-transparent pointer-events-none" />
+      </div>
 
-      {/* Decorative Technical Vector (SVG) + Real Image Overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.06)_0%,transparent_70%)] pointer-events-none z-0" />
+
+      {/* Decorative Technical Vector (SVG) */}
       <div className="absolute right-0 bottom-0 top-0 w-full lg:w-1/2 opacity-20 lg:opacity-100 pointer-events-none z-0 flex items-center justify-center select-none parallax-bg-svg px-6 lg:pl-12">
-        <div className="relative w-full h-[55%] lg:h-[75%] max-w-[580px] overflow-hidden border border-brand-primary/10 bg-brand-gray-light shadow-xl">
-          <Image
-            src="/images/hero_background.png"
-            alt="ARQUIAVALÚOS Infraestructura y Valoración"
-            fill
-            sizes="(max-width: 1024px) 100vw, 580px"
-            className="object-cover opacity-85 transition-all duration-700"
-            priority
-          />
-          {/* Subtle grid pattern overlay */}
-          <div className="absolute inset-0 bg-cad-grid-fine opacity-30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent pointer-events-none" />
+        <div className="relative w-full h-[55%] lg:h-[75%] max-w-[580px] overflow-visible">
 
           {/* Technical SVG overlay */}
           <svg
@@ -153,13 +156,6 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Content Column */}
         <div className="lg:col-span-7 space-y-8 text-left">
-          {/* Top Badge */}
-          <div className="hero-badge inline-flex items-center gap-2 px-3 py-1.5 bg-brand-primary/5 border border-brand-secondary/30 rounded-full">
-            <span className="w-2 h-2 rounded-full bg-brand-secondary animate-pulse" />
-            <span className="text-xs font-mono tracking-wider text-brand-secondary uppercase">
-              Certificación y Rigor Técnico RAA / RNA
-            </span>
-          </div>
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] max-w-2xl font-mono text-brand-primary">
@@ -241,14 +237,6 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
             <div className="text-3xl font-bold font-mono text-brand-primary">100% Bancos</div>
             <p className="text-[10px] text-brand-gray-cool mt-1">Aceptación y homologación en todas las entidades bancarias del país.</p>
           </div>
-        </div>
-      </div>
-      
-      {/* Scroll Down Hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-        <span className="text-[9px] font-mono tracking-widest text-brand-primary uppercase">SCROLL PARA EXPLORAR</span>
-        <div className="w-[1px] h-8 bg-brand-secondary relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 bg-brand-primary h-1/2 animate-bounce" />
         </div>
       </div>
     </section>

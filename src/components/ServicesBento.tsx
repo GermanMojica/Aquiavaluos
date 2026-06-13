@@ -94,7 +94,7 @@ export default function ServicesBento() {
     <section
       id="servicios"
       ref={containerRef}
-      className="py-24 bg-white dark:bg-white relative"
+      className="pt-24 pb-4 bg-white dark:bg-white relative"
     >
       {/* Background grids */}
       <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
@@ -114,62 +114,9 @@ export default function ServicesBento() {
           </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {services.map((service, idx) => {
-            const IconComponent = service.icon
-            return (
-              <div
-                key={idx}
-                className={`bento-cell ${service.colSpan} ${service.height} relative group overflow-hidden border border-brand-primary/10 p-8 flex flex-col justify-between transition-all duration-500 bg-white hover:border-brand-secondary/40 hover:shadow-lg`}
-                style={{ backgroundColor: service.bgAccent !== 'rgba(0, 0, 0, 0)' ? service.bgAccent : undefined }}
-              >
-                {/* Architectural Grid fine lines inside Cell */}
-                <div className="absolute inset-0 bg-cad-grid-fine opacity-20 pointer-events-none group-hover:scale-[1.03] transition-transform duration-500" />
-                
-                {/* Coordinates Hover Glow */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--x,50%)_var(--y,50%),rgba(0,148,206,0.03)_0%,transparent_50%)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                {/* Corner blueprint markers */}
-                <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-primary/15 dark:border-brand-primary/15" />
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-primary/15 dark:border-brand-primary/15" />
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-primary/15 dark:border-brand-primary/15" />
-                <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-primary/15 dark:border-brand-primary/15" />
-
-                {/* Top: technical code */}
-                <div className="flex items-center justify-between z-10">
-                  <span className="text-[9px] font-mono text-brand-secondary tracking-widest">
-                    {service.code}
-                  </span>
-                  <span className="text-[10px] font-mono text-brand-gray-cool">
-                    REF-0{service.id}
-                  </span>
-                </div>
-
-                {/* Center / Content */}
-                <div className="space-y-4 z-10">
-                  <div className="w-12 h-12 border border-brand-secondary/20 flex items-center justify-center text-brand-primary dark:text-brand-primary bg-brand-secondary/5 group-hover:bg-brand-secondary group-hover:text-white transition-all duration-300">
-                    <IconComponent className="w-6 h-6" />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold font-mono text-brand-primary dark:text-brand-primary group-hover:text-brand-secondary transition-colors">
-                      {service.title}
-                    </h3>
-                    <p className="text-xs text-brand-gray-cool leading-relaxed max-w-md">
-                      {service.desc}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bottom: detailed specs anchor */}
-                <div className="flex items-center gap-1.5 text-[10px] font-mono text-brand-secondary hover:text-brand-primary-light z-10 select-none cursor-pointer">
-                  <span>[ DETALLES TÉCNICOS ]</span>
-                  <span className="w-4 h-[1px] bg-brand-secondary group-hover:w-8 transition-all duration-300" />
-                </div>
-              </div>
-            )
-          })}
+        {/* Bento Grid (Removed as per user request) */}
+        <div className="w-full">
+          {/* El plano irá debajo de esta sección en page.tsx */}
         </div>
       </div>
     </section>

@@ -4,14 +4,10 @@ import { useState } from 'react'
 import CustomCursor from '@/components/CustomCursor'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
-import CredibilityBar from '@/components/CredibilityBar'
 import StorytellingSection from '@/components/StorytellingSection'
-import ServicesBento from '@/components/ServicesBento'
 import BlueprintTransition from '@/components/BlueprintTransition'
 import Sectors from '@/components/Sectors'
 import ProcessTimeline from '@/components/ProcessTimeline'
-import WhyChooseUs from '@/components/WhyChooseUs'
-import Testimonials from '@/components/Testimonials'
 import Partners from '@/components/Partners'
 import CTA from '@/components/CTA'
 import Footer from '@/components/Footer'
@@ -33,37 +29,25 @@ export default function Home() {
 
       {/* Main Sections */}
       <main className="flex-1">
-        {/* 1. Hero Premium */}
+        {/* 1. Hero — Primera impresión con background y CTA principal */}
         <Hero onOpenDrawer={openDrawer} />
 
-        {/* 2. Barra de Credibilidad */}
-        <CredibilityBar />
-
-        {/* 3. ¿Quiénes Somos? (Storytelling scroll inmersivo & Sergio Delgado & Clientes) */}
+        {/* 2. Quiénes Somos — Storytelling inmersivo: Sergio Delgado + Clientes + Stats */}
         <StorytellingSection />
 
-        {/* 4. Servicios Principales (Bento Grid) */}
-        <ServicesBento />
-
-        {/* 4.5 Transición Inmersiva CAD Blueprint */}
+        {/* 3. Transición Inmersiva CAD — El plano arquitectónico animado */}
         <BlueprintTransition />
 
-        {/* 5. Sectores que Atendemos */}
+        {/* 4. Sectores que Atendemos — A quién servimos */}
         <Sectors />
 
-        {/* 6. Nuestro Proceso (Timeline interactivo con scroll-draw) */}
+        {/* 5. Nuestro Proceso Técnico — Timeline paso a paso */}
         <ProcessTimeline />
 
-        {/* 7. ¿Por qué elegir ARQUIAVALÚOS? */}
-        <WhyChooseUs />
-
-        {/* 8. Testimonios */}
-        <Testimonials />
-
-        {/* 8b. Aliados y Gremios */}
+        {/* 6. Aliados y Gremios */}
         <Partners />
 
-        {/* 10. CTA Final */}
+        {/* 7. CTA Final — Llamado a la acción */}
         <CTA onOpenDrawer={openDrawer} />
       </main>
 

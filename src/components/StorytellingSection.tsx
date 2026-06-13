@@ -42,11 +42,12 @@ export default function StorytellingSection() {
       ease: 'power2.inOut'
     }, '-=0.5')
 
-    // Reveal Sergio Delgado picture mask (clip-path)
+    // Reveal Sergio Delgado picture mask (scale and opacity)
     tl.to('.executive-mask', {
-      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+      opacity: 1,
+      scale: 1,
       duration: 1.2,
-      ease: 'power2.inOut'
+      ease: 'power2.out'
     }, '-=0.8')
 
     // Stagger text contents in screen 2
@@ -132,7 +133,7 @@ export default function StorytellingSection() {
   ]
 
   const finalMessage = "Hoy ayudamos a empresas, entidades financieras y propietarios a tomar decisiones respaldadas por información confiable."
-  const finalMessageChars = Array.from(finalMessage)
+  const finalMessageWords = finalMessage.split(' ')
 
   return (
     <section
@@ -173,13 +174,13 @@ export default function StorytellingSection() {
                 {/* Fine blueprint details */}
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
-                <div className="executive-mask absolute inset-0 transition-all" style={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0% 100%)' }}>
+                <div className="executive-mask absolute inset-0 opacity-0 scale-95 transition-none">
                   <Image
                     src="/images/founder_portrait.png"
                     alt="Sergio Delgado - Gerente General de ARQUIAVALÚOS"
                     fill
                     sizes="(max-width: 768px) 100vw, 380px"
-                    className="object-cover transition-all duration-700"
+                    className="object-cover"
                     priority
                   />
                 </div>
@@ -306,13 +307,17 @@ export default function StorytellingSection() {
             <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ COMPROMISO ARQUIAVALÚOS ]
             </span>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary">
-              {finalMessageChars.map((char, index) => (
-                <span 
-                  key={index} 
-                  className="char-span inline-block select-none transform translate-y-12 opacity-0"
-                >
-                  {char === ' ' ? '\u00A0' : char}
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary flex flex-wrap justify-center gap-x-[0.25em] gap-y-2">
+              {finalMessageWords.map((word, wIdx) => (
+                <span key={wIdx} className="inline-block whitespace-nowrap">
+                  {Array.from(word).map((char, cIdx) => (
+                    <span 
+                      key={`${wIdx}-${cIdx}`} 
+                      className="char-span inline-block select-none transform translate-y-12 opacity-0"
+                    >
+                      {char}
+                    </span>
+                  ))}
                 </span>
               ))}
             </h2>
