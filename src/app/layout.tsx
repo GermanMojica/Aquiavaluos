@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
+import SmoothScroll from "@/components/ui/SmoothScroll";
+import Preloader from "@/components/ui/Preloader";
+import FloatingActions from "@/components/ui/FloatingActions";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -31,6 +33,8 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans selection:bg-brand-secondary selection:text-white">
+        <Preloader />
+        <FloatingActions />
         <SmoothScroll>
           {children}
         </SmoothScroll>

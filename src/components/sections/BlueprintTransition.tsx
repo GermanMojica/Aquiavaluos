@@ -59,7 +59,7 @@ export default function BlueprintTransition() {
       }
     })
 
-    /* ─── Phase 1: Coords + frame corners (0→10%) ─── */
+    /* ─── Phase 1: Coords + frame corners + badges (0→15%) ─── */
     tl.fromTo(el.querySelectorAll('.bp-coord'), 
       { opacity: 0, y: 6 },
       { opacity: 1, y: 0, stagger: 0.05, duration: 0.4, ease: 'none' }
@@ -68,6 +68,11 @@ export default function BlueprintTransition() {
       { opacity: 0 },
       { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
       '-=0.2'
+    )
+    .fromTo(el.querySelectorAll('.bp-badge'),
+      { opacity: 0, y: 12, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: 0.4, ease: 'power2.out' },
+      '-=0.1'
     )
 
     /* ─── Phase 2: SVG walls draw (10→45%) ─── */
@@ -94,7 +99,7 @@ export default function BlueprintTransition() {
       '-=0.15'
     )
 
-    /* ─── Phase 4: Text + badges (60→85%) ─── */
+    /* ─── Phase 4: Text (60→85%) ─── */
     .fromTo(el.querySelector('.bp-title'),
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.5, ease: 'none' }
@@ -108,11 +113,6 @@ export default function BlueprintTransition() {
       { scaleX: 0, opacity: 0 },
       { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.3, ease: 'none' },
       '-=0.1'
-    )
-    .fromTo(el.querySelectorAll('.bp-badge'),
-      { opacity: 0, y: 12, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: 0.35, ease: 'none' },
-      '-=0.2'
     )
 
     /* ─── Phase 5: Fade out (85→100%) ─── */

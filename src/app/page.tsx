@@ -1,17 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import CustomCursor from '@/components/CustomCursor'
-import Navbar from '@/components/Navbar'
-import Hero from '@/components/Hero'
-import StorytellingSection from '@/components/StorytellingSection'
-import BlueprintTransition from '@/components/BlueprintTransition'
-import Sectors from '@/components/Sectors'
-import ProcessTimeline from '@/components/ProcessTimeline'
-import Partners from '@/components/Partners'
-import CTA from '@/components/CTA'
-import Footer from '@/components/Footer'
-import RequestValuationDrawer from '@/components/RequestValuationDrawer'
+import CustomCursor from '@/components/ui/CustomCursor'
+import Navbar from '@/components/layout/Navbar'
+import Hero from '@/components/sections/Hero'
+import StorytellingSection from '@/components/sections/StorytellingSection'
+import BlueprintTransition from '@/components/sections/BlueprintTransition'
+import Sectors from '@/components/sections/Sectors'
+import ProcessTimeline from '@/components/sections/ProcessTimeline'
+import Partners from '@/components/sections/Partners'
+import CTA from '@/components/sections/CTA'
+import Footer from '@/components/layout/Footer'
+import RequestValuationDrawer from '@/components/features/RequestValuationDrawer'
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
