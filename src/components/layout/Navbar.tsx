@@ -31,7 +31,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? 'py-3 bg-white/95 dark:bg-white/95 backdrop-blur-md border-b border-brand-primary/10 shadow-sm'
+          ? 'py-3 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-sm'
           : 'py-6 bg-transparent border-b border-transparent'
       }`}
     >
@@ -83,7 +83,9 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
             <a
               key={link.name}
               href={link.href}
-              className="text-xs font-mono text-brand-primary/70 dark:text-brand-primary/70 hover:text-brand-secondary dark:hover:text-brand-secondary transition-colors py-2 tracking-wider relative group"
+              className={`text-xs font-mono transition-colors py-2 tracking-wider relative group hover:text-brand-secondary ${
+                scrolled ? 'text-white/80' : 'text-brand-primary/70 dark:text-brand-primary/70'
+              }`}
             >
               {link.name}
               <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-brand-secondary transition-all duration-300 group-hover:w-full" />
@@ -95,7 +97,9 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         <div className="hidden md:flex items-center gap-4">
           <a
             href="tel:+573001234567"
-            className="flex items-center gap-2 text-xs font-mono text-brand-primary dark:text-brand-primary hover:text-brand-secondary dark:hover:text-brand-secondary transition-colors"
+            className={`flex items-center gap-2 text-xs font-mono transition-colors hover:text-brand-secondary ${
+              scrolled ? 'text-white/80' : 'text-brand-primary dark:text-brand-primary'
+            }`}
           >
             <Phone className="w-4 h-4 text-brand-secondary" />
             <span>+57 300 123 4567</span>
@@ -111,7 +115,9 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-brand-primary dark:text-brand-primary hover:text-brand-secondary relative z-50"
+          className={`md:hidden p-2 hover:text-brand-secondary relative z-50 ${
+            scrolled ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
+          }`}
           aria-label="Menú de navegación"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -120,9 +126,9 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
 
       {/* Mobile Menu Panel */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-white dark:bg-white z-45 md:hidden flex flex-col p-6 pt-24">
+        <div className="fixed inset-0 bg-black z-45 md:hidden flex flex-col p-6 pt-24">
           {/* Background Technical Grid */}
-          <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-40 pointer-events-none" />
+          <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-10 pointer-events-none" />
           
           <div className="flex flex-col gap-6 relative z-10">
             {navLinks.map((link) => (
@@ -130,7 +136,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-lg font-bold font-mono text-brand-primary dark:text-brand-primary border-b border-brand-primary/10 pb-3 hover:text-brand-secondary dark:hover:text-brand-secondary transition-colors"
+                className="text-lg font-bold font-mono text-white border-b border-white/10 pb-3 hover:text-brand-secondary transition-colors"
               >
                 {link.name}
               </a>
@@ -138,7 +144,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
             <div className="flex flex-col gap-4 mt-6">
               <a
                 href="tel:+573001234567"
-                className="flex items-center gap-2 text-sm font-mono text-brand-primary dark:text-brand-primary"
+                className="flex items-center gap-2 text-sm font-mono text-white/80"
               >
                 <Phone className="w-4 h-4 text-brand-secondary" />
                 <span>+57 300 123 4567</span>
@@ -148,7 +154,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
                   setMobileMenuOpen(false)
                   onOpenDrawer()
                 }}
-                className="w-full bg-brand-primary text-white font-mono text-sm py-4 tracking-wider transition-all"
+                className="w-full bg-brand-secondary text-white font-mono text-sm py-4 tracking-wider transition-all"
               >
                 SOLICITAR AVALÚO
               </button>

@@ -32,6 +32,17 @@ export default function Home() {
         {/* 1. Hero — Primera impresión con background y CTA principal */}
         <Hero onOpenDrawer={openDrawer} />
 
+        {/* Quote Banner */}
+        <div className="bg-black py-10 px-6 sm:px-12">
+          <div className="max-w-4xl mx-auto flex items-start gap-6">
+            <div className="w-8 h-0.5 bg-brand-secondary mt-5 flex-shrink-0" />
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-snug">
+              "Transformamos conocimiento y experiencia en{' '}
+              <span className="text-brand-secondary">confianza</span> para nuestros clientes."
+            </p>
+          </div>
+        </div>
+
         {/* 2. Quiénes Somos — Storytelling inmersivo: Sergio Delgado + Clientes + Stats */}
         <StorytellingSection />
 

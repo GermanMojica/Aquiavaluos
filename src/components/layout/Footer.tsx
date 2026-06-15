@@ -1,13 +1,13 @@
 'use client'
 
-import { Grid, Mail, Phone, MapPin, Globe } from 'lucide-react'
+import { Mail, Phone, MapPin, Globe } from 'lucide-react'
 import Image from 'next/image'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-brand-primary text-white border-t border-white/10 relative overflow-hidden">
+    <footer className="bg-black text-white border-t border-white/10 relative overflow-hidden">
       {/* Background CAD grid */}
       <div className="absolute inset-0 bg-cad-grid opacity-5 pointer-events-none" />
 
@@ -16,18 +16,15 @@ export default function Footer() {
           
           {/* Column 1: Logo and Accreditations */}
           <div className="md:col-span-5 space-y-6 text-left">
-            <a href="#" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 border border-white/15 flex items-center justify-center relative overflow-hidden group-hover:border-brand-secondary transition-colors duration-300">
-                <div className="absolute inset-0 bg-cad-grid opacity-30" />
-                <Grid className="w-5 h-5 text-white group-hover:text-brand-secondary transition-colors duration-300" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-lg leading-none tracking-wider uppercase font-mono">
-                  ARQUIAVALÚOS
-                </span>
-                <span className="text-[9px] font-mono tracking-widest text-brand-secondary uppercase mt-0.5">
-                  [ Soluciones de Valor ]
-                </span>
+            <a href="#" className="flex items-center group">
+              <div className="relative w-48 h-14">
+                <Image
+                  src="/images/cropped-logo.webp"
+                  alt="ARQUIAVALÚOS"
+                  fill
+                  sizes="192px"
+                  className="object-contain object-left brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                />
               </div>
             </a>
             

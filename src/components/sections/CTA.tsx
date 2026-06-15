@@ -8,7 +8,7 @@ interface CTAProps {
 
 export default function CTA({ onOpenDrawer }: CTAProps) {
   return (
-    <section className="py-24 bg-brand-bg-dark text-white relative overflow-hidden">
+    <section className="py-24 bg-brand-primary text-white relative overflow-hidden">
       {/* Background CAD grid */}
       <div className="absolute inset-0 bg-cad-grid opacity-15 pointer-events-none" />
       <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none" />

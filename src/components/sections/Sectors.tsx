@@ -76,22 +76,22 @@ export default function Sectors() {
     <section
       id="sectores"
       ref={containerRef}
-      className="py-24 bg-slate-50 dark:bg-slate-50 text-brand-primary relative overflow-hidden"
+      className="py-24 bg-brand-primary text-white relative overflow-hidden"
     >
       {/* Background CAD grid */}
-      <div className="absolute inset-0 bg-cad-grid opacity-15 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,148,206,0.06)_0%,transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid opacity-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,148,206,0.15)_0%,transparent_65%)] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
-        <div className="text-left mb-16 max-w-2xl border-b border-brand-primary/10 pb-8">
+        <div className="text-left mb-16 max-w-2xl border-b border-white/20 pb-8">
           <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
             [ ALCANCE DEL SERVICIO ]
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+          <h2 className="text-3xl sm:text-4xl font-bold font-mono text-white mt-1">
             Sectores que Atendemos
           </h2>
-          <p className="text-sm text-brand-gray-cool leading-relaxed mt-3">
+          <p className="text-sm text-white/70 leading-relaxed mt-3">
             Nuestros informes cumplen con las exigencias regulatorias de diversas industrias, sirviendo como soporte técnico de máxima confiabilidad.
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function Sectors() {
             return (
               <div
                 key={idx}
-                className="sector-card group relative overflow-hidden border border-brand-primary/10 bg-white shadow-sm hover:shadow-xl hover:border-brand-secondary/40 transition-all duration-500"
+                className="sector-card group relative overflow-hidden border border-white/15 bg-white/10 backdrop-blur-sm hover:bg-white/15 hover:border-brand-secondary/60 transition-all duration-500 shadow-sm hover:shadow-xl"
               >
                 {/* Image */}
                 <div className="relative h-48 w-full overflow-hidden">
@@ -113,13 +113,13 @@ export default function Sectors() {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/80 via-brand-primary/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/30 to-transparent" />
                   
                   {/* CAD overlay on image */}
                   <div className="absolute inset-0 bg-cad-grid-fine opacity-20 pointer-events-none mix-blend-overlay" />
                   
                   {/* Tech code badge */}
-                  <div className="absolute top-3 right-3 text-[8px] font-mono text-white/60 bg-brand-primary/40 backdrop-blur-sm px-2 py-1 tracking-widest">
+                  <div className="absolute top-3 right-3 text-[8px] font-mono text-white/60 bg-white/10 backdrop-blur-sm px-2 py-1 tracking-widest">
                     [ SYS_{sector.key} ]
                   </div>
 
@@ -131,10 +131,10 @@ export default function Sectors() {
 
                 {/* Text Content */}
                 <div className="p-5 space-y-2">
-                  <h3 className="text-base font-bold font-mono text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                  <h3 className="text-base font-bold font-mono text-white group-hover:text-brand-secondary transition-colors duration-300">
                     {sector.name}
                   </h3>
-                  <p className="text-xs text-brand-gray-cool leading-relaxed">
+                  <p className="text-xs text-white/65 leading-relaxed">
                     {sector.desc}
                   </p>
                 </div>
