@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import CustomCursor from '@/components/ui/CustomCursor'
 import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/sections/Hero'
 import StorytellingSection from '@/components/sections/StorytellingSection'
@@ -20,9 +19,6 @@ export default function Home() {
 
   return (
     <div className="relative flex flex-col min-h-screen overflow-x-hidden select-none bg-white dark:bg-white text-brand-primary dark:text-brand-primary">
-      {/* Premium Interactive Cursor */}
-      <CustomCursor />
-
       {/* Sticky Header */}
       <Navbar onOpenDrawer={openDrawer} />
 

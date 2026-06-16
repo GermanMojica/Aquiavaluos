@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode, useEffect } from 'react'
+import Lenis from 'lenis'
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -9,7 +10,6 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       const gsap = gsapModule.gsap || gsapModule.default || gsapModule
       const ScrollTriggerModule = await import('gsap/ScrollTrigger')
       const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
-      const Lenis = (await import('lenis')).default
       gsap.registerPlugin(ScrollTrigger)
 
       const lenis = new Lenis({
