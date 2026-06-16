@@ -1,13 +1,19 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
+  const gsapRef = useRef<any>(null)
 
   useEffect(() => {
+    // Load GSAP once and cache reference
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      gsapRef.current = gsapModule.gsap || gsapModule.default || gsapModule
+    })()
+
     // Disable custom cursor on mobile or touch-only screens
     if (window.matchMedia('(pointer: coarse)').matches) return
 
@@ -21,20 +27,22 @@ export default function CustomCursor() {
 
     const onMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e
-      
-      gsap.to(dot, {
-        x: clientX,
-        y: clientY,
-        duration: 0.08,
-        ease: 'power2.out'
-      })
+      const gsap = gsapRef.current
+      if (gsap) {
+        gsap.to(dot, {
+          x: clientX,
+          y: clientY,
+          duration: 0.08,
+          ease: 'power2.out'
+        })
 
-      gsap.to(ring, {
-        x: clientX,
-        y: clientY,
-        duration: 0.25,
-        ease: 'power2.out'
-      })
+        gsap.to(ring, {
+          x: clientX,
+          y: clientY,
+          duration: 0.25,
+          ease: 'power2.out'
+        })
+      }
     }
 
     const onMouseOver = (e: MouseEvent) => {
@@ -49,17 +57,20 @@ export default function CustomCursor() {
         target.classList.contains('interactive-hover')
 
       if (isInteractive) {
-        gsap.to(ring, {
-          scale: 1.6,
-          borderColor: '#0094CE',
-          backgroundColor: 'rgba(0, 148, 206, 0.08)',
-          duration: 0.2,
-        })
-        gsap.to(dot, {
-          scale: 0.5,
-          backgroundColor: '#0094CE',
-          duration: 0.2,
-        })
+        const gsap = gsapRef.current
+        if (gsap) {
+          gsap.to(ring, {
+            scale: 1.6,
+            borderColor: '#0094CE',
+            backgroundColor: 'rgba(0, 148, 206, 0.08)',
+            duration: 0.2,
+          })
+          gsap.to(dot, {
+            scale: 0.5,
+            backgroundColor: '#0094CE',
+            duration: 0.2,
+          })
+        }
       }
     }
 
@@ -75,17 +86,20 @@ export default function CustomCursor() {
         target.classList.contains('interactive-hover')
 
       if (isInteractive) {
-        gsap.to(ring, {
-          scale: 1,
-          borderColor: 'rgba(0, 148, 206, 0.3)',
-          backgroundColor: 'transparent',
-          duration: 0.2,
-        })
-        gsap.to(dot, {
-          scale: 1,
-          backgroundColor: '#0094CE',
-          duration: 0.2,
-        })
+        const gsap = gsapRef.current
+        if (gsap) {
+          gsap.to(ring, {
+            scale: 1,
+            borderColor: 'rgba(0, 148, 206, 0.3)',
+            backgroundColor: 'transparent',
+            duration: 0.2,
+          })
+          gsap.to(dot, {
+            scale: 1,
+            backgroundColor: '#0094CE',
+            duration: 0.2,
+          })
+        }
       }
     }
 

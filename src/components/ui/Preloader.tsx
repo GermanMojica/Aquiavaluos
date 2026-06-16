@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
 
 export default function Preloader() {
   const [loading, setLoading] = useState(true)
@@ -11,64 +10,68 @@ export default function Preloader() {
   const svgRef = useRef<SVGSVGElement>(null)
 
   useGSAP(() => {
-    // Evitar scroll durante la carga
-    document.body.style.overflow = 'hidden'
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        // Al finalizar la animación, ocultar el preloader y restaurar el scroll
-        gsap.to(containerRef.current, {
-          yPercent: -100,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.inOut',
-          onComplete: () => {
-            setLoading(false)
-            document.body.style.overflow = ''
-          }
-        })
-      }
-    })
+      // Evitar scroll durante la carga
+      document.body.style.overflow = 'hidden'
 
-    // Animación del dibujo del SVG (Blueprint house/building)
-    if (svgRef.current) {
-      const paths = svgRef.current.querySelectorAll('path, line, polyline')
-      paths.forEach(p => {
-        if (typeof (p as SVGGeometryElement).getTotalLength === 'function') {
-          const len = (p as SVGGeometryElement).getTotalLength()
-          ;(p as SVGGeometryElement).style.strokeDasharray = `${len}`
-          ;(p as SVGGeometryElement).style.strokeDashoffset = `${len}`
+      const tl = gsap.timeline({
+        onComplete: () => {
+          // Al finalizar la animación, ocultar el preloader y restaurar el scroll
+          gsap.to(containerRef.current, {
+            yPercent: -100,
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power3.inOut',
+            onComplete: () => {
+              setLoading(false)
+              document.body.style.overflow = ''
+            }
+          })
         }
       })
 
-      tl.to(paths, {
-        strokeDashoffset: 0,
-        duration: 1.5,
-        stagger: 0.1,
-        ease: 'power2.inOut'
-      }, 0)
-    }
+      // Animación del dibujo del SVG (Blueprint house/building)
+      if (svgRef.current) {
+        const paths = svgRef.current.querySelectorAll('path, line, polyline')
+        paths.forEach(p => {
+          if (typeof (p as SVGGeometryElement).getTotalLength === 'function') {
+            const len = (p as SVGGeometryElement).getTotalLength()
+            ;(p as SVGGeometryElement).style.strokeDasharray = `${len}`
+            ;(p as SVGGeometryElement).style.strokeDashoffset = `${len}`
+          }
+        })
 
-    // Simulador de porcentaje
-    tl.to({ val: 0 }, {
-      val: 100,
-      duration: 1.8,
-      ease: 'power1.inOut',
-      onUpdate: function() {
-        setProgress(Math.round(this.targets()[0].val))
+        tl.to(paths, {
+          strokeDashoffset: 0,
+          duration: 1.5,
+          stagger: 0.1,
+          ease: 'power2.inOut'
+        }, 0)
       }
-    }, 0)
 
-    // Animación de los textos "Precision..."
-    tl.fromTo('.preloader-text', 
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, stagger: 0.2, duration: 0.5, ease: 'power2.out' },
-      0.5
-    )
+      // Simulador de porcentaje
+      tl.to({ val: 0 }, {
+        val: 100,
+        duration: 1.8,
+        ease: 'power1.inOut',
+        onUpdate: function() {
+          setProgress(Math.round(this.targets()[0].val))
+        }
+      }, 0)
 
-    // Pequeño retardo al finalizar al 100%
-    tl.to({}, { duration: 0.4 })
+      // Animación de los textos "Precision..."
+      tl.fromTo('.preloader-text', 
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, stagger: 0.2, duration: 0.5, ease: 'power2.out' },
+        0.5
+      )
 
+      // Pequeño retardo al finalizar al 100%
+      tl.to({}, { duration: 0.4 })
+    })()
   }, { scope: containerRef })
 
   if (!loading) return null

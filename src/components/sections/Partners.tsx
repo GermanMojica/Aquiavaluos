@@ -3,8 +3,6 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default function Partners() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -22,34 +20,40 @@ export default function Partners() {
   const duplicatedGuilds = [...guilds, ...guilds]
 
   useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger)
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    // Optimized header animation
-    gsap.from('.partners-header', {
-      y: 20,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top 85%',
-        toggleActions: 'play none none none'
-      }
-    })
-
-    // Marquee infinito — ultra-optimized
-    if (trackRef.current) {
-      const tl = gsap.to(trackRef.current, {
-        xPercent: -25,
-        duration: 30,
-        ease: 'none',
-        repeat: -1,
+      // Optimized header animation
+      gsap.from('.partners-header', {
+        y: 20,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
       })
 
-      // Pausar animación al hacer hover
-      trackRef.current.addEventListener('mouseenter', () => tl.pause(), { passive: true })
-      trackRef.current.addEventListener('mouseleave', () => tl.play(), { passive: true })
-    }
+      // Marquee infinito — ultra-optimized
+      if (trackRef.current) {
+        const tl = gsap.to(trackRef.current, {
+          xPercent: -25,
+          duration: 30,
+          ease: 'none',
+          repeat: -1,
+        })
+
+        // Pausar animación al hacer hover
+        trackRef.current.addEventListener('mouseenter', () => tl.pause(), { passive: true })
+        trackRef.current.addEventListener('mouseleave', () => tl.play(), { passive: true })
+      }
+    })()
   }, { scope: containerRef })
 
   return (

@@ -2,10 +2,6 @@
 
 import { useRef, useCallback } from 'react'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /* ------------------------------------------------------------------ */
 /*  BlueprintTransition                                                */
@@ -28,97 +24,105 @@ export default function BlueprintTransition() {
   }, [])
 
   useGSAP(() => {
-    const el = sectionRef.current
-    if (!el) return
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    /* Reduced-motion guard */
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.querySelectorAll<SVGPathElement>('.bp-line, .bp-det').forEach(p => {
-        if (typeof p.getTotalLength === 'function') {
-          p.style.strokeDasharray = 'none'
-          p.style.strokeDashoffset = '0'
+      const el = sectionRef.current
+      if (!el) return
+
+      /* Reduced-motion guard */
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.querySelectorAll<SVGPathElement>('.bp-line, .bp-det').forEach(p => {
+          if (typeof p.getTotalLength === 'function') {
+            p.style.strokeDasharray = 'none'
+            p.style.strokeDashoffset = '0'
+          }
+        })
+        return
+      }
+
+      /* Prepare SVG stroke draw */
+      const mainPaths = initPaths('.bp-line', el)
+      const detPaths  = initPaths('.bp-det', el)
+
+      /* Master pinned timeline — optimized for performance */
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          pin: true,
+          scrub: 1,
+          start: 'top top',
+          end: '+=100%',
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         }
       })
-      return
-    }
 
-    /* Prepare SVG stroke draw */
-    const mainPaths = initPaths('.bp-line', el)
-    const detPaths  = initPaths('.bp-det', el)
+      /* ─── Phase 1: Coords + frame corners + badges (0→20%) ─── */
+      tl.fromTo(el.querySelectorAll('.bp-coord'), 
+        { opacity: 0, y: 6 },
+        { opacity: 1, y: 0, stagger: 0.04, duration: 0.3, ease: 'none' }
+      )
+      .fromTo(el.querySelectorAll('.bp-fc'),
+        { opacity: 0 },
+        { opacity: 1, stagger: 0.02, duration: 0.15, ease: 'none' },
+        '-=0.15'
+      )
+      .fromTo(el.querySelectorAll('.bp-badge'),
+        { opacity: 0, y: 8, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, stagger: 0.06, duration: 0.3, ease: 'power2.out' },
+        '-=0.08'
+      )
 
-    /* Master pinned timeline — optimized for performance */
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: el,
-        pin: true,
-        scrub: 1,
-        start: 'top top',
-        end: '+=100%',
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      }
-    })
+      /* ─── Phase 2: SVG walls draw (20→55%) — Simplified ─── */
+      .to(mainPaths, {
+        strokeDashoffset: 0, stagger: 0.02, duration: 1.2, ease: 'none'
+      })
+      .to(detPaths, {
+        strokeDashoffset: 0, stagger: 0.01, duration: 0.7, ease: 'none'
+      }, '-=0.6')
+      .fromTo(el.querySelectorAll('.bp-label'),
+        { opacity: 0 },
+        { opacity: 1, stagger: 0.02, duration: 0.2, ease: 'none' },
+        '-=0.3'
+      )
 
-    /* ─── Phase 1: Coords + frame corners + badges (0→20%) ─── */
-    tl.fromTo(el.querySelectorAll('.bp-coord'), 
-      { opacity: 0, y: 6 },
-      { opacity: 1, y: 0, stagger: 0.04, duration: 0.3, ease: 'none' }
-    )
-    .fromTo(el.querySelectorAll('.bp-fc'),
-      { opacity: 0 },
-      { opacity: 1, stagger: 0.02, duration: 0.15, ease: 'none' },
-      '-=0.15'
-    )
-    .fromTo(el.querySelectorAll('.bp-badge'),
-      { opacity: 0, y: 8, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.06, duration: 0.3, ease: 'power2.out' },
-      '-=0.08'
-    )
+      /* ─── Phase 3: Dimensions (55→70%) ─── */
+      .fromTo(el.querySelectorAll('.bp-dim'),
+        { opacity: 0, scaleX: 0 },
+        { opacity: 1, scaleX: 1, transformOrigin: 'left center', stagger: 0.03, duration: 0.3, ease: 'none' }
+      )
+      .fromTo(el.querySelectorAll('.bp-meas'),
+        { opacity: 0 },
+        { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
+        '-=0.1'
+      )
 
-    /* ─── Phase 2: SVG walls draw (20→55%) — Simplified ─── */
-    .to(mainPaths, {
-      strokeDashoffset: 0, stagger: 0.02, duration: 1.2, ease: 'none'
-    })
-    .to(detPaths, {
-      strokeDashoffset: 0, stagger: 0.01, duration: 0.7, ease: 'none'
-    }, '-=0.6')
-    .fromTo(el.querySelectorAll('.bp-label'),
-      { opacity: 0 },
-      { opacity: 1, stagger: 0.02, duration: 0.2, ease: 'none' },
-      '-=0.3'
-    )
+      /* ─── Phase 4: Text (70→85%) ─── */
+      .fromTo(el.querySelector('.bp-title'),
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'none' }
+      )
+      .fromTo(el.querySelector('.bp-sub'),
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.3, ease: 'none' },
+        '-=0.1'
+      )
+      .fromTo(el.querySelector('.bp-scanl'),
+        { scaleX: 0, opacity: 0 },
+        { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.25, ease: 'none' },
+        '-=0.08'
+      )
 
-    /* ─── Phase 3: Dimensions (55→70%) ─── */
-    .fromTo(el.querySelectorAll('.bp-dim'),
-      { opacity: 0, scaleX: 0 },
-      { opacity: 1, scaleX: 1, transformOrigin: 'left center', stagger: 0.03, duration: 0.3, ease: 'none' }
-    )
-    .fromTo(el.querySelectorAll('.bp-meas'),
-      { opacity: 0 },
-      { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
-      '-=0.1'
-    )
-
-    /* ─── Phase 4: Text (70→85%) ─── */
-    .fromTo(el.querySelector('.bp-title'),
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.4, ease: 'none' }
-    )
-    .fromTo(el.querySelector('.bp-sub'),
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.3, ease: 'none' },
-      '-=0.1'
-    )
-    .fromTo(el.querySelector('.bp-scanl'),
-      { scaleX: 0, opacity: 0 },
-      { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.25, ease: 'none' },
-      '-=0.08'
-    )
-
-    /* ─── Phase 5: Smooth fade out (85→100%) ─── */
-    .to(el.querySelector('.bp-wrap'), {
-      opacity: 0, duration: 0.5, ease: 'power1.in'
-    }, '+=0.1')
+      /* ─── Phase 5: Smooth fade out (85→100%) ─── */
+      .to(el.querySelector('.bp-wrap'), {
+        opacity: 0, duration: 0.5, ease: 'power1.in'
+      }, '+=0.1')
+    })()
 
   }, { scope: sectionRef })
 

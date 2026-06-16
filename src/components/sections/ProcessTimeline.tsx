@@ -2,8 +2,6 @@
 
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FileText, Eye, AreaChart, Inbox, FileCheck } from 'lucide-react'
 
 export default function ProcessTimeline() {
@@ -11,37 +9,43 @@ export default function ProcessTimeline() {
   const lineRef = useRef<SVGLineElement>(null)
 
   useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger)
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    // Animate the line drawing based on scroll
-    gsap.fromTo(lineRef.current,
-      { strokeDashoffset: 1000 },
-      {
-        strokeDashoffset: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 70%',
-          end: 'bottom 70%',
-          scrub: 0.5,
+      // Animate the line drawing based on scroll
+      gsap.fromTo(lineRef.current,
+        { strokeDashoffset: 1000 },
+        {
+          strokeDashoffset: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 70%',
+            end: 'bottom 70%',
+            scrub: 0.5,
+          }
         }
-      }
-    )
+      )
 
-    // Animate each timeline point
-    const steps = gsap.utils.toArray('.timeline-step') as HTMLElement[]
-    steps.forEach((step, idx) => {
-      gsap.from(step, {
-        opacity: 0,
-        x: -40,
-        duration: 0.6,
-        scrollTrigger: {
-          trigger: step,
-          start: 'top 80%',
-          toggleActions: 'play none none none'
-        }
+      // Animate each timeline point
+      const steps = gsap.utils.toArray('.timeline-step') as HTMLElement[]
+      steps.forEach((step, idx) => {
+        gsap.from(step, {
+          opacity: 0,
+          x: -40,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: step,
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+          }
+        })
       })
-    })
+    })()
   }, { scope: containerRef })
 
   const steps = [

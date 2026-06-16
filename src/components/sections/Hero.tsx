@@ -3,7 +3,6 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
 import { ArrowUpRight, ShieldCheck, MapPin } from 'lucide-react'
 
 interface HeroProps {
@@ -15,77 +14,82 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
   const technicalBgRef = useRef<SVGSVGElement>(null)
 
   useGSAP(() => {
-    // Reveal text elements on mount
-    const tl = gsap.timeline()
-    
-    tl.from('.hero-badge', {
-      opacity: 0,
-      y: -20,
-      duration: 0.6,
-      ease: 'power3.out'
-    })
-    
-    tl.from('.hero-title-word', {
-      opacity: 0,
-      y: 60,
-      stagger: 0.08,
-      duration: 0.8,
-      ease: 'power3.out'
-    }, '-=0.4')
-    
-    tl.from('.hero-subtitle', {
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      ease: 'power3.out'
-    }, '-=0.5')
-    
-    tl.from('.hero-btn', {
-      opacity: 0,
-      y: 20,
-      stagger: 0.12,
-      duration: 0.6,
-      ease: 'power3.out'
-    }, '-=0.4')
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
 
-    tl.from('.hero-card-stat', {
-      opacity: 0,
-      scale: 0.95,
-      stagger: 0.1,
-      duration: 0.6,
-      ease: 'power3.out'
-    }, '-=0.3')
-
-    // Technical SVG blueprint animations (drawing lines)
-    gsap.fromTo(technicalBgRef.current?.querySelectorAll('.blueprint-line') || [], 
-      { strokeDasharray: '300', strokeDashoffset: '300' },
-      { strokeDashoffset: '0', duration: 2.5, stagger: 0.15, ease: 'power2.inOut', delay: 0.2 }
-    )
-
-    gsap.to('.blueprint-rotate', {
-      rotation: 360,
-      transformOrigin: 'center',
-      duration: 60,
-      repeat: -1,
-      ease: 'none'
-    })
-
-    // Mouse interactive depth effect (parallax)
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e
-      const xPos = (clientX / window.innerWidth - 0.5) * 30
-      const yPos = (clientY / window.innerHeight - 0.5) * 30
-
-      gsap.to('.parallax-bg-svg', {
-        x: xPos,
-        y: yPos,
-        duration: 1.5,
-        ease: 'power2.out'
+      // Reveal text elements on mount
+      const tl = gsap.timeline()
+      
+      tl.from('.hero-badge', {
+        opacity: 0,
+        y: -20,
+        duration: 0.6,
+        ease: 'power3.out'
       })
-    }
+      
+      tl.from('.hero-title-word', {
+        opacity: 0,
+        y: 60,
+        stagger: 0.08,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.4')
+      
+      tl.from('.hero-subtitle', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.5')
+      
+      tl.from('.hero-btn', {
+        opacity: 0,
+        y: 20,
+        stagger: 0.12,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, '-=0.4')
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+      tl.from('.hero-card-stat', {
+        opacity: 0,
+        scale: 0.95,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, '-=0.3')
+
+      // Technical SVG blueprint animations (drawing lines)
+      gsap.fromTo(technicalBgRef.current?.querySelectorAll('.blueprint-line') || [], 
+        { strokeDasharray: '300', strokeDashoffset: '300' },
+        { strokeDashoffset: '0', duration: 2.5, stagger: 0.15, ease: 'power2.inOut', delay: 0.2 }
+      )
+
+      gsap.to('.blueprint-rotate', {
+        rotation: 360,
+        transformOrigin: 'center',
+        duration: 60,
+        repeat: -1,
+        ease: 'none'
+      })
+
+      // Mouse interactive depth effect (parallax)
+      const handleMouseMove = (e: MouseEvent) => {
+        const { clientX, clientY } = e
+        const xPos = (clientX / window.innerWidth - 0.5) * 30
+        const yPos = (clientY / window.innerHeight - 0.5) * 30
+
+        gsap.to('.parallax-bg-svg', {
+          x: xPos,
+          y: yPos,
+          duration: 1.5,
+          ease: 'power2.out'
+        })
+      }
+
+      window.addEventListener('mousemove', handleMouseMove)
+      return () => window.removeEventListener('mousemove', handleMouseMove)
+    })()
   }, { scope: containerRef })
 
   return (

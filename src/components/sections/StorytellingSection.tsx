@@ -3,125 +3,128 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 export default function StorytellingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
 
   useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger)
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    // Master Timeline linked to scroll progress of the main section container
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=240%', // Scroll distance reduced
-        pin: true,
-        scrub: 1.2,
-        invalidateOnRefresh: true,
-      }
-    })
+      // Master Timeline linked to scroll progress of the main section container
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=240%', // Scroll distance reduced
+          pin: true,
+          scrub: 1.2,
+          invalidateOnRefresh: true,
+        }
+      })
 
-    // --- SCREEN 1 TO SCREEN 2 TRANSITION ---
-    // Fade out screen 1
-    tl.to('.screen-1-content', {
-      opacity: 0,
-      y: -60,
-      duration: 1,
-      ease: 'power2.inOut'
-    })
-    
-    // Fade in screen 2
-    tl.to('.screen-2', {
-      opacity: 1,
-      pointerEvents: 'all',
-      duration: 1,
-      ease: 'power2.inOut'
-    }, '-=0.5')
+      // --- SCREEN 1 TO SCREEN 2 TRANSITION ---
+      // Fade out screen 1
+      tl.to('.screen-1-content', {
+        opacity: 0,
+        y: -60,
+        duration: 1,
+        ease: 'power2.inOut'
+      })
+      
+      // Fade in screen 2
+      tl.to('.screen-2', {
+        opacity: 1,
+        pointerEvents: 'all',
+        duration: 1,
+        ease: 'power2.inOut'
+      }, '-=0.5')
+      
+      // Reveal Sergio Delgado picture mask (scale and opacity)
+      tl.to('.executive-mask', {
+        opacity: 1,
+        scale: 1,
+        duration: 1.2,
+        ease: 'power2.out'
+      }, '-=0.8')
 
-    // Reveal Sergio Delgado picture mask (scale and opacity)
-    tl.to('.executive-mask', {
-      opacity: 1,
-      scale: 1,
-      duration: 1.2,
-      ease: 'power2.out'
-    }, '-=0.8')
+      // Stagger text contents in screen 2
+      tl.from('.screen-2-text', {
+        opacity: 0,
+        x: 30,
+        stagger: 0.15,
+        duration: 1,
+        ease: 'power2.out'
+      }, '-=0.6')
 
-    // Stagger text contents in screen 2
-    tl.from('.screen-2-text', {
-      opacity: 0,
-      x: 30,
-      stagger: 0.15,
-      duration: 1,
-      ease: 'power2.out'
-    }, '-=0.6')
+      // Hold screen 2 state
+      tl.to({}, { duration: 0.8 })
 
-    // Hold screen 2 state
-    tl.to({}, { duration: 0.8 })
+      // --- SCREEN 2 TO SCREEN 3 TRANSITION ---
+      // Fade out screen 2
+      tl.to('.screen-2', {
+        opacity: 0,
+        y: -40,
+        pointerEvents: 'none',
+        duration: 1,
+        ease: 'power2.inOut'
+      })
 
-    // --- SCREEN 2 TO SCREEN 3 TRANSITION ---
-    // Fade out screen 2
-    tl.to('.screen-2', {
-      opacity: 0,
-      y: -40,
-      pointerEvents: 'none',
-      duration: 1,
-      ease: 'power2.inOut'
-    })
+      // Fade in screen 3
+      tl.to('.screen-3', {
+        opacity: 1,
+        pointerEvents: 'all',
+        duration: 1,
+        ease: 'power2.inOut'
+      }, '-=0.6')
 
-    // Fade in screen 3
-    tl.to('.screen-3', {
-      opacity: 1,
-      pointerEvents: 'all',
-      duration: 1,
-      ease: 'power2.inOut'
-    }, '-=0.6')
+      // Horizontal scrub for marquee is not needed since marquee will animate infinitely
+      // Stagger clients
+      tl.from('.client-logo-item', {
+        opacity: 0,
+        y: 40,
+        scale: 0.9,
+        stagger: 0.1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, '-=0.4')
 
-    // Horizontal scrub for marquee is not needed since marquee will animate infinitely
-    // Stagger clients
-    tl.from('.client-logo-item', {
-      opacity: 0,
-      y: 40,
-      scale: 0.9,
-      stagger: 0.1,
-      duration: 1.5,
-      ease: 'power2.out'
-    }, '-=0.4')
+      // Hold screen 3 state
+      tl.to({}, { duration: 1.5 })
 
-    // Hold screen 3 state
-    tl.to({}, { duration: 1.5 })
+      // --- SCREEN 3 TO SCREEN 4 TRANSITION ---
+      // Fade out screen 3
+      tl.to('.screen-3', {
+        opacity: 0,
+        pointerEvents: 'none',
+        duration: 1,
+        ease: 'power2.inOut'
+      })
 
-    // --- SCREEN 3 TO SCREEN 4 TRANSITION ---
-    // Fade out screen 3
-    tl.to('.screen-3', {
-      opacity: 0,
-      pointerEvents: 'none',
-      duration: 1,
-      ease: 'power2.inOut'
-    })
+      // Fade in screen 4
+      tl.to('.screen-4', {
+        opacity: 1,
+        pointerEvents: 'all',
+        duration: 1,
+        ease: 'power2.inOut'
+      }, '-=0.6')
 
-    // Fade in screen 4
-    tl.to('.screen-4', {
-      opacity: 1,
-      pointerEvents: 'all',
-      duration: 1,
-      ease: 'power2.inOut'
-    }, '-=0.6')
+      // Stagger characters reveal in Screen 4 text
+      tl.to('.char-span', {
+        opacity: 1,
+        y: 0,
+        stagger: 0.02,
+        duration: 1.5,
+        ease: 'power3.out'
+      }, '-=0.4')
 
-    // Stagger characters reveal in Screen 4 text
-    tl.to('.char-span', {
-      opacity: 1,
-      y: 0,
-      stagger: 0.02,
-      duration: 1.5,
-      ease: 'power3.out'
-    }, '-=0.4')
-
-    // Removed the final empty hold so that scrolling immediately unpins here.
-
+      // Removed the final empty hold so that scrolling immediately unpins here.
+    })()
   }, { scope: containerRef })
 
   const clients = [

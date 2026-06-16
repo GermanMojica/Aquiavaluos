@@ -3,11 +3,7 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { HardHat, Building, Home, UserCheck } from 'lucide-react'
-
-gsap.registerPlugin(ScrollTrigger)
 
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -16,55 +12,63 @@ export default function Sectors() {
   const cardsRef = useRef<HTMLDivElement[]>([])
 
   useGSAP(() => {
-    // Header entrance using direct ref (more efficient than querying selectors)
-    const headerEl = headerRef.current
-    if (headerEl) {
-      gsap.from(headerEl, {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 85%',
-          toggleActions: 'play pause resume pause'
-        }
-      })
-    }
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    // Batch animations for cards — reduces ScrollTrigger instances and improves scroll performance
-    const cards = gsap.utils.toArray('.sector-card') as Element[]
-    if (cards.length) {
-      ScrollTrigger.batch(cards, {
-        onEnter: batch => gsap.fromTo(batch, { opacity: 0, y: 40, scale: 0.97 }, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          stagger: 0.06,
+      // Header entrance using direct ref (more efficient than querying selectors)
+      const headerEl = headerRef.current
+      if (headerEl) {
+        gsap.from(headerEl, {
+          opacity: 0,
+          y: 20,
           duration: 0.6,
-          ease: 'back.out(1.1)'
-        }),
-        onEnterBack: batch => gsap.fromTo(batch, { opacity: 0, y: -20, scale: 0.98 }, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          stagger: 0.06,
-          duration: 0.5,
-          ease: 'power2.out'
-        }),
-        start: 'top 75%',
-        once: false
-      })
-    }
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 85%',
+            toggleActions: 'play pause resume pause'
+          }
+        })
+      }
 
-    // Hover effects (passive listeners)
-    const cardElements = cardsRef.current.filter(Boolean)
-    cardElements.forEach(card => {
-      const onEnter = () => gsap.to(card, { y: -8, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
-      const onLeave = () => gsap.to(card, { y: 0, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
-      card.addEventListener('mouseenter', onEnter, { passive: true })
-      card.addEventListener('mouseleave', onLeave, { passive: true })
-    })
+      // Batch animations for cards — reduces ScrollTrigger instances and improves scroll performance
+      const cards = gsap.utils.toArray('.sector-card') as Element[]
+      if (cards.length) {
+        ScrollTrigger.batch(cards, {
+          onEnter: batch => gsap.fromTo(batch, { opacity: 0, y: 40, scale: 0.97 }, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.06,
+            duration: 0.6,
+            ease: 'back.out(1.1)'
+          }),
+          onEnterBack: batch => gsap.fromTo(batch, { opacity: 0, y: -20, scale: 0.98 }, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            stagger: 0.06,
+            duration: 0.5,
+            ease: 'power2.out'
+          }),
+          start: 'top 75%',
+          once: false
+        })
+      }
+
+      // Hover effects (passive listeners)
+      const cardElements = cardsRef.current.filter(Boolean)
+      cardElements.forEach(card => {
+        const onEnter = () => gsap.to(card, { y: -8, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
+        const onLeave = () => gsap.to(card, { y: 0, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
+        card.addEventListener('mouseenter', onEnter, { passive: true })
+        card.addEventListener('mouseleave', onLeave, { passive: true })
+      })
+    })()
   }, { scope: containerRef })
 
   const sectors = [
