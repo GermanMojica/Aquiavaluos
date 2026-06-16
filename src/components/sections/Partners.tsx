@@ -78,8 +78,34 @@ export default function Partners() {
           <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6" />
         </div>
 
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:hidden justify-items-center gap-6 md:gap-8 w-full max-w-3xl px-6">
+          {guilds.map((guild, idx) => (
+            <div
+              key={idx}
+              className={`relative h-14 w-28 md:h-20 md:w-40 flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer group ${
+                idx === guilds.length - 1 ? 'col-span-2 md:col-span-3 justify-self-center' : ''
+              }`}
+            >
+              {/* Decoración en esquinas estilo plano */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+              <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+
+              <Image 
+                src={guild.src} 
+                alt={guild.alt}
+                width={guild.width}
+                height={guild.height}
+                style={{ height: 'auto' }}
+                className="object-contain max-h-full max-w-full drop-shadow-md"
+              />
+            </div>
+          ))}
+        </div>
+
         {/* Carrusel / Marquee Animado */}
-        <div className="relative w-full overflow-hidden flex items-center h-24 md:h-32 mask-image-fade">
+        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-24 md:h-32 mask-image-fade">
           <div 
             ref={trackRef}
             className="flex items-center w-max"

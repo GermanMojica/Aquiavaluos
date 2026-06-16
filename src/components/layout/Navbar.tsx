@@ -35,7 +35,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
           : 'py-6 bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between gap-6">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group relative z-50">
           <div 
@@ -78,7 +78,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-10 xl:gap-12">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -94,10 +94,10 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-6">
           <a
             href="tel:+573001234567"
-            className={`flex items-center gap-2 text-xs font-mono transition-colors hover:text-brand-secondary ${
+            className={`flex items-center gap-2 text-xs font-mono whitespace-nowrap transition-colors hover:text-brand-secondary ${
               scrolled ? 'text-white/80' : 'text-brand-primary dark:text-brand-primary'
             }`}
           >
@@ -106,7 +106,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
           </a>
           <button
             onClick={onOpenDrawer}
-            className="bg-brand-primary hover:bg-brand-primary-light dark:bg-brand-primary dark:hover:bg-brand-primary-light text-white font-mono text-xs px-5 py-3 tracking-wider transition-all cursor-pointer hover:shadow-lg"
+            className="bg-brand-primary hover:bg-brand-primary-light dark:bg-brand-primary dark:hover:bg-brand-primary-light text-white font-mono text-xs px-5 py-3 tracking-wider whitespace-nowrap transition-all cursor-pointer hover:shadow-lg"
           >
             SOLICITAR AVALÚO
           </button>
@@ -115,7 +115,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`md:hidden p-2 hover:text-brand-secondary relative z-50 ${
+          className={`lg:hidden p-2 hover:text-brand-secondary relative z-50 ${
             scrolled ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
           }`}
           aria-label="Menú de navegación"
@@ -126,7 +126,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
 
       {/* Mobile Menu Panel */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black z-45 md:hidden flex flex-col p-6 pt-24">
+        <div className="fixed inset-0 bg-black z-45 lg:hidden flex flex-col p-6 pt-24">
           {/* Background Technical Grid */}
           <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-10 pointer-events-none" />
           
@@ -144,7 +144,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
             <div className="flex flex-col gap-4 mt-6">
               <a
                 href="tel:+573001234567"
-                className="flex items-center gap-2 text-sm font-mono text-white/80"
+                className="flex items-center gap-2 text-sm font-mono text-white/80 whitespace-nowrap"
               >
                 <Phone className="w-4 h-4 text-brand-secondary" />
                 <span>+57 300 123 4567</span>

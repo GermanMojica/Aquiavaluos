@@ -260,11 +260,13 @@ export default function StorytellingSection() {
           </div>
 
           <div className="w-full relative py-4 sm:py-8">
-            <div className="clients-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-6xl mx-auto">
+            <div className="clients-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-items-center gap-3 sm:gap-6 max-w-6xl mx-auto">
               {clients.map((client, idx) => (
                 <div
                   key={idx}
-                  className="client-logo-item relative flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm"
+                  className={`client-logo-item relative flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm ${
+                    idx === clients.length - 1 ? 'col-span-2 md:col-span-3 lg:col-span-1 justify-self-center' : ''
+                  }`}
                 >
                   <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/30" />
                   <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/30" />

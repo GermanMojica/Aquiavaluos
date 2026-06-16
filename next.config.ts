@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     // keep edge runtime and modern builds enabled where supported; safe opt-ins
     // Note: check Next.js docs for your exact version if flags differ
     optimizeCss: true,
+  },
+  turbopack: {
+    root: __dirname,
   }
 };
 
