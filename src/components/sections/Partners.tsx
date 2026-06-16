@@ -24,31 +24,31 @@ export default function Partners() {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger)
 
-    // Animación de aparición (Fade Up)
+    // Optimized header animation
     gsap.from('.partners-header', {
-      y: 30,
+      y: 20,
       opacity: 0,
-      duration: 0.8,
+      duration: 0.6,
       ease: 'power2.out',
       scrollTrigger: {
         trigger: containerRef.current,
-        start: 'top 80%',
+        start: 'top 85%',
         toggleActions: 'play none none none'
       }
     })
 
-    // Marquee infinito con GSAP
+    // Marquee infinito — ultra-optimized
     if (trackRef.current) {
       const tl = gsap.to(trackRef.current, {
         xPercent: -25,
-        duration: 25,
+        duration: 30,
         ease: 'none',
         repeat: -1,
       })
 
       // Pausar animación al hacer hover
-      trackRef.current.addEventListener('mouseenter', () => tl.pause())
-      trackRef.current.addEventListener('mouseleave', () => tl.play())
+      trackRef.current.addEventListener('mouseenter', () => tl.pause(), { passive: true })
+      trackRef.current.addEventListener('mouseleave', () => tl.play(), { passive: true })
     }
   }, { scope: containerRef })
 

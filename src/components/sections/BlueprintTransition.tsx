@@ -46,79 +46,79 @@ export default function BlueprintTransition() {
     const mainPaths = initPaths('.bp-line', el)
     const detPaths  = initPaths('.bp-det', el)
 
-    /* Master pinned timeline — scrub linked to scroll */
+    /* Master pinned timeline — optimized for performance */
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: el,
         pin: true,
-        scrub: 0.6,
+        scrub: 1,
         start: 'top top',
-        end: '+=150%',
+        end: '+=100%',
         anticipatePin: 1,
         invalidateOnRefresh: true,
       }
     })
 
-    /* ─── Phase 1: Coords + frame corners + badges (0→15%) ─── */
+    /* ─── Phase 1: Coords + frame corners + badges (0→20%) ─── */
     tl.fromTo(el.querySelectorAll('.bp-coord'), 
       { opacity: 0, y: 6 },
-      { opacity: 1, y: 0, stagger: 0.05, duration: 0.4, ease: 'none' }
+      { opacity: 1, y: 0, stagger: 0.04, duration: 0.3, ease: 'none' }
     )
     .fromTo(el.querySelectorAll('.bp-fc'),
       { opacity: 0 },
-      { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
-      '-=0.2'
+      { opacity: 1, stagger: 0.02, duration: 0.15, ease: 'none' },
+      '-=0.15'
     )
     .fromTo(el.querySelectorAll('.bp-badge'),
-      { opacity: 0, y: 12, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, stagger: 0.08, duration: 0.4, ease: 'power2.out' },
-      '-=0.1'
+      { opacity: 0, y: 8, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, stagger: 0.06, duration: 0.3, ease: 'power2.out' },
+      '-=0.08'
     )
 
-    /* ─── Phase 2: SVG walls draw (10→45%) ─── */
+    /* ─── Phase 2: SVG walls draw (20→55%) — Simplified ─── */
     .to(mainPaths, {
-      strokeDashoffset: 0, stagger: 0.03, duration: 1.6, ease: 'none'
+      strokeDashoffset: 0, stagger: 0.02, duration: 1.2, ease: 'none'
     })
     .to(detPaths, {
-      strokeDashoffset: 0, stagger: 0.02, duration: 1, ease: 'none'
-    }, '-=0.8')
+      strokeDashoffset: 0, stagger: 0.01, duration: 0.7, ease: 'none'
+    }, '-=0.6')
     .fromTo(el.querySelectorAll('.bp-label'),
       { opacity: 0 },
-      { opacity: 1, stagger: 0.03, duration: 0.3, ease: 'none' },
-      '-=0.4'
+      { opacity: 1, stagger: 0.02, duration: 0.2, ease: 'none' },
+      '-=0.3'
     )
 
-    /* ─── Phase 3: Dimensions (45→60%) ─── */
+    /* ─── Phase 3: Dimensions (55→70%) ─── */
     .fromTo(el.querySelectorAll('.bp-dim'),
       { opacity: 0, scaleX: 0 },
-      { opacity: 1, scaleX: 1, transformOrigin: 'left center', stagger: 0.05, duration: 0.4, ease: 'none' }
+      { opacity: 1, scaleX: 1, transformOrigin: 'left center', stagger: 0.03, duration: 0.3, ease: 'none' }
     )
     .fromTo(el.querySelectorAll('.bp-meas'),
       { opacity: 0 },
-      { opacity: 1, stagger: 0.04, duration: 0.25, ease: 'none' },
-      '-=0.15'
-    )
-
-    /* ─── Phase 4: Text (60→85%) ─── */
-    .fromTo(el.querySelector('.bp-title'),
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.5, ease: 'none' }
-    )
-    .fromTo(el.querySelector('.bp-sub'),
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.35, ease: 'none' },
-      '-=0.15'
-    )
-    .fromTo(el.querySelector('.bp-scanl'),
-      { scaleX: 0, opacity: 0 },
-      { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.3, ease: 'none' },
+      { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
       '-=0.1'
     )
 
-    /* ─── Phase 5: Fade out (85→100%) ─── */
+    /* ─── Phase 4: Text (70→85%) ─── */
+    .fromTo(el.querySelector('.bp-title'),
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.4, ease: 'none' }
+    )
+    .fromTo(el.querySelector('.bp-sub'),
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.3, ease: 'none' },
+      '-=0.1'
+    )
+    .fromTo(el.querySelector('.bp-scanl'),
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.25, ease: 'none' },
+      '-=0.08'
+    )
+
+    /* ─── Phase 5: Smooth fade out (85→100%) ─── */
     .to(el.querySelector('.bp-wrap'), {
-      opacity: 0, duration: 0.6, ease: 'none'
-    }, '+=0.15')
+      opacity: 0, duration: 0.5, ease: 'power1.in'
+    }, '+=0.1')
 
   }, { scope: sectionRef })
 

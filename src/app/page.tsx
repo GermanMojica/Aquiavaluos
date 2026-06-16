@@ -7,7 +7,6 @@ import Hero from '@/components/sections/Hero'
 import StorytellingSection from '@/components/sections/StorytellingSection'
 import BlueprintTransition from '@/components/sections/BlueprintTransition'
 import Sectors from '@/components/sections/Sectors'
-import ProcessTimeline from '@/components/sections/ProcessTimeline'
 import Partners from '@/components/sections/Partners'
 import CTA from '@/components/sections/CTA'
 import Footer from '@/components/layout/Footer'
@@ -52,8 +51,7 @@ export default function Home() {
         {/* 4. Sectores que Atendemos — A quién servimos */}
         <Sectors />
 
-        {/* 5. Nuestro Proceso Técnico — Timeline paso a paso */}
-        <ProcessTimeline />
+        {/* 5. Nuestro Proceso Técnico — (sección eliminada por rendimiento) */}
 
         {/* 6. Aliados y Gremios */}
         <Partners />
