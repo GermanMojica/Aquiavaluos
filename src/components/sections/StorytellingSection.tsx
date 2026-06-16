@@ -128,11 +128,41 @@ export default function StorytellingSection() {
   }, { scope: containerRef })
 
   const clients = [
-    { src: '/images/clients/GRUPO-_SURA.png', alt: 'Grupo Sura', w: 160, h: 60 },
-    { src: '/images/clients/camara.webp', alt: 'Cámara de Comercio', w: 150, h: 55 },
-    { src: '/images/clients/dian.webp', alt: 'DIAN', w: 120, h: 50 },
-    { src: '/images/clients/alcaldia.webp', alt: 'Alcaldía', w: 140, h: 55 },
-    { src: '/images/clients/afinia.webp', alt: 'Afinia', w: 140, h: 55 },
+    {
+      src: '/images/clients/GRUPO-_SURA.png',
+      alt: 'Grupo Sura',
+      w: 3509,
+      h: 1411,
+      logoClass: 'max-h-[42px] max-w-[150px] sm:max-h-[48px] sm:max-w-[170px]',
+    },
+    {
+      src: '/images/clients/camara.webp',
+      alt: 'Cámara de Comercio',
+      w: 1024,
+      h: 415,
+      logoClass: 'max-h-[42px] max-w-[150px] sm:max-h-[48px] sm:max-w-[168px]',
+    },
+    {
+      src: '/images/clients/dian.webp',
+      alt: 'DIAN',
+      w: 194,
+      h: 51,
+      logoClass: 'max-h-[38px] max-w-[136px] sm:max-h-[44px] sm:max-w-[156px]',
+    },
+    {
+      src: '/images/clients/alcaldia.webp',
+      alt: 'Alcaldía',
+      w: 409,
+      h: 123,
+      logoClass: 'max-h-[40px] max-w-[142px] sm:max-h-[46px] sm:max-w-[164px]',
+    },
+    {
+      src: '/images/clients/afinia.webp',
+      alt: 'Afinia',
+      w: 512,
+      h: 323,
+      logoClass: 'max-h-[46px] max-w-[126px] sm:max-h-[52px] sm:max-w-[142px]',
+    },
   ]
 
   const finalMessage = "Hoy ayudamos a empresas, entidades financieras y propietarios a tomar decisiones respaldadas por información confiable."
@@ -247,7 +277,7 @@ export default function StorytellingSection() {
 
         {/* ----------------- PANTALLA 3 (CLIENTES) ----------------- */}
         <div className="screen-3 absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 opacity-0 pointer-events-none z-30 overflow-hidden">
-          <div className="max-w-6xl w-full mx-auto text-left mb-6 sm:mb-10 shrink-0">
+          <div className="max-w-6xl w-full mx-auto text-left mb-4 sm:mb-6 md:mb-7 shrink-0">
             <span className="text-[10px] sm:text-xs font-mono text-brand-secondary tracking-widest uppercase block">
               [ NUESTROS CLIENTES ]
             </span>
@@ -259,13 +289,15 @@ export default function StorytellingSection() {
             </p>
           </div>
 
-          <div className="w-full relative py-4 sm:py-8">
-            <div className="clients-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-items-center gap-3 sm:gap-6 max-w-6xl mx-auto">
+          <div className="w-full relative py-2 sm:py-4">
+            <div className="clients-grid grid grid-cols-2 md:grid-cols-6 xl:grid-cols-5 items-center justify-items-center gap-x-3 gap-y-3 sm:gap-x-5 sm:gap-y-4 md:gap-x-5 md:gap-y-3 max-w-3xl lg:max-w-4xl xl:max-w-6xl mx-auto">
               {clients.map((client, idx) => (
                 <div
                   key={idx}
-                  className={`client-logo-item relative flex items-center justify-center py-4 sm:py-8 px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm ${
-                    idx === clients.length - 1 ? 'col-span-2 md:col-span-3 lg:col-span-1 justify-self-center' : ''
+                  className={`client-logo-item relative h-[92px] sm:h-[104px] md:h-[110px] w-full max-w-[220px] md:col-span-2 xl:col-span-1 flex items-center justify-center px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm ${
+                    idx === clients.length - 1 ? 'col-span-2 justify-self-center' : ''
+                  } ${
+                    idx === 3 ? 'md:col-start-2 xl:col-start-auto' : ''
                   }`}
                 >
                   <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/30" />
@@ -278,15 +310,16 @@ export default function StorytellingSection() {
                     alt={client.alt}
                     width={client.w}
                     height={client.h}
-                    style={{ height: 'auto' }}
-                    className="object-contain max-h-8 sm:max-h-12 max-w-full opacity-80"
+                    sizes="(max-width: 767px) 220px, (max-width: 1279px) 220px, 180px"
+                    style={{ width: 'auto', height: 'auto' }}
+                    className={`object-contain opacity-80 ${client.logoClass}`}
                   />
                 </div>
               ))}
             </div>
             
             {/* Stats strip inline */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-brand-primary/10 pt-10 mt-12 max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-6 border-t border-brand-primary/10 pt-6 md:pt-8 mt-7 md:mt-8 max-w-6xl mx-auto">
               {[
                 { label: 'Avalúos realizados', target: '5000+' },
                 { label: 'Entidades financieras', target: '40+' },
