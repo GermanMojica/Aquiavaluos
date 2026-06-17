@@ -135,17 +135,17 @@ export default function Partners() {
         </div>
 
         {/* Carrusel / Marquee Animado */}
-        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-24 md:h-32 mask-image-fade">
+        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-32 md:h-40 mask-image-fade">
           <div 
             ref={trackRef}
             className="flex items-center w-max"
           >
             {[...Array(4)].map((_, setIdx) => (
-              <div key={setIdx} className="flex items-center gap-10 md:gap-24 px-4 md:px-8">
+              <div key={setIdx} className="flex items-center gap-12 md:gap-28 px-4 md:px-8">
                 {guilds.map((guild, idx) => (
                   <div 
                     key={`${setIdx}-${idx}`} 
-                    className="relative h-14 w-28 md:h-20 md:w-40 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
+                    className="relative h-20 w-36 md:h-28 md:w-52 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
                   >
                     {/* Decoración en esquinas estilo plano */}
                     <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
