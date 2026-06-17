@@ -148,12 +148,12 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
 
           {/* Action Buttons */}
           <div
-            className="flex flex-wrap"
+            className="hero-btn flex flex-wrap pt-4"
             style={{ gap: '16px' }}
           >
             <button
               onClick={onOpenDrawer}
-              className="hero-btn justify-center bg-brand-primary hover:bg-brand-secondary text-white font-mono text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider flex items-center gap-2 cursor-pointer transition-all shadow-md"
+              className="justify-center bg-brand-primary hover:bg-brand-secondary text-white font-mono text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider flex items-center gap-2 cursor-pointer transition-all shadow-md"
               style={{ minWidth: '220px' }}
             >
               <span className="font-bold">SOLICITAR AVALÚO</span>
@@ -161,7 +161,7 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
             </button>
             <a
               href="tel:+573001234567"
-              className="hero-btn justify-center flex items-center bg-white border-2 border-brand-primary hover:bg-brand-primary text-brand-primary hover:text-white font-mono font-bold text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider transition-colors"
+              className="justify-center flex items-center bg-white border-2 border-brand-primary hover:bg-brand-primary text-brand-primary hover:text-white font-mono font-bold text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider transition-colors"
               style={{ minWidth: '220px' }}
             >
               HABLAR CON UN EXPERTO
