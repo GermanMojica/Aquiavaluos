@@ -23,15 +23,16 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
   const navLinks = [
     { name: 'Quiénes Somos', href: '#quienes-somos' },
     { name: 'Servicios', href: '#servicios' },
-    { name: 'Sectores', href: '#sectores' },
-    { name: 'Proceso', href: '#proceso' }
+    { name: 'Sectores', href: '#sectores' }
   ]
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? 'py-3 bg-black/95 backdrop-blur-md border-b border-white/10 shadow-sm'
+        mobileMenuOpen
+          ? 'py-3 bg-black border-transparent'
+          : scrolled
+          ? 'py-3 bg-white/95 backdrop-blur-md border-b border-brand-primary/10 shadow-sm'
           : 'py-6 bg-transparent border-b border-transparent'
       }`}
     >
@@ -40,13 +41,13 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         <a href="#" className="flex items-center gap-2 group relative z-50">
           <div 
             className={`relative flex items-center transition-all duration-500 ease-in-out ${
-              scrolled ? 'w-10 h-10' : 'w-44 h-10'
+              scrolled || mobileMenuOpen ? 'w-10 h-10' : 'w-44 h-10'
             }`}
           >
-            {/* Full Logo - Visible when NOT scrolled */}
+            {/* Full Logo - Visible when NOT scrolled and menu closed */}
             <div 
               className={`absolute inset-0 transition-all duration-500 ease-in-out origin-left ${
-                scrolled ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
+                scrolled || mobileMenuOpen ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'
               }`}
             >
               <Image
@@ -59,10 +60,10 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
               />
             </div>
 
-            {/* Icon Logo - Visible when SCROLLED */}
+            {/* Icon Logo - Visible when SCROLLED or menu open */}
             <div 
               className={`absolute inset-0 transition-all duration-500 ease-in-out origin-left ${
-                scrolled ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'
+                scrolled || mobileMenuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'
               }`}
             >
               <Image
@@ -84,7 +85,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
               key={link.name}
               href={link.href}
               className={`text-xs font-mono transition-colors py-2 tracking-wider relative group hover:text-brand-secondary ${
-                scrolled ? 'text-white/80' : 'text-brand-primary/70 dark:text-brand-primary/70'
+                scrolled ? 'text-brand-primary' : 'text-brand-primary/70 dark:text-brand-primary/70'
               }`}
             >
               {link.name}
@@ -98,7 +99,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
           <a
             href="tel:+573001234567"
             className={`flex items-center gap-2 text-xs font-mono whitespace-nowrap transition-colors hover:text-brand-secondary ${
-              scrolled ? 'text-white/80' : 'text-brand-primary dark:text-brand-primary'
+              scrolled ? 'text-brand-primary' : 'text-brand-primary dark:text-brand-primary'
             }`}
           >
             <Phone className="w-4 h-4 text-brand-secondary" />
@@ -116,7 +117,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className={`lg:hidden p-2 hover:text-brand-secondary relative z-50 ${
-            scrolled || mobileMenuOpen ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
+            mobileMenuOpen ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
           }`}
           aria-label="Menú de navegación"
         >
@@ -125,43 +126,45 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
       </div>
 
       {/* Mobile Menu Panel */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black z-[45] lg:hidden flex flex-col p-6 pt-24">
-          {/* Background Technical Grid */}
-          <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-10 pointer-events-none" />
-          
-          <div className="flex flex-col gap-6 relative z-10">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-lg font-bold font-mono text-white border-b border-white/10 pb-3 hover:text-brand-secondary transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
-            <div className="flex flex-col gap-4 mt-6">
-              <a
-                href="tel:+573001234567"
-                className="flex items-center gap-2 text-sm font-mono text-white/80 whitespace-nowrap"
-              >
-                <Phone className="w-4 h-4 text-brand-secondary" />
-                <span>+57 300 123 4567</span>
-              </a>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  onOpenDrawer()
-                }}
-                className="w-full bg-brand-secondary text-white font-mono text-sm py-4 tracking-wider transition-all"
-              >
-                SOLICITAR AVALÚO
-              </button>
-            </div>
+      <div 
+        className={`fixed inset-0 bg-black z-[45] lg:hidden flex flex-col p-6 pt-24 transition-all duration-300 ease-in-out ${
+          mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
+        }`}
+      >
+        {/* Background Technical Grid */}
+        <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-10 pointer-events-none" />
+        
+        <div className="flex flex-col gap-6 relative z-10">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-lg font-bold font-mono text-white border-b border-white/10 pb-3 hover:text-brand-secondary transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+          <div className="flex flex-col gap-4 mt-6">
+            <a
+              href="tel:+573001234567"
+              className="flex items-center gap-2 text-sm font-mono text-white/80 whitespace-nowrap"
+            >
+              <Phone className="w-4 h-4 text-brand-secondary" />
+              <span>+57 300 123 4567</span>
+            </a>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false)
+                onOpenDrawer()
+              }}
+              className="w-full bg-brand-secondary text-white font-mono text-sm py-4 tracking-wider transition-all"
+            >
+              SOLICITAR AVALÚO
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </header>
   )
 }
