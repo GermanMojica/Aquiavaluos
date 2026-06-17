@@ -142,7 +142,10 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
           </p>
 
           {/* Action Buttons */}
-          <div className="hero-btn flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 px-4 sm:px-0 w-full sm:w-auto">
+          <div
+            className="hero-btn flex flex-col sm:flex-row pt-4 px-4 sm:px-0 w-full sm:w-auto"
+            style={{ gap: '16px' }}
+          >
             <button
               onClick={onOpenDrawer}
               className="w-full sm:w-auto justify-center bg-brand-primary hover:bg-brand-secondary text-white font-mono text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider flex items-center gap-2 cursor-pointer transition-all shadow-md"
