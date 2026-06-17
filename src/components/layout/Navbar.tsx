@@ -116,7 +116,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className={`lg:hidden p-2 hover:text-brand-secondary relative z-50 ${
-            scrolled ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
+            scrolled || mobileMenuOpen ? 'text-white' : 'text-brand-primary dark:text-brand-primary'
           }`}
           aria-label="Menú de navegación"
         >
@@ -126,7 +126,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
 
       {/* Mobile Menu Panel */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black z-45 lg:hidden flex flex-col p-6 pt-24">
+        <div className="fixed inset-0 bg-black z-[45] lg:hidden flex flex-col p-6 pt-24">
           {/* Background Technical Grid */}
           <div className="absolute inset-0 bg-cad-grid bg-cad-grid-fine opacity-10 pointer-events-none" />
           

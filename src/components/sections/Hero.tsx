@@ -119,43 +119,50 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.06)_0%,transparent_70%)] pointer-events-none z-0" />
 
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-24 sm:pt-32 lg:pt-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full pt-20 sm:pt-24 lg:pt-0">
         {/* Content Column */}
-        <div className="lg:col-span-8 space-y-6 sm:space-y-8 text-left">
+        <div 
+          className="flex flex-col justify-center text-left w-full max-w-[800px] xl:max-w-[950px]"
+          style={{ gap: 'clamp(2rem, 5vh, 4rem)' }}
+        >
+          {/* Header text group */}
+          <div className="flex flex-col" style={{ gap: 'clamp(1rem, 2.5vh, 2rem)' }}>
+            {/* Heading */}
+            <h1 className="font-black tracking-tight leading-[1.1] sm:leading-[1.1] font-mono text-brand-primary text-[clamp(2.5rem,6vw+1rem,5rem)]">
+              {['Avalúos', 'certificados', 'con', 'respaldo', 'técnico,', 'normativo', 'y', 'experiencia.'].map((word, idx) => (
+                <span key={idx} className="hero-title-word inline-block mr-3">
+                  {word === 'técnico,' || word === 'normativo' ? (
+                    <span className="text-brand-secondary">{word}</span>
+                  ) : (
+                    word
+                  )}
+                </span>
+              ))}
+            </h1>
 
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] sm:leading-[1.1] max-w-2xl font-mono text-brand-primary">
-            {['Avalúos', 'certificados', 'con', 'respaldo', 'técnico,', 'normativo', 'y', 'experiencia.'].map((word, idx) => (
-              <span key={idx} className="hero-title-word inline-block mr-3">
-                {word === 'técnico,' || word === 'normativo' ? (
-                  <span className="text-brand-secondary">{word}</span>
-                ) : (
-                  word
-                )}
-              </span>
-            ))}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="hero-subtitle text-base sm:text-lg lg:text-xl text-brand-gray-cool max-w-xl leading-relaxed font-medium">
-            Más de 15 años de trayectoria en el mercado inmobiliario, ofreciendo dictámenes periciales precisos para la toma de decisiones estratégicas.
-          </p>
+            {/* Subtitle */}
+            <p className="hero-subtitle text-brand-gray-cool max-w-[650px] leading-relaxed font-medium text-[clamp(1rem,1.5vw+0.5rem,1.25rem)]">
+              Más de 15 años de trayectoria en el mercado inmobiliario, ofreciendo dictámenes periciales precisos para la toma de decisiones estratégicas.
+            </p>
+          </div>
 
           {/* Action Buttons */}
           <div
-            className="hero-btn flex flex-col sm:flex-row pt-4 px-4 sm:px-0 w-full sm:w-auto"
+            className="flex flex-wrap"
             style={{ gap: '16px' }}
           >
             <button
               onClick={onOpenDrawer}
-              className="w-full sm:w-auto justify-center bg-brand-primary hover:bg-brand-secondary text-white font-mono text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider flex items-center gap-2 cursor-pointer transition-all shadow-md"
+              className="hero-btn justify-center bg-brand-primary hover:bg-brand-secondary text-white font-mono text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider flex items-center gap-2 cursor-pointer transition-all shadow-md"
+              style={{ minWidth: '220px' }}
             >
               <span className="font-bold">SOLICITAR AVALÚO</span>
               <ArrowUpRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
             <a
               href="tel:+573001234567"
-              className="w-full sm:w-auto justify-center flex items-center bg-white border-2 border-brand-primary hover:bg-brand-primary text-brand-primary hover:text-white font-mono font-bold text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider transition-colors"
+              className="hero-btn justify-center flex items-center bg-white border-2 border-brand-primary hover:bg-brand-primary text-brand-primary hover:text-white font-mono font-bold text-sm px-8 sm:px-10 py-4 sm:py-5 tracking-wider transition-colors"
+              style={{ minWidth: '220px' }}
             >
               HABLAR CON UN EXPERTO
             </a>

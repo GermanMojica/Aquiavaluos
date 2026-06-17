@@ -203,17 +203,17 @@ export default function StorytellingSection() {
           <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-8 md:gap-12 items-center">
             {/* Left Column: Image Reveal */}
             <div className="md:col-span-5 flex justify-center">
-              <div className="relative w-full aspect-square max-w-[200px] sm:max-w-[280px] md:max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md">
+              <div className="relative w-full max-w-[200px] sm:max-w-[280px] md:max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md flex justify-center items-center">
                 {/* Fine blueprint details */}
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
-                <div className="executive-mask absolute inset-0 opacity-0 scale-95 transition-none">
+                <div className="executive-mask opacity-0 scale-95 transition-none w-full h-auto">
                   <Image
-                    src="/images/founder_portrait.png"
+                    src="/images/Arquiavaluoss-1-1-1.png"
                     alt="Sergio Delgado - Gerente General de ARQUIAVALÚOS"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 380px"
-                    className="object-cover"
+                    width={380}
+                    height={500}
+                    className="w-full h-auto object-contain"
                     priority
                   />
                 </div>
