@@ -1,15 +1,92 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
 import { HardHat, Building, Home, UserCheck } from 'lucide-react'
 
+const sectors = [
+  {
+    name: 'Propietarios',
+    key: 'PART',
+    icon: UserCheck,
+    image: '/images/sectors/residential.png',
+    detail: 'Si eres propietario, tomar decisiones sobre tu inmueble sin un avalúo certificado puede costarte mucho más de lo que crees. Nuestros dictámenes periciales te dan la seguridad técnica y legal que necesitas.',
+    bullets: [
+      'Avalúo comercial para compraventa de inmuebles',
+      'Valoración para procesos de sucesión y herencia',
+      'Avalúo para declaración de renta y patrimonio',
+      'Dictamen pericial para procesos legales',
+    ],
+    stats: [
+      { value: '5.000+', label: 'Avalúos realizados' },
+      { value: '15+', label: 'Años de experiencia' },
+    ],
+  },
+  {
+    name: 'Constructoras',
+    key: 'CONST',
+    icon: HardHat,
+    image: '/images/sectors/construction.png',
+    detail: 'El éxito de un proyecto depende de cifras reales desde el inicio. Proveemos análisis técnicos rigurosos desde la adquisición del terreno hasta la comercialización.',
+    bullets: [
+      'Estudios de factibilidad inmobiliaria y de mercado',
+      'Avalúos de lotes, terrenos y áreas brutas',
+      'Cálculo de plusvalías urbanas y rurales',
+      'Avalúos para créditos de construcción y preventas',
+    ],
+    stats: [
+      { value: '120+', label: 'Municipios cubiertos' },
+      { value: '40+', label: 'Entidades financieras' },
+    ],
+  },
+  {
+    name: 'Empresas Privadas',
+    key: 'CORP',
+    icon: Building,
+    image: '/images/sectors/corporate.png',
+    detail: 'Las empresas necesitan cifras confiables para sus estados financieros, fusiones y reestructuraciones. Nuestros avalúos cumplen estándares IVS y NIIF requeridos por auditores internacionales.',
+    bullets: [
+      'Valoración de activos fijos bajo NIIF / IFRS',
+      'Peritajes técnicos para seguros y reclamaciones',
+      'Avalúos para fusiones y adquisiciones (M&A)',
+      'Dictámenes para estados financieros auditados',
+    ],
+    stats: [
+      { value: 'NIIF', label: 'Estándar internacional' },
+      { value: 'IVS', label: 'Metodología aplicada' },
+    ],
+  },
+  {
+    name: 'Entidades Públicas',
+    key: 'GOB',
+    icon: Home,
+    image: '/images/sectors/government.png',
+    detail: 'El sector público exige transparencia, trazabilidad y cumplimiento normativo. Somos avaluadores certificados RAA/RNA con experiencia en valoraciones estatales y procesos de licitación.',
+    bullets: [
+      'Avalúos catastrales conforme normativa IGAC',
+      'Valoraciones para enajenación voluntaria',
+      'Avalúos para procesos de expropiación',
+      'Dictámenes para licitaciones y contratos públicos',
+    ],
+    stats: [
+      { value: 'RAA/RNA', label: 'Certificación oficial' },
+      { value: 'IGAC', label: 'Normativa cumplida' },
+    ],
+  },
+]
+
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
-  const gridRef = useRef<HTMLDivElement>(null)
-  const cardsRef = useRef<HTMLDivElement[]>([])
+  const [current, setCurrent] = useState(0)
+  const [paused, setPaused] = useState(false)
+
+  useEffect(() => {
+    if (paused) return
+    const t = setInterval(() => setCurrent(p => (p + 1) % sectors.length), 10000)
+    return () => clearInterval(t)
+  }, [paused])
 
   useGSAP(() => {
     ;(async () => {
@@ -18,194 +95,183 @@ export default function Sectors() {
       const ScrollTriggerModule = await import('gsap/ScrollTrigger')
       const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
       gsap.registerPlugin(ScrollTrigger)
-
-      // Header entrance using direct ref (more efficient than querying selectors)
-      const headerEl = headerRef.current
-      if (headerEl) {
-        gsap.from(headerEl, {
-          opacity: 0,
-          y: 20,
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 85%',
-            toggleActions: 'play pause resume pause'
-          }
-        })
-      }
-
-      // Batch animations for cards — reduces ScrollTrigger instances and improves scroll performance
-      const cards = gsap.utils.toArray('.sector-card') as Element[]
-      if (cards.length) {
-        ScrollTrigger.batch(cards, {
-          onEnter: batch => gsap.fromTo(batch, { opacity: 0, y: 40, scale: 0.97 }, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            stagger: 0.06,
-            duration: 0.6,
-            ease: 'back.out(1.1)'
-          }),
-          onEnterBack: batch => gsap.fromTo(batch, { opacity: 0, y: -20, scale: 0.98 }, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            stagger: 0.06,
-            duration: 0.5,
-            ease: 'power2.out'
-          }),
-          start: 'top 75%',
-          once: false
-        })
-      }
-
-      // Hover effects (passive listeners)
-      const cardElements = cardsRef.current.filter(Boolean)
-      cardElements.forEach(card => {
-        const onEnter = () => gsap.to(card, { y: -8, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
-        const onLeave = () => gsap.to(card, { y: 0, duration: 0.28, ease: 'power2.out', overwrite: 'auto' })
-        card.addEventListener('mouseenter', onEnter, { passive: true })
-        card.addEventListener('mouseleave', onLeave, { passive: true })
+      gsap.from(containerRef.current, {
+        opacity: 0, y: 30, duration: 0.7, ease: 'power2.out',
+        scrollTrigger: { trigger: containerRef.current, start: 'top 80%' }
       })
     })()
   }, { scope: containerRef })
 
-  const sectors = [
-    {
-      name: 'Propietarios',
-      key: 'PART',
-      desc: 'Valoraciones comerciales justas para compra-venta, sucesiones e impuestos.',
-      icon: UserCheck,
-      image: '/images/sectors/residential.png'
-    },
-    {
-      name: 'Constructoras',
-      key: 'CONST',
-      desc: 'Estudios de factibilidad inmobiliaria, plusvalías y avalúos de lotes.',
-      icon: HardHat,
-      image: '/images/sectors/construction.png'
-    },
-    {
-      name: 'Empresas Privadas',
-      key: 'CORP',
-      desc: 'Valoración técnica de activos bajo NIIF, peritajes para seguros y M&A.',
-      icon: Building,
-      image: '/images/sectors/corporate.png'
-    },
-    {
-      name: 'Entidades Públicas',
-      key: 'GOB',
-      desc: 'Avalúos catastrales y comerciales conforme normativas del IGAC.',
-      icon: Home,
-      image: '/images/sectors/government.png'
-    }
-  ]
+  const sector = sectors[current]
+  const Icon = sector.icon
 
   return (
     <section
       id="sectores"
       ref={containerRef}
-      className="pt-20 pb-32 sm:pb-48 lg:pb-64 bg-gradient-to-b from-brand-primary via-brand-primary to-brand-primary/95 text-white relative overflow-hidden"
+      className="relative overflow-hidden text-white"
     >
-      {/* Premium background elements */}
-      <div className="absolute inset-0 bg-cad-grid opacity-5 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(255,255,255,0.08)_0%,transparent_70%)] pointer-events-none" />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-brand-secondary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-secondary/5 rounded-full blur-3xl pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header with premium typography */}
-        <div ref={headerRef} className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="text-xs font-mono text-brand-secondary/80 tracking-widest uppercase block mb-4">
+      {/* All background images stacked — crossfade via opacity */}
+      <div className="absolute inset-0">
+        {sectors.map((s, i) => (
+          <motion.div
+            key={i}
+            className="absolute inset-0"
+            initial={{ opacity: i === 0 ? 1 : 0 }}
+            animate={{ opacity: i === current ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+          >
+            <Image
+              src={s.image}
+              alt={s.name}
+              fill
+              className="object-cover"
+              priority={i === 0}
+            />
+          </motion.div>
+        ))}
+        {/* Dark overlay — left heavier for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/70 to-brand-dark/40" />
+        <div className="absolute inset-0 bg-cad-grid opacity-[0.04] pointer-events-none" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10">
+
+        {/* Header */}
+        <div className="text-center">
+          <span className="text-xs font-mono text-brand-secondary/80 tracking-widest uppercase block mb-3">
             [ ALCANCE DEL SERVICIO ]
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-mono text-white mb-6 leading-tight">
-            Sectores que
-            <br />
-            <span className="text-brand-secondary">Atendemos</span>
+          <h2 className="text-4xl sm:text-5xl font-bold font-mono text-white leading-tight">
+            Sectores que <span className="text-brand-secondary">Atendemos</span>
           </h2>
-          <p className="text-base sm:text-lg text-white/70 leading-relaxed max-w-2xl mx-auto">
-            Soluciones técnicas especializadas para cada vertical industrial. Nuestros avalúos cumplen con normativas regulatorias de máxima exigencia.
-          </p>
         </div>
 
-        {/* Sectors Grid — Simplified centered */}
-        <div ref={gridRef} className="flex flex-wrap justify-center gap-6 w-full mb-5 sm:mb-8 lg:mb-10">
-          {sectors.map((sector, idx) => {
-            const IconComponent = sector.icon
-            return (
-              <div
-                key={idx}
-                ref={(el) => {
-                  if (el) cardsRef.current[idx] = el
-                }}
-                className="sector-card group relative overflow-hidden rounded-xl border border-white/12 bg-white/8 backdrop-blur-xl hover:border-brand-secondary/50 transition-all duration-500 ease-out shadow-xl hover:shadow-2xl w-full sm:w-1/2 md:w-1/3 lg:w-[280px] min-h-[320px] sm:min-h-[380px] flex-shrink-0"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                {/* Premium background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Image with premium overlay */}
-                <div className="relative h-40 w-full overflow-hidden bg-gradient-to-b from-brand-primary/30 to-brand-primary/60">
-                  <Image
-                    src={sector.image}
-                    alt={sector.name}
-                    fill
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
-                  
-                  {/* Dynamic overlay — premium gradient */}
-                  <div 
-                    className="card-image-overlay absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/60 to-transparent transition-opacity duration-500 ease-out"
-                    style={{ opacity: 0.4 }}
-                  />
-                  
-                  {/* CAD grid overlay for tech feel */}
-                  <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none mix-blend-overlay" />
-                  
-                  {/* Tech badge — elevated design */}
-                  <div className="absolute top-3 right-3 text-[8px] font-mono text-brand-secondary/90 bg-white/15 backdrop-blur-md px-2 py-1 tracking-widest rounded-lg border border-brand-secondary/20 group-hover:bg-brand-secondary/20 group-hover:text-white transition-all duration-300">
-                    [ {sector.key} ]
-                  </div>
-
-                  {/* Large Icon on image */}
-                  <div className="absolute bottom-3 left-3 w-12 h-12 border-2 border-white/30 bg-white/10 backdrop-blur-lg rounded-lg flex items-center justify-center text-white group-hover:bg-brand-secondary group-hover:border-brand-secondary group-hover:text-brand-primary transition-all duration-400 ease-out shadow-lg">
-                    <IconComponent className="w-6 h-6" />
-                  </div>
+        {/* Sector detail — animates on sector change */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start"
+          >
+            {/* Left column: text */}
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 border-2 border-brand-secondary/60 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-brand-secondary" />
                 </div>
-
-                {/* Content section — compact */}
-                <div className="card-hover-zone relative p-4 space-y-2 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-base font-bold font-mono text-white group-hover:text-brand-secondary transition-colors duration-300 ease-out tracking-wide">
-                      {sector.name}
-                    </h3>
-                    <div className="absolute top-4 right-4 w-0.5 h-6 bg-gradient-to-b from-brand-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
-                  </div>
-                  
-                  <p className="text-xs text-white/70 leading-snug group-hover:text-white/85 transition-colors duration-300 ease-out">
-                    {sector.desc}
-                  </p>
-
-                  {/* Interactive CTAs hint */}
-                  <div className="pt-2 flex items-center gap-1.5 text-[10px] font-mono text-brand-secondary/60 group-hover:text-brand-secondary opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300 ease-out">
-                    <span>Saber más</span>
-                    <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Bottom accent line — premium animation */}
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand-secondary via-brand-secondary/50 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left" />
-
-                {/* Corner accent — top right */}
-                <div className="absolute -top-0.5 -right-0.5 w-6 h-6 border-t border-r border-brand-secondary/30 group-hover:border-brand-secondary/70 transition-all duration-300 opacity-0 group-hover:opacity-100" />
+                <span className="text-xs font-mono text-brand-secondary/70 tracking-widest uppercase">
+                  [ {sector.key} ]
+                </span>
               </div>
-            )
-          })}
+
+              <h3 className="text-3xl sm:text-4xl font-black font-mono text-white leading-tight">
+                {sector.name}
+              </h3>
+
+              <p className="text-base text-white/80 leading-relaxed max-w-md">
+                {sector.detail}
+              </p>
+
+              <ul className="space-y-2.5 pt-1">
+                {sector.bullets.map((b, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 + i * 0.07, duration: 0.35 }}
+                    className="flex items-start gap-3"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-[7px] shrink-0" />
+                    <span className="text-sm text-white/75">{b}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right column: featured image panel + stats */}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden lg:flex flex-col gap-4"
+            >
+              {/* Image frame */}
+              <div className="relative h-64 xl:h-72 rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+                <Image src={sector.image} alt={sector.name} fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-transparent" />
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-secondary/60" />
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-brand-secondary/60" />
+                {/* Badge */}
+                <div className="absolute top-3 left-3 text-[9px] font-mono text-brand-secondary/90 bg-brand-dark/60 backdrop-blur-sm px-2 py-1 tracking-widest border border-brand-secondary/20 rounded">
+                  [ {sector.key} ]
+                </div>
+              </div>
+
+              {/* Stats row */}
+              <div className="grid grid-cols-2 gap-4">
+                {sector.stats.map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 + i * 0.1, duration: 0.4 }}
+                    className="relative border border-white/12 bg-white/8 backdrop-blur-md rounded-xl px-5 py-4 overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-brand-secondary/30" />
+                    <div className="text-2xl xl:text-3xl font-black font-mono text-white mb-1">
+                      {stat.value}
+                    </div>
+                    <div className="text-[11px] font-mono text-brand-secondary/70 tracking-wider uppercase">
+                      {stat.label}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation dots with progress bar */}
+        <div className="flex items-end gap-6 pt-2">
+          {sectors.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => { setCurrent(i); setPaused(true) }}
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
+              className="flex flex-col gap-1.5 items-start group"
+            >
+              <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
+                i === current ? 'text-brand-secondary' : 'text-white/35 group-hover:text-white/60'
+              }`}>
+                {s.name.toUpperCase()}
+              </span>
+              <div className="relative h-0.5 w-14 bg-white/15 rounded-full overflow-hidden">
+                {i === current && (
+                  <motion.div
+                    key={`bar-${current}`}
+                    className="absolute inset-y-0 left-0 bg-brand-secondary rounded-full"
+                    initial={{ width: '0%' }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: paused ? 0 : 10, ease: 'linear' }}
+                  />
+                )}
+                {i < current && (
+                  <div className="absolute inset-0 bg-brand-secondary/40 rounded-full" />
+                )}
+              </div>
+            </button>
+          ))}
         </div>
+
       </div>
     </section>
   )

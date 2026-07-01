@@ -1,12 +1,49 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
+import { ArrowUpRight } from 'lucide-react'
 
-export default function StorytellingSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const stickyRef = useRef<HTMLDivElement>(null)
+interface Props { onOpenDrawer: () => void }
+
+const clients = [
+  { src: '/images/clients/GRUPO-_SURA.png', alt: 'Grupo Sura',         w: 3509, h: 1411, cls: 'max-h-[48px] max-w-[160px]' },
+  { src: '/images/clients/camara.webp',      alt: 'Cámara de Comercio', w: 1024, h: 415,  cls: 'max-h-[48px] max-w-[160px]' },
+  { src: '/images/clients/dian.webp',        alt: 'DIAN',               w: 194,  h: 51,   cls: 'max-h-[44px] max-w-[140px]' },
+  { src: '/images/clients/alcaldia.webp',    alt: 'Alcaldía',           w: 409,  h: 123,  cls: 'max-h-[46px] max-w-[152px]' },
+  { src: '/images/clients/afinia.webp',      alt: 'Afinia',             w: 512,  h: 323,  cls: 'max-h-[50px] max-w-[130px]' },
+]
+
+const specialties = [
+  {
+    heading: 'Experiencia Profesional',
+    body: 'Más de 15 años liderando avalúos comerciales, industriales y rurales para las principales bancas del país.',
+    bullets: ['Avalúos comerciales e industriales', 'Valoración de infraestructura', 'Dictámenes para banca'],
+  },
+  {
+    heading: 'Especialización Técnica',
+    body: 'Avaluador certificado RAA/RNA. Experto en estándares IVS y metodologías NIIF para fondos internacionales.',
+    bullets: ['Certificación RAA / RNA oficial', 'Estándares IVS y NIIF', 'Consultor fondos inmobiliarios'],
+  },
+]
+
+export default function StorytellingSection({ onOpenDrawer }: Props) {
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const trackRef      = useRef<HTMLDivElement>(null)
+  // Keep hard refs so useEffect cleanup can kill them synchronously before React unmounts the DOM
+  const pinSTRef      = useRef<unknown>(null)
+  const marqueeRef    = useRef<unknown>(null)
+
+  // Synchronous cleanup — kills GSAP's pin spacer before React removes the DOM node
+  useEffect(() => {
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(pinSTRef.current as any)?.kill?.()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(marqueeRef.current as any)?.kill?.()
+    }
+  }, [])
 
   useGSAP(() => {
     ;(async () => {
@@ -16,203 +53,91 @@ export default function StorytellingSection() {
       const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
       gsap.registerPlugin(ScrollTrigger)
 
-      // Master Timeline linked to scroll progress of the main section container
+      // Entrance — plays once, fully, the moment the profile scrolls into view.
+      // Not tied to scroll position, so the profile is always shown complete,
+      // never caught half-faded-in.
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        }
+      })
+        .to('.executive-mask', { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' })
+        .from('.screen-2-text', { opacity: 0, x: 30, stagger: 0.15, duration: 0.8, ease: 'power2.out' }, '-=0.6')
+
+      // Pinned crossfade — only toggles between the profile (already fully
+      // shown) and the clients screen. Snap has just two valid resting states,
+      // so stopping mid-scroll always settles on a complete screen, never blank.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=240%', // Scroll distance reduced
+          end: '+=90%',
           pin: true,
+          anticipatePin: 1,
           scrub: 1.2,
           invalidateOnRefresh: true,
+          snap: {
+            snapTo: 'labels',
+            duration: { min: 0.3, max: 0.6 },
+            ease: 'power1.inOut',
+          },
         }
       })
+      pinSTRef.current = tl.scrollTrigger
 
-      // --- SCREEN 1 TO SCREEN 2 TRANSITION ---
-      // Fade out screen 1
-      tl.to('.screen-1-content', {
-        opacity: 0,
-        y: -60,
-        duration: 1,
-        ease: 'power2.inOut'
-      })
-      
-      // Fade in screen 2
-      tl.to('.screen-2', {
-        opacity: 1,
-        pointerEvents: 'all',
-        duration: 1,
-        ease: 'power2.inOut'
-      }, '-=0.5')
-      
-      // Reveal Sergio Delgado picture mask (scale and opacity)
-      tl.to('.executive-mask', {
-        opacity: 1,
-        scale: 1,
-        duration: 1.2,
-        ease: 'power2.out'
-      }, '-=0.8')
+      tl.addLabel('screen2Ready')
+      tl.to({}, { duration: 0.4 })
+      tl.to('.screen-2', { opacity: 0, y: -40, pointerEvents: 'none', duration: 1, ease: 'power2.inOut' })
+      tl.to('.screen-3', { opacity: 1, pointerEvents: 'all', duration: 1, ease: 'power2.inOut' }, '-=0.6')
+      tl.addLabel('screen3Ready')
+      tl.to({}, { duration: 0.4 })
 
-      // Stagger text contents in screen 2
-      tl.from('.screen-2-text', {
-        opacity: 0,
-        x: 30,
-        stagger: 0.15,
-        duration: 1,
-        ease: 'power2.out'
-      }, '-=0.6')
-
-      // Hold screen 2 state
-      tl.to({}, { duration: 0.8 })
-
-      // --- SCREEN 2 TO SCREEN 3 TRANSITION ---
-      // Fade out screen 2
-      tl.to('.screen-2', {
-        opacity: 0,
-        y: -40,
-        pointerEvents: 'none',
-        duration: 1,
-        ease: 'power2.inOut'
-      })
-
-      // Fade in screen 3
-      tl.to('.screen-3', {
-        opacity: 1,
-        pointerEvents: 'all',
-        duration: 1,
-        ease: 'power2.inOut'
-      }, '-=0.6')
-
-      // Horizontal scrub for marquee is not needed since marquee will animate infinitely
-      // Stagger clients
-      tl.from('.client-logo-item', {
-        opacity: 0,
-        y: 40,
-        scale: 0.9,
-        stagger: 0.1,
-        duration: 1.5,
-        ease: 'power2.out'
-      }, '-=0.4')
-
-      // Hold screen 3 state
-      tl.to({}, { duration: 1.5 })
-
-      // --- SCREEN 3 TO SCREEN 4 TRANSITION ---
-      // Fade out screen 3
-      tl.to('.screen-3', {
-        opacity: 0,
-        pointerEvents: 'none',
-        duration: 1,
-        ease: 'power2.inOut'
-      })
-
-      // Fade in screen 4
-      tl.to('.screen-4', {
-        opacity: 1,
-        pointerEvents: 'all',
-        duration: 1,
-        ease: 'power2.inOut'
-      }, '-=0.6')
-
-      // Stagger characters reveal in Screen 4 text
-      tl.to('.char-span', {
-        opacity: 1,
-        y: 0,
-        stagger: 0.02,
-        duration: 1.5,
-        ease: 'power3.out'
-      }, '-=0.4')
-
-      // Removed the final empty hold so that scrolling immediately unpins here.
+      // Infinite marquee for client logos
+      if (trackRef.current) {
+        const marquee = gsap.to(trackRef.current, {
+          xPercent: -25,
+          duration: 28,
+          ease: 'none',
+          repeat: -1,
+        })
+        marqueeRef.current = marquee
+        trackRef.current.addEventListener('mouseenter', () => marquee.pause(), { passive: true })
+        trackRef.current.addEventListener('mouseleave', () => marquee.play(),  { passive: true })
+      }
     })()
   }, { scope: containerRef })
-
-  const clients = [
-    {
-      src: '/images/clients/GRUPO-_SURA.png',
-      alt: 'Grupo Sura',
-      w: 3509,
-      h: 1411,
-      logoClass: 'max-h-[42px] max-w-[150px] sm:max-h-[48px] sm:max-w-[170px]',
-    },
-    {
-      src: '/images/clients/camara.webp',
-      alt: 'Cámara de Comercio',
-      w: 1024,
-      h: 415,
-      logoClass: 'max-h-[42px] max-w-[150px] sm:max-h-[48px] sm:max-w-[168px]',
-    },
-    {
-      src: '/images/clients/dian.webp',
-      alt: 'DIAN',
-      w: 194,
-      h: 51,
-      logoClass: 'max-h-[38px] max-w-[136px] sm:max-h-[44px] sm:max-w-[156px]',
-    },
-    {
-      src: '/images/clients/alcaldia.webp',
-      alt: 'Alcaldía',
-      w: 409,
-      h: 123,
-      logoClass: 'max-h-[40px] max-w-[142px] sm:max-h-[46px] sm:max-w-[164px]',
-    },
-    {
-      src: '/images/clients/afinia.webp',
-      alt: 'Afinia',
-      w: 512,
-      h: 323,
-      logoClass: 'max-h-[46px] max-w-[126px] sm:max-h-[52px] sm:max-w-[142px]',
-    },
-  ]
-
-  const finalMessage = "Hoy ayudamos a empresas, entidades financieras y propietarios a tomar decisiones respaldadas por información confiable."
-  const finalMessageWords = finalMessage.split(' ')
 
   return (
     <section
       id="quienes-somos"
       ref={containerRef}
-      className="relative h-screen bg-white dark:bg-white overflow-hidden text-brand-primary dark:text-brand-primary"
+      className="relative h-screen bg-white overflow-hidden text-brand-primary"
     >
-      {/* Content Canvas */}
-      <div
-        className="relative w-full h-full overflow-hidden flex items-center justify-center"
-      >
-        {/* CAD Grid Backdrop */}
-        <div className="absolute inset-0 bg-cad-grid opacity-25 dark:opacity-25 pointer-events-none" />
-        <div className="absolute inset-0 bg-cad-grid-fine opacity-15 dark:opacity-15 pointer-events-none" />
+      <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+        {/* Grid backdrops */}
+        <div className="absolute inset-0 bg-cad-grid opacity-25 pointer-events-none" />
+        <div className="absolute inset-0 bg-cad-grid-fine opacity-15 pointer-events-none" />
         <div className="absolute top-0 right-0 p-6 text-[9px] font-mono text-brand-secondary tracking-widest pointer-events-none">
           [ SECCIÓN: TRAYECTORIA CORPORATIVA ]
         </div>
 
-        {/* ----------------- PANTALLA 1 ----------------- */}
-        <div className="absolute inset-0 flex items-center justify-center p-6 select-none z-10 pointer-events-none">
-          <div className="screen-1-content text-center max-w-4xl space-y-6">
-            <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
-              [ QUIÉNES SOMOS ]
-            </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary">
-              Más de 15 años transformando experiencia y conocimiento en confianza.
-            </h2>
-            <div className="w-12 h-[1px] bg-brand-secondary mx-auto mt-8 animate-pulse" />
-          </div>
-        </div>
+        {/* ──────────── PANTALLA 2: PERFIL EJECUTIVO ──────────── */}
+        <div className="screen-2 absolute inset-0 flex items-center justify-center p-6 sm:p-10 z-20">
+          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-14 items-center">
 
-        {/* ----------------- PANTALLA 2 ----------------- */}
-        <div className="screen-2 absolute inset-0 flex items-center justify-center p-4 sm:p-6 opacity-0 pointer-events-none z-20">
-          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-8 md:gap-12 items-center">
-            {/* Left Column: Image Reveal */}
+            {/* LEFT — Photo */}
             <div className="md:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[200px] sm:max-w-[280px] md:max-w-[380px] bg-brand-primary/5 dark:bg-brand-primary/5 border border-brand-primary/10 dark:border-brand-primary/10 overflow-hidden shadow-md flex justify-center items-center">
-                {/* Fine blueprint details */}
+              <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-none">
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
-                <div className="executive-mask opacity-0 scale-95 transition-none w-full h-auto">
+                <div className="executive-mask opacity-0 scale-95">
                   <Image
                     src="/images/Arquiavaluoss-1-1-1.png"
-                    alt="Sergio Delgado - Gerente General de ARQUIAVALÚOS"
-                    width={380}
-                    height={500}
+                    alt="Sergio Delgado — Gerente General de ARQUIAVALÚOS"
+                    width={420}
+                    height={520}
                     className="w-full h-auto object-contain"
                     priority
                   />
@@ -220,149 +145,131 @@ export default function StorytellingSection() {
               </div>
             </div>
 
-            {/* Right Column: Profile details */}
-            <div className="md:col-span-7 space-y-4 sm:space-y-6 text-left">
-              <div className="screen-2-text">
-                <span className="text-[10px] sm:text-xs font-mono text-brand-secondary tracking-widest uppercase block">
-                  [ PERFIL EJECUTIVO ]
+            {/* RIGHT — Profile */}
+            <div className="md:col-span-7 flex flex-col gap-5">
+
+              {/* Label with dash */}
+              <div className="screen-2-text flex items-center gap-3">
+                <div className="w-8 h-[2px] bg-brand-secondary shrink-0" />
+                <span className="text-sm font-mono text-brand-secondary tracking-widest uppercase">
+                  PERFIL EJECUTIVO
                 </span>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+              </div>
+
+              {/* Name */}
+              <div className="screen-2-text">
+                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black font-mono text-brand-primary leading-[1.0]">
                   Sergio Delgado
-                </h3>
-                <p className="text-[10px] sm:text-xs font-mono text-brand-gray-cool uppercase tracking-widest">
-                  Gerente General & Fundador
+                </h2>
+                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black font-mono text-brand-secondary leading-[1.0]">
+                  Pachón
+                </h2>
+                <p className="text-sm sm:text-base font-mono text-brand-primary/45 tracking-[0.14em] uppercase mt-3">
+                  Gerente General &amp; Fundador
                 </p>
               </div>
 
-              <div className="space-y-3 sm:space-y-4 pt-1 sm:pt-2">
-                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">01</span>
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Experiencia Profesional</h4>
-                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
-                      Más de 15 años de trayectoria liderando avalúos comerciales, industriales, rurales e infraestructura estratégica para las principales bancas del país.
-                    </p>
-                  </div>
-                </div>
+              {/* Bio */}
+              <p className="screen-2-text text-base sm:text-lg text-brand-primary/65 leading-relaxed max-w-lg">
+                Arquitecto con más de 15 años de trayectoria en el sector inmobiliario, respaldado por los 35 años de sólida experiencia, garantizando calidad y confiabilidad en cada resultado.
+              </p>
 
-                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">02</span>
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Trayectoria y Liderazgo</h4>
-                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
-                      Consultor y asesor en estructuración de activos reales para fondos inmobiliarios internacionales, multinacionales y el sector público.
-                    </p>
-                  </div>
-                </div>
+              {/* CTA */}
+              <button
+                onClick={onOpenDrawer}
+                className="screen-2-text self-start flex items-center gap-2 border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-mono font-bold text-base px-6 py-3 tracking-wider transition-all duration-200 cursor-pointer"
+              >
+                SOLICITAR AVALÚO <ArrowUpRight className="w-5 h-5" />
+              </button>
 
-                <div className="screen-2-text flex items-start gap-3 sm:gap-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-brand-secondary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[10px] sm:text-xs font-mono text-brand-secondary">03</span>
+              {/* 2-col specialties */}
+              <div className="screen-2-text grid grid-cols-1 sm:grid-cols-2 gap-5 border-t border-brand-primary/12 pt-5">
+                {specialties.map((s, i) => (
+                  <div key={i} className="flex flex-col gap-2.5">
+                    <h4 className="text-base sm:text-lg font-black font-mono text-brand-primary">{s.heading}</h4>
+                    <p className="text-sm text-brand-primary/55 leading-relaxed">{s.body}</p>
+                    <ul className="space-y-1.5">
+                      {s.bullets.map((b, j) => (
+                        <li key={j} className="flex items-start gap-2">
+                          <span className="text-brand-secondary font-bold text-sm mt-0.5 shrink-0">↗</span>
+                          <span className="text-sm text-brand-primary/70">{b}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-mono font-bold text-brand-primary dark:text-brand-primary uppercase tracking-wider">Especialización Técnica</h4>
-                    <p className="text-[10px] sm:text-xs text-brand-gray-cool mt-1 leading-snug sm:leading-relaxed">
-                      Avaluador certificado RAA/RNA. Experto en estándares internacionales IVS y metodologías NIIF corporativas.
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
+
             </div>
           </div>
         </div>
 
-        {/* ----------------- PANTALLA 3 (CLIENTES) ----------------- */}
-        <div className="screen-3 absolute inset-0 flex flex-col justify-center px-4 sm:px-6 md:px-12 opacity-0 pointer-events-none z-30 overflow-hidden">
-          <div className="max-w-6xl w-full mx-auto text-left mb-4 sm:mb-6 md:mb-7 shrink-0">
-            <span className="text-[10px] sm:text-xs font-mono text-brand-secondary tracking-widest uppercase block">
+        {/* ──────────── PANTALLA 3: CLIENTES ──────────── */}
+        <div className="screen-3 absolute inset-0 flex flex-col justify-center opacity-0 pointer-events-none z-30 overflow-hidden">
+
+          {/* Header */}
+          <div className="max-w-6xl w-full mx-auto px-6 sm:px-10 mb-8 shrink-0">
+            <span className="text-sm font-mono text-brand-secondary tracking-widest uppercase block mb-2">
               [ NUESTROS CLIENTES ]
             </span>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-mono text-brand-primary dark:text-brand-primary mt-1">
+            <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-mono text-brand-primary leading-tight">
               Confianza que <span className="text-brand-secondary">respalda resultados.</span>
             </h3>
-            <p className="text-xs sm:text-sm text-brand-gray-cool mt-2 sm:mt-3 max-w-2xl font-mono leading-relaxed">
+            <p className="text-base sm:text-lg text-brand-primary/50 mt-3 max-w-2xl font-mono leading-relaxed">
               Empresas del sector financiero, entidades públicas y conglomerados confían en ARQUIAVALÚOS para sus decisiones de valoración.
             </p>
           </div>
 
-          <div className="w-full relative py-2 sm:py-4">
-            <div className="clients-grid grid grid-cols-2 md:grid-cols-6 xl:grid-cols-5 items-center justify-items-center gap-x-3 gap-y-3 sm:gap-x-5 sm:gap-y-4 md:gap-x-5 md:gap-y-3 max-w-3xl lg:max-w-4xl xl:max-w-6xl mx-auto">
-              {clients.map((client, idx) => (
-                <div
-                  key={idx}
-                  className={`client-logo-item relative h-[92px] sm:h-[104px] md:h-[110px] w-full max-w-[220px] md:col-span-2 xl:col-span-1 flex items-center justify-center px-4 sm:px-6 border border-brand-primary/10 bg-white shadow-sm ${
-                    idx === clients.length - 1 ? 'col-span-2 justify-self-center' : ''
-                  } ${
-                    idx === 3 ? 'md:col-start-2 xl:col-start-auto' : ''
-                  }`}
-                >
-                  <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/30" />
-                  <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/30" />
-                  <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/30" />
-                  <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/30" />
-
-                  <Image
-                    src={client.src}
-                    alt={client.alt}
-                    width={client.w}
-                    height={client.h}
-                    sizes="(max-width: 767px) 220px, (max-width: 1279px) 220px, 180px"
-                    style={{ width: 'auto', height: 'auto' }}
-                    className={`object-contain opacity-80 ${client.logoClass}`}
-                  />
-                </div>
-              ))}
-            </div>
-            
-            {/* Stats strip inline */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-6 border-t border-brand-primary/10 pt-6 md:pt-8 mt-7 md:mt-8 max-w-6xl mx-auto">
-              {[
-                { label: 'Avalúos realizados', target: '5000+' },
-                { label: 'Entidades financieras', target: '40+' },
-                { label: 'Municipios cubiertos', target: '120+' },
-                { label: 'Años de experiencia', target: '15+' },
-              ].map((stat, idx) => (
-                <div key={idx} className="client-logo-item text-center space-y-1">
-                  <div className="text-3xl lg:text-4xl font-bold font-mono text-brand-primary dark:text-brand-primary">
-                    {stat.target}
-                  </div>
-                  <span className="text-[10px] font-mono text-brand-secondary uppercase tracking-widest block">
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ----------------- PANTALLA 4 ----------------- */}
-        <div className="screen-4 absolute inset-0 flex items-center justify-center p-6 opacity-0 pointer-events-none z-40">
-          <div className="text-center max-w-4xl space-y-8">
-            <span className="text-xs font-mono text-brand-secondary tracking-widest uppercase block">
-              [ COMPROMISO ARQUIAVALÚOS ]
-            </span>
-            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold font-mono tracking-tight leading-tight text-brand-primary dark:text-brand-primary flex flex-wrap justify-center gap-x-[0.25em] gap-y-2">
-              {finalMessageWords.map((word, wIdx) => (
-                <span key={wIdx} className="inline-block whitespace-nowrap">
-                  {Array.from(word).map((char, cIdx) => (
-                    <span 
-                      key={`${wIdx}-${cIdx}`} 
-                      className="char-span inline-block select-none transform translate-y-12 opacity-0"
+          {/* ── Infinite marquee (identical to Partners) ── */}
+          <div className="relative w-full overflow-hidden flex items-center h-36">
+            <div ref={trackRef} className="flex items-center w-max">
+              {[...Array(4)].map((_, setIdx) => (
+                <div key={setIdx} className="flex items-center gap-10 sm:gap-16 px-5 sm:px-8">
+                  {clients.map((client, idx) => (
+                    <div
+                      key={`${setIdx}-${idx}`}
+                      className="client-logo-item relative h-[92px] w-[200px] sm:w-[220px] flex items-center justify-center shrink-0 bg-white border border-brand-primary/10 shadow-sm hover:scale-105 transition-all duration-300 cursor-pointer group"
                     >
-                      {char}
-                    </span>
+                      <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                      <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                      <Image
+                        src={client.src}
+                        alt={client.alt}
+                        width={client.w}
+                        height={client.h}
+                        sizes="220px"
+                        style={{ width: 'auto', height: 'auto' }}
+                        className={`object-contain px-4 ${client.cls}`}
+                      />
+                    </div>
                   ))}
-                </span>
+                </div>
               ))}
-            </h2>
-            <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6 animate-pulse" />
-
-
+            </div>
+            {/* Fade edges */}
+            <div className="absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-white to-transparent pointer-events-none z-20" />
+            <div className="absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-white to-transparent pointer-events-none z-20" />
           </div>
+
+          {/* Stats */}
+          <div className="max-w-6xl w-full mx-auto px-6 sm:px-10 mt-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-brand-primary/10 pt-7">
+              {[
+                { label: 'Avalúos realizados',    value: '5.000+' },
+                { label: 'Entidades financieras', value: '40+'    },
+                { label: 'Municipios cubiertos',  value: '120+'   },
+                { label: 'Años de experiencia',   value: '15+'    },
+              ].map((s, idx) => (
+                <div key={idx} className="client-logo-item text-center space-y-1">
+                  <div className="text-4xl lg:text-5xl font-bold font-mono text-brand-primary">{s.value}</div>
+                  <span className="text-xs font-mono text-brand-secondary uppercase tracking-widest block">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

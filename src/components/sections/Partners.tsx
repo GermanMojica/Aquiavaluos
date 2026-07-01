@@ -14,35 +14,35 @@ export default function Partners() {
       alt: 'Gremio 1',
       width: 200,
       height: 200,
-      logoClass: 'max-h-[58px] max-w-[148px] scale-[1.18] md:max-h-[66px] md:max-w-[166px]',
+      logoClass: 'max-h-[75px] max-w-[192px] scale-[1.18] md:max-h-[88px] md:max-w-[216px]',
     },
     {
       src: '/images/logos/gremio-2.webp',
       alt: 'Gremio 2',
       width: 200,
       height: 200,
-      logoClass: 'max-h-[56px] max-w-[108px] md:max-h-[64px] md:max-w-[118px]',
+      logoClass: 'max-h-[73px] max-w-[140px] md:max-h-[85px] md:max-w-[154px]',
     },
     {
       src: '/images/logos/gremio-3.webp',
       alt: 'Gremio 3',
       width: 200,
       height: 200,
-      logoClass: 'max-h-[58px] max-w-[138px] scale-[1.14] md:max-h-[66px] md:max-w-[154px]',
+      logoClass: 'max-h-[75px] max-w-[179px] scale-[1.14] md:max-h-[88px] md:max-w-[200px]',
     },
     {
       src: '/images/logos/gremio-4.webp',
       alt: 'Gremio 4',
       width: 200,
       height: 200,
-      logoClass: 'max-h-[58px] max-w-[140px] scale-[1.06] md:max-h-[66px] md:max-w-[158px]',
+      logoClass: 'max-h-[75px] max-w-[182px] scale-[1.06] md:max-h-[88px] md:max-w-[205px]',
     },
     {
       src: '/images/logos/gremio-5.webp',
       alt: 'Gremio 5',
       width: 200,
       height: 200,
-      logoClass: 'max-h-[62px] max-w-[150px] scale-[1.14] md:max-h-[70px] md:max-w-[168px]',
+      logoClass: 'max-h-[81px] max-w-[195px] scale-[1.14] md:max-h-[93px] md:max-w-[218px]',
     }
   ]
 
@@ -84,15 +84,14 @@ export default function Partners() {
   }, { scope: containerRef })
 
   return (
-    <section 
+    <section
       ref={containerRef}
-      className="py-16 md:py-[72px] lg:py-20 bg-slate-50 dark:bg-slate-50 border-t border-b border-brand-primary/10 relative overflow-hidden"
+      className="py-16 md:py-[72px] lg:py-20 bg-white border-t border-b border-brand-primary/10 relative overflow-hidden"
     >
       {/* CAD grids para estética técnica */}
-      <div className="absolute inset-0 bg-cad-grid opacity-15 pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none" />
       <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,148,206,0.04)_0%,transparent_70%)] pointer-events-none" />
-      
+
       <div className="max-w-full mx-auto relative z-10 flex flex-col items-center">
         {/* Header Animado */}
         <div className="partners-header text-center mb-8 md:mb-10 px-6">
@@ -105,11 +104,11 @@ export default function Partners() {
           <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-6 lg:hidden items-center justify-items-center gap-x-6 gap-y-2 md:gap-x-5 md:gap-y-3 w-full max-w-3xl px-6 sm:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-6 lg:hidden items-center justify-items-center gap-x-6 gap-y-4 md:gap-x-5 md:gap-y-6 w-full max-w-4xl px-6 sm:px-8">
           {guilds.map((guild, idx) => (
             <div
               key={idx}
-              className={`relative h-16 w-full max-w-[148px] px-2 py-1 md:col-span-2 md:h-20 md:max-w-[176px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer group ${
+              className={`relative h-20 w-full max-w-[192px] px-2 py-1 md:col-span-2 md:h-24 md:max-w-[220px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer group ${
                 idx === guilds.length - 1 ? 'col-span-2 justify-self-center' : ''
               } ${
                 idx === 3 ? 'md:col-start-2' : ''
@@ -126,7 +125,7 @@ export default function Partners() {
                 alt={guild.alt}
                 width={guild.width}
                 height={guild.height}
-                sizes="(max-width: 767px) 148px, 170px"
+                sizes="(max-width: 767px) 192px, 220px"
                 style={{ width: 'auto', height: 'auto' }}
                 className={`object-contain drop-shadow-md ${guild.logoClass}`}
               />
@@ -135,31 +134,32 @@ export default function Partners() {
         </div>
 
         {/* Carrusel / Marquee Animado */}
-        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-32 md:h-40 mask-image-fade">
-          <div 
+        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-56 xl:h-64 mask-image-fade">
+          <div
             ref={trackRef}
             className="flex items-center w-max"
           >
             {[...Array(4)].map((_, setIdx) => (
-              <div key={setIdx} className="flex items-center gap-12 md:gap-28 px-4 md:px-8">
+              <div key={setIdx} className="flex items-center gap-12 xl:gap-20 px-8 xl:px-12">
                 {guilds.map((guild, idx) => (
-                  <div 
-                    key={`${setIdx}-${idx}`} 
-                    className="relative h-20 w-36 md:h-28 md:w-52 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
+                  <div
+                    key={`${setIdx}-${idx}`}
+                    className="relative h-44 w-64 xl:h-52 xl:w-80 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
                   >
                     {/* Decoración en esquinas estilo plano */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
 
-                    <Image 
-                      src={guild.src} 
+                    <Image
+                      src={guild.src}
                       alt={guild.alt}
                       width={guild.width}
                       height={guild.height}
+                      sizes="(max-width: 1279px) 256px, 320px"
                       style={{ width: 'auto', height: 'auto' }}
-                      className="object-contain max-h-full max-w-full drop-shadow-md"
+                      className="object-contain drop-shadow-md max-h-[190px] xl:max-h-[220px] max-w-[95%]"
                     />
                   </div>
                 ))}
@@ -170,8 +170,8 @@ export default function Partners() {
       </div>
 
       {/* Gradientes laterales para suavizar la entrada/salida de los logos */}
-      <div className="absolute top-0 bottom-0 left-0 w-12 md:w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-20" />
-      <div className="absolute top-0 bottom-0 right-0 w-12 md:w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 left-0 w-12 md:w-32 bg-gradient-to-r from-white to-transparent pointer-events-none z-20" />
+      <div className="absolute top-0 bottom-0 right-0 w-12 md:w-32 bg-gradient-to-l from-white to-transparent pointer-events-none z-20" />
     </section>
   )
 }

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import Hero from '@/components/sections/Hero'
 import StorytellingSection from '@/components/sections/StorytellingSection'
+import Certifications from '@/components/sections/Certifications'
 import BlueprintTransition from '@/components/sections/BlueprintTransition'
 import Sectors from '@/components/sections/Sectors'
 import Partners from '@/components/sections/Partners'
@@ -38,10 +39,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 2. Quiénes Somos — Storytelling inmersivo: Sergio Delgado + Clientes + Stats */}
-        <StorytellingSection />
+        {/* 2. Perfil ejecutivo + Clientes */}
+        <StorytellingSection onOpenDrawer={openDrawer} />
 
-        {/* 3. Transición Inmersiva CAD — El plano arquitectónico animado */}
+        {/* 3. Certificaciones ISO */}
+        <Certifications />
+
+        {/* 4. ¿Por qué elegirnos? — Gráfica animada de diferenciadores */}
         <BlueprintTransition />
 
         {/* 4. Sectores que Atendemos — A quién servimos */}

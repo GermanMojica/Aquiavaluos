@@ -1,318 +1,311 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
-import { useGSAP } from '@gsap/react'
+import { useRef, useEffect } from 'react'
+import { Award, Globe, MapPin } from 'lucide-react'
 
-/* ------------------------------------------------------------------ */
-/*  BlueprintTransition                                                */
-/*  Immersive CAD/blueprint scroll-driven transition Servicios→Sectores*/
-/* ------------------------------------------------------------------ */
+const standards = ['IVSC', 'NIIF', 'NIC', 'ICONTEC-RNA®', 'ISO 9001']
 
 export default function BlueprintTransition() {
-  const sectionRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  const initPaths = useCallback((selector: string, container: HTMLElement) => {
-    const paths = container.querySelectorAll<SVGPathElement>(selector)
-    paths.forEach(p => {
-      if (typeof p.getTotalLength === 'function') {
-        const len = p.getTotalLength()
-        p.style.strokeDasharray = `${len}`
-        p.style.strokeDashoffset = `${len}`
-      }
-    })
-    return paths
-  }, [])
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
 
-  useGSAP(() => {
-    ;(async () => {
-      const gsapModule = await import('gsap')
-      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
-      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
-      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
-      gsap.registerPlugin(ScrollTrigger)
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries[0].isIntersecting) return
+        observer.disconnect()
 
-      const el = sectionRef.current
-      if (!el) return
+        const gsapModule = await import('gsap')
+        const gsap = gsapModule.gsap || gsapModule.default || gsapModule
 
-      /* Reduced-motion guard */
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        el.querySelectorAll<SVGPathElement>('.bp-line, .bp-det').forEach(p => {
-          if (typeof p.getTotalLength === 'function') {
-            p.style.strokeDasharray = 'none'
-            p.style.strokeDashoffset = '0'
+        const tl = gsap.timeline()
+
+        // 1. Header
+        tl.fromTo('.why-label',
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+        )
+        tl.fromTo('.why-title',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out' },
+          '-=0.35'
+        )
+
+        // 2. Cards arrive together, calmly — no directional slides
+        tl.fromTo(['.why-card-exp', '.why-card-normas', '.why-card-cob'],
+          { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.16 },
+          '-=0.3'
+        )
+
+        // 3. Card 1 — divider draws, then the headline counter arrives
+        tl.fromTo('.why-exp-bar',
+          { scaleX: 0 },
+          { scaleX: 1, duration: 1.3, ease: 'power2.inOut', transformOrigin: 'left' },
+          '-=0.55'
+        )
+
+        const c15 = { v: 0 }
+        tl.to(c15, {
+          v: 15, duration: 1.6, ease: 'power1.out',
+          onUpdate: () => {
+            const el = container.querySelector('#cnt-15')
+            if (el) el.textContent = Math.round(c15.v).toString()
           }
-        })
-        return
-      }
+        }, '-=1.1')
 
-      /* Prepare SVG stroke draw */
-      const mainPaths = initPaths('.bp-line', el)
-      const detPaths  = initPaths('.bp-det', el)
+        const c35 = { v: 0 }
+        tl.to(c35, {
+          v: 35, duration: 1.3, ease: 'power1.out',
+          onUpdate: () => {
+            const el = container.querySelector('#cnt-35')
+            if (el) el.textContent = Math.round(c35.v).toString()
+          }
+        }, '-=1.2')
 
-      /* Master pinned timeline — optimized for performance */
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: el,
-          pin: true,
-          scrub: 1,
-          start: 'top top',
-          end: '+=100%',
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        }
-      })
+        const c5k = { v: 0 }
+        tl.to(c5k, {
+          v: 5000, duration: 1.3, ease: 'power1.out',
+          onUpdate: () => {
+            const el = container.querySelector('#cnt-5k')
+            if (el) el.textContent = (Math.round(c5k.v / 100) / 10).toFixed(1) + 'K'
+          }
+        }, '-=0.9')
 
-      /* ─── Phase 1: Coords + frame corners + badges (0→20%) ─── */
-      tl.fromTo(el.querySelectorAll('.bp-coord'), 
-        { opacity: 0, y: 6 },
-        { opacity: 1, y: 0, stagger: 0.04, duration: 0.3, ease: 'none' }
-      )
-      .fromTo(el.querySelectorAll('.bp-fc'),
-        { opacity: 0 },
-        { opacity: 1, stagger: 0.02, duration: 0.15, ease: 'none' },
-        '-=0.15'
-      )
-      .fromTo(el.querySelectorAll('.bp-badge'),
-        { opacity: 0, y: 8, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, stagger: 0.06, duration: 0.3, ease: 'power2.out' },
-        '-=0.08'
-      )
+        const c40 = { v: 0 }
+        tl.to(c40, {
+          v: 40, duration: 1.1, ease: 'power1.out',
+          onUpdate: () => {
+            const el = container.querySelector('#cnt-40')
+            if (el) el.textContent = Math.round(c40.v).toString()
+          }
+        }, '<')
 
-      /* ─── Phase 2: SVG walls draw (20→55%) — Simplified ─── */
-      .to(mainPaths, {
-        strokeDashoffset: 0, stagger: 0.02, duration: 1.2, ease: 'none'
-      })
-      .to(detPaths, {
-        strokeDashoffset: 0, stagger: 0.01, duration: 0.7, ease: 'none'
-      }, '-=0.6')
-      .fromTo(el.querySelectorAll('.bp-label'),
-        { opacity: 0 },
-        { opacity: 1, stagger: 0.02, duration: 0.2, ease: 'none' },
-        '-=0.3'
-      )
+        // 4. Card 2 — standards tags settle in gently, no bounce
+        tl.fromTo('.std-tag',
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.09, ease: 'power2.out' },
+          '-=1.0'
+        )
 
-      /* ─── Phase 3: Dimensions (55→70%) ─── */
-      .fromTo(el.querySelectorAll('.bp-dim'),
-        { opacity: 0, scaleX: 0 },
-        { opacity: 1, scaleX: 1, transformOrigin: 'left center', stagger: 0.03, duration: 0.3, ease: 'none' }
-      )
-      .fromTo(el.querySelectorAll('.bp-meas'),
-        { opacity: 0 },
-        { opacity: 1, stagger: 0.03, duration: 0.2, ease: 'none' },
-        '-=0.1'
-      )
+        // 5. Card 3 — coverage counter and dot grid
+        const c120 = { v: 0 }
+        tl.to(c120, {
+          v: 120, duration: 1.3, ease: 'power1.out',
+          onUpdate: () => {
+            const el = container.querySelector('#cnt-120')
+            if (el) el.textContent = Math.round(c120.v).toString()
+          }
+        }, '-=0.9')
 
-      /* ─── Phase 4: Text (70→85%) ─── */
-      .fromTo(el.querySelector('.bp-title'),
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'none' }
-      )
-      .fromTo(el.querySelector('.bp-sub'),
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.3, ease: 'none' },
-        '-=0.1'
-      )
-      .fromTo(el.querySelector('.bp-scanl'),
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 0.7, transformOrigin: 'center', duration: 0.25, ease: 'none' },
-        '-=0.08'
-      )
+        tl.fromTo('.cov-dot',
+          { opacity: 0, scale: 0.85 },
+          { opacity: 1, scale: 1, duration: 0.4, stagger: 0.025, ease: 'power2.out' },
+          '-=1.0'
+        )
+      },
+      { threshold: 0.1 }
+    )
 
-      /* ─── Phase 5: Smooth fade out (85→100%) ─── */
-      .to(el.querySelector('.bp-wrap'), {
-        opacity: 0, duration: 0.5, ease: 'power1.in'
-      }, '+=0.1')
-    })()
-
-  }, { scope: sectionRef })
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section
-      ref={sectionRef}
-      id="servicios"
-      className="relative w-full h-screen overflow-hidden"
-      style={{ background: '#f6f9fc' }}
+      ref={containerRef}
+      className="relative bg-white py-20 sm:py-28 px-6 overflow-hidden text-brand-primary"
     >
-      <div className="bp-wrap absolute inset-0">
+      {/* ── Backgrounds ── */}
+      <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none" />
 
-        {/* ═══ BG: Always-visible grid ═══ */}
-        <div className="absolute inset-0 bg-blueprint-grid opacity-100" />
-        <div className="absolute inset-0 bg-blueprint-grid-fine opacity-100" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_15%,rgba(246,249,252,0.9)_100%)]" />
+      <div className="max-w-6xl mx-auto relative z-10 flex flex-col gap-10 sm:gap-14">
 
-        {/* ═══ X/Y Axis Labels (always visible, faint) ═══ */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-between px-8 pointer-events-none">
-          {['0','2','4','6','8','10','12','14','16'].map((v,i) => (
-            <span key={`x${i}`} className="text-[8px] font-mono text-brand-secondary/25 select-none">{v}m</span>
-          ))}
-        </div>
-        <div className="absolute top-0 bottom-0 left-2 flex flex-col justify-between py-8 pointer-events-none">
-          {['12','10','8','6','4','2','0'].map((v,i) => (
-            <span key={`y${i}`} className="text-[8px] font-mono text-brand-secondary/25 select-none">{v}m</span>
-          ))}
+        {/* ── Header ── */}
+        <div className="text-center">
+          <span className="why-label text-[10px] font-mono text-brand-secondary tracking-[0.22em] uppercase block mb-4 opacity-0">
+            [ DIFERENCIADORES CLAVE ]
+          </span>
+          <h2 className="why-title text-4xl sm:text-5xl lg:text-6xl font-black font-mono leading-tight opacity-0 text-brand-primary">
+            ¿Por qué elegir{' '}
+            <span className="text-brand-secondary">Arquiavalúos?</span>
+          </h2>
         </div>
 
-        {/* ═══ Corner Coordinates ═══ */}
-        <div className="bp-coord absolute top-4 left-5 opacity-0">
-          <span className="text-[9px] font-mono text-brand-primary/20 tracking-wider block">COORD_SYS::WGS84</span>
-          <span className="text-[9px] font-mono text-brand-secondary/35 tracking-wider block">N 4°42&apos;35.2&quot; / W 74°03&apos;12.8&quot;</span>
-        </div>
-        <div className="bp-coord absolute top-4 right-5 opacity-0 text-right">
-          <span className="text-[9px] font-mono text-brand-primary/20 tracking-wider block">REF::AV-2024-0847</span>
-          <span className="text-[9px] font-mono text-brand-primary/15 tracking-wider block">ESC 1:200 · FORMATO A1</span>
-        </div>
-        <div className="bp-coord absolute bottom-4 left-5 opacity-0">
-          <span className="text-[9px] font-mono text-brand-primary/15 tracking-wider block">NORMA IGAC · RES. 620/2008</span>
-        </div>
-        <div className="bp-coord absolute bottom-4 right-5 opacity-0 text-right">
-          <span className="text-[9px] font-mono text-brand-secondary/30 tracking-wider block">SYS_CAT::URB_4521 · HOJA 01/01</span>
-        </div>
+        {/* ── Bento Grid ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-5">
 
-        {/* Frame corners */}
-        <div className="bp-fc opacity-0 absolute top-1.5 left-1.5 w-4 h-4 border-t-[1.5px] border-l-[1.5px] border-brand-secondary/20" />
-        <div className="bp-fc opacity-0 absolute top-1.5 right-1.5 w-4 h-4 border-t-[1.5px] border-r-[1.5px] border-brand-secondary/20" />
-        <div className="bp-fc opacity-0 absolute bottom-1.5 left-1.5 w-4 h-4 border-b-[1.5px] border-l-[1.5px] border-brand-secondary/20" />
-        <div className="bp-fc opacity-0 absolute bottom-1.5 right-1.5 w-4 h-4 border-b-[1.5px] border-r-[1.5px] border-brand-secondary/20" />
+          {/* ━━━ CARD 1: EXPERIENCIA ━━━ */}
+          <div className="why-card-exp relative flex flex-col justify-between bg-gradient-to-br from-brand-secondary/[0.06] to-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/30 transition-colors duration-500 opacity-0 p-6 sm:p-8 lg:p-10 shadow-md">
+            {/* Ambient glow */}
+            <div className="absolute -top-28 -left-28 w-96 h-96 bg-brand-secondary/[0.08] rounded-full blur-3xl pointer-events-none" />
+            {/* Corner marks */}
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-brand-secondary/60" />
+            <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-brand-primary/10" />
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-brand-primary/10" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-brand-secondary/25" />
 
-        {/* ═══ SVG Architectural Floor Plan ═══ */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <svg
-            viewBox="0 0 800 500"
-            className="w-[82vw] max-w-[860px] h-auto"
-            fill="none"
-            aria-hidden="true"
-          >
-            {/* Outer walls */}
-            <path className="bp-line" d="M100 80 L700 80" stroke="#0094CE" strokeWidth="2.5" strokeLinecap="square"/>
-            <path className="bp-line" d="M700 80 L700 420" stroke="#0094CE" strokeWidth="2.5" strokeLinecap="square"/>
-            <path className="bp-line" d="M700 420 L100 420" stroke="#0094CE" strokeWidth="2.5" strokeLinecap="square"/>
-            <path className="bp-line" d="M100 420 L100 80" stroke="#0094CE" strokeWidth="2.5" strokeLinecap="square"/>
+            <div>
+              {/* Field label */}
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
+                  <Award className="w-4 h-4 text-brand-secondary" />
+                </div>
+                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
+                  FIELD_01 / EXPERIENCIA & TRAYECTORIA
+                </span>
+              </div>
 
-            {/* Corridor */}
-            <path className="bp-line" d="M100 250 L700 250" stroke="#0094CE" strokeWidth="1.5"/>
+              {/* Giant counter */}
+              <div className="flex items-start gap-3 mb-3">
+                <span
+                  id="cnt-15"
+                  className="font-black font-mono text-brand-primary leading-none tabular-nums"
+                  style={{ fontSize: 'clamp(3.5rem, 14vw, 9rem)' }}
+                >
+                  0
+                </span>
+                <div className="flex flex-col mt-3">
+                  <span className="text-3xl font-black font-mono text-brand-secondary leading-none">+</span>
+                  <span className="text-[10px] font-mono text-brand-primary/55 tracking-[0.18em] uppercase mt-3 leading-loose">
+                    AÑOS<br />EN EL<br />SECTOR
+                  </span>
+                </div>
+              </div>
 
-            {/* Verticals */}
-            <path className="bp-line" d="M280 80 L280 250" stroke="#0094CE" strokeWidth="1.5"/>
-            <path className="bp-line" d="M280 250 L280 420" stroke="#0094CE" strokeWidth="1.5"/>
-            <path className="bp-line" d="M520 80 L520 250" stroke="#0094CE" strokeWidth="1.5"/>
-            <path className="bp-line" d="M520 250 L520 420" stroke="#0094CE" strokeWidth="1.5"/>
+              {/* Animated progress bar */}
+              <div className="relative h-[2px] w-full bg-brand-primary/10 rounded-full mb-6 overflow-hidden">
+                <div
+                  className="why-exp-bar absolute inset-y-0 left-0 w-full rounded-full"
+                  style={{
+                    background: 'linear-gradient(to right, #0094CE, rgba(0,148,206,0.25))',
+                    transform: 'scaleX(0)',
+                    transformOrigin: 'left',
+                  }}
+                />
+              </div>
 
-            {/* Interior walls */}
-            <path className="bp-line" d="M400 80 L400 250" stroke="#0094CE" strokeWidth="1"/>
-            <path className="bp-line" d="M400 250 L400 420" stroke="#0094CE" strokeWidth="1"/>
-            <path className="bp-line" d="M180 250 L180 420" stroke="#0094CE" strokeWidth="1"/>
-            <path className="bp-line" d="M610 250 L610 420" stroke="#0094CE" strokeWidth="1"/>
+              <p className="text-sm text-brand-primary/65 leading-relaxed max-w-lg">
+                Respaldados por los{' '}
+                <span className="text-brand-primary/90 font-bold font-mono">
+                  <span id="cnt-35">0</span>+ años
+                </span>{' '}
+                de trayectoria del arquitecto Sergio Delgado Pachón — calidad y confiabilidad garantizadas en cada resultado.
+              </p>
+            </div>
 
-            {/* Door arcs */}
-            <path className="bp-det" d="M280 140 A30 30 0 0 1 310 170" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
-            <path className="bp-det" d="M520 140 A30 30 0 0 0 490 170" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
-            <path className="bp-det" d="M280 310 A30 30 0 0 0 310 340" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
-            <path className="bp-det" d="M400 310 A30 30 0 0 1 370 340" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
-            <path className="bp-det" d="M180 310 A25 25 0 0 0 205 335" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
-            <path className="bp-det" d="M610 310 A25 25 0 0 1 585 335" stroke="#0094CE" strokeWidth="0.7" opacity="0.5"/>
+            {/* Bottom stat row */}
+            <div className="flex gap-6 sm:gap-10 mt-8 sm:mt-10 pt-6 border-t border-brand-primary/10">
+              <div>
+                <div className="text-2xl font-black font-mono text-brand-secondary tabular-nums">
+                  <span id="cnt-5k">0</span>+
+                </div>
+                <div className="text-[10px] font-mono text-brand-primary/50 uppercase tracking-widest mt-1">Avalúos realizados</div>
+              </div>
+              <div>
+                <div className="text-2xl font-black font-mono text-brand-secondary tabular-nums">
+                  <span id="cnt-40">0</span>+
+                </div>
+                <div className="text-[10px] font-mono text-brand-primary/50 uppercase tracking-widest mt-1">Entidades financieras</div>
+              </div>
+            </div>
+          </div>
 
-            {/* Window ticks */}
-            <path className="bp-det" d="M150 75 L150 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M220 75 L220 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M350 75 L350 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M450 75 L450 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M580 75 L580 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M650 75 L650 85" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M150 415 L150 425" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M350 415 L350 425" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M450 415 L450 425" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
-            <path className="bp-det" d="M650 415 L650 425" stroke="#0094CE" strokeWidth="0.5" opacity="0.4"/>
+          {/* ━━━ Right column ━━━ */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
 
-            {/* Staircase */}
-            <path className="bp-det" d="M615 105 L655 105 L655 195 L615 195 Z" stroke="#0094CE" strokeWidth="0.7" opacity="0.4"/>
-            <path className="bp-det" d="M615 120 L655 120 M615 135 L655 135 M615 150 L655 150 M615 165 L655 165 M615 180 L655 180" stroke="#0094CE" strokeWidth="0.4" opacity="0.3"/>
-            <path className="bp-det" d="M635 195 L635 112 M630 122 L635 112 L640 122" stroke="#0094CE" strokeWidth="0.6" opacity="0.4"/>
+            {/* CARD 2: NORMAS */}
+            <div className="why-card-normas relative flex flex-col gap-5 bg-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/25 transition-colors duration-500 opacity-0 p-7 shadow-md">
+              <div className="absolute -top-16 -right-16 w-52 h-52 bg-brand-secondary/[0.06] rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-brand-secondary/55" />
+              <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-brand-secondary/20" />
 
-            {/* Column crosses */}
-            <path className="bp-det" d="M280 246 L280 258 M274 252 L286 252" stroke="#0094CE" strokeWidth="1" opacity="0.5"/>
-            <path className="bp-det" d="M400 246 L400 258 M394 252 L406 252" stroke="#0094CE" strokeWidth="1" opacity="0.5"/>
-            <path className="bp-det" d="M520 246 L520 258 M514 252 L526 252" stroke="#0094CE" strokeWidth="1" opacity="0.5"/>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
+                  <Globe className="w-4 h-4 text-brand-secondary" />
+                </div>
+                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
+                  FIELD_02 / NORMAS INTERNACIONALES
+                </span>
+              </div>
 
-            {/* Hatch */}
-            <path className="bp-det" d="M615 270 L695 270 M615 290 L695 290 M615 310 L695 310 M615 330 L695 330 M615 350 L695 350" stroke="#0094CE" strokeWidth="0.3" opacity="0.2"/>
+              <div className="h-px bg-gradient-to-r from-brand-secondary/50 to-transparent" />
 
-            {/* Room labels */}
-            <text className="bp-label" x="160" y="170" fill="#1A3E70" fontSize="9" fontFamily="monospace" opacity="0">SALA</text>
-            <text className="bp-label" x="325" y="170" fill="#1A3E70" fontSize="9" fontFamily="monospace" opacity="0">COMEDOR</text>
-            <text className="bp-label" x="565" y="170" fill="#1A3E70" fontSize="9" fontFamily="monospace" opacity="0">COCINA</text>
-            <text className="bp-label" x="118" y="345" fill="#1A3E70" fontSize="8" fontFamily="monospace" opacity="0">HAB.1</text>
-            <text className="bp-label" x="210" y="345" fill="#1A3E70" fontSize="8" fontFamily="monospace" opacity="0">HAB.2</text>
-            <text className="bp-label" x="325" y="345" fill="#1A3E70" fontSize="8" fontFamily="monospace" opacity="0">HAB.3</text>
-            <text className="bp-label" x="440" y="345" fill="#1A3E70" fontSize="8" fontFamily="monospace" opacity="0">ESTUDIO</text>
-            <text className="bp-label" x="635" y="345" fill="#1A3E70" fontSize="8" fontFamily="monospace" opacity="0">BAÑO</text>
-          </svg>
-        </div>
+              <div className="flex flex-wrap gap-2">
+                {standards.map((s) => (
+                  <span
+                    key={s}
+                    className="std-tag text-[10px] font-mono font-bold px-3 py-1.5 rounded-md bg-brand-secondary/15 border border-brand-secondary/30 text-brand-secondary tracking-widest opacity-0"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
 
-        {/* ═══ Dimension Lines ═══ */}
-        {/* Top horizontal */}
-        <div className="bp-dim absolute top-[12%] left-[14%] right-[14%] h-[1px] bg-brand-primary/15 opacity-0 pointer-events-none">
-          <div className="absolute left-0 -top-1 w-[1px] h-2 bg-brand-primary/20"/>
-          <div className="absolute right-0 -top-1 w-[1px] h-2 bg-brand-primary/20"/>
-        </div>
-        <span className="bp-meas absolute top-[10%] left-1/2 -translate-x-1/2 text-[9px] font-mono text-brand-primary/35 opacity-0 pointer-events-none">16.00 m</span>
+              <p className="text-xs text-brand-primary/60 leading-relaxed">
+                Avalúos bajo los marcos más rigurosos — auditables y reconocidos internacionalmente en Colombia y el exterior.
+              </p>
+            </div>
 
-        {/* Left vertical */}
-        <div className="bp-dim absolute left-[8%] top-[17%] w-[1px] h-[66%] bg-brand-primary/15 opacity-0 pointer-events-none" style={{transformOrigin:'center top',transform:'scaleY(0)'}}>
-          <div className="absolute top-0 -left-1 w-2 h-[1px] bg-brand-primary/20"/>
-          <div className="absolute bottom-0 -left-1 w-2 h-[1px] bg-brand-primary/20"/>
-        </div>
-        <span className="bp-meas absolute left-[4.5%] top-1/2 -translate-y-1/2 text-[9px] font-mono text-brand-primary/35 opacity-0 [writing-mode:vertical-lr] rotate-180 pointer-events-none">10.50 m</span>
+            {/* CARD 3: COBERTURA */}
+            <div className="why-card-cob relative flex flex-col gap-5 bg-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/25 transition-colors duration-500 opacity-0 p-7 shadow-md">
+              <div className="absolute -bottom-16 -left-16 w-52 h-52 bg-brand-secondary/[0.06] rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-brand-secondary/55" />
+              <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-brand-secondary/20" />
 
-        {/* Interior dims */}
-        <div className="bp-dim absolute top-[52%] left-[17%] w-[14%] h-[1px] bg-brand-secondary/25 opacity-0 pointer-events-none"/>
-        <span className="bp-meas absolute top-[50%] left-[21%] text-[8px] font-mono text-brand-secondary/40 opacity-0 pointer-events-none">4.80 m</span>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
+                  <MapPin className="w-4 h-4 text-brand-secondary" />
+                </div>
+                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
+                  FIELD_03 / COBERTURA NACIONAL
+                </span>
+              </div>
 
-        <div className="bp-dim absolute top-[36%] left-[52%] w-[14%] h-[1px] bg-brand-secondary/25 opacity-0 pointer-events-none"/>
-        <span className="bp-meas absolute top-[34%] left-[56%] text-[8px] font-mono text-brand-secondary/40 opacity-0 pointer-events-none">6.40 m</span>
+              <div className="h-px bg-gradient-to-r from-brand-secondary/50 to-transparent" />
 
-        {/* ═══ Narrative Text ═══ */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-          <h3 className="bp-title opacity-0 text-2xl sm:text-3xl md:text-[2.8rem] font-mono font-bold text-brand-primary text-center tracking-tight max-w-xl leading-tight drop-shadow-[0_1px_20px_rgba(255,255,255,0.8)]">
-            Cada valoración comienza
-            <br/>
-            <span className="text-brand-secondary">con un plano</span>
-          </h3>
-          <p className="bp-sub opacity-0 text-[10px] sm:text-xs font-mono text-brand-gray-cool mt-3 tracking-[0.18em] uppercase text-center">
-            Precisión milimétrica en cada metro cuadrado
-          </p>
-          <div className="bp-scanl opacity-0 w-24 h-[1px] bg-gradient-to-r from-transparent via-brand-secondary/50 to-transparent mt-4"/>
-        </div>
+              <div className="flex items-end gap-3">
+                <div className="flex items-start">
+                  <span
+                    id="cnt-120"
+                    className="font-black font-mono text-brand-primary leading-none tabular-nums"
+                    style={{ fontSize: 'clamp(2.25rem, 9vw, 4.5rem)' }}
+                  >
+                    0
+                  </span>
+                  <span className="text-xl font-black font-mono text-brand-secondary mt-1">+</span>
+                </div>
+                <span className="text-[10px] font-mono text-brand-primary/55 uppercase tracking-widest mb-1 leading-loose">
+                  municipios<br />cubiertos
+                </span>
+              </div>
 
-        {/* ═══ Valuation Badges ═══ */}
-        <div className="bp-badge opacity-0 absolute top-[18%] right-[5%] sm:right-[10%] z-20 pointer-events-none">
-          <div className="bp-badge-card border border-brand-secondary/12 bg-white/80 backdrop-blur-sm px-3 py-2 shadow-sm">
-            <span className="text-[7px] font-mono text-brand-secondary/45 tracking-widest block">VALOR CATASTRAL</span>
-            <span className="text-xs font-mono font-bold text-brand-primary block mt-0.5">$ 850.000.000</span>
-            <span className="text-[7px] font-mono text-brand-gray-cool block">COP · 2024</span>
+              {/* Coverage dot grid */}
+              <div className="flex flex-wrap gap-[5px]">
+                {Array.from({ length: 35 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="cov-dot w-[7px] h-[7px] rounded-full opacity-0"
+                    style={{
+                      backgroundColor: i < 14
+                        ? 'rgba(0,148,206,0.85)'
+                        : i < 22
+                          ? 'rgba(0,148,206,0.35)'
+                          : 'rgba(26,62,112,0.12)',
+                    }}
+                  />
+                ))}
+              </div>
+
+              <p className="text-xs text-brand-primary/60 leading-relaxed">
+                Asociados locales en las principales ciudades — servicio directo y eficiente en todo el territorio colombiano.
+              </p>
+            </div>
           </div>
         </div>
-        <div className="bp-badge opacity-0 absolute bottom-[18%] left-[5%] sm:left-[10%] z-20 pointer-events-none">
-          <div className="bp-badge-card border border-brand-secondary/12 bg-white/80 backdrop-blur-sm px-3 py-2 shadow-sm">
-            <span className="text-[7px] font-mono text-brand-secondary/45 tracking-widest block">ÁREA CONSTRUIDA</span>
-            <span className="text-xs font-mono font-bold text-brand-primary block mt-0.5">1,240.00 m²</span>
-            <span className="text-[7px] font-mono text-brand-gray-cool block">Nivel 1 + Nivel 2</span>
-          </div>
-        </div>
-        <div className="bp-badge opacity-0 absolute bottom-[18%] right-[5%] sm:right-[10%] z-20 pointer-events-none">
-          <div className="bp-badge-card border border-brand-secondary/12 bg-white/80 backdrop-blur-sm px-3 py-2 shadow-sm">
-            <span className="text-[7px] font-mono text-brand-secondary/45 tracking-widest block">USO DEL SUELO</span>
-            <span className="text-xs font-mono font-bold text-brand-primary block mt-0.5">COMERCIAL MIXTO</span>
-            <span className="text-[7px] font-mono text-brand-gray-cool block">POT Bogotá 2024</span>
-          </div>
-        </div>
-        <div className="bp-badge opacity-0 absolute top-[18%] left-[5%] sm:left-[10%] z-20 pointer-events-none">
-          <div className="bp-badge-card border border-brand-secondary/12 bg-white/80 backdrop-blur-sm px-3 py-2 shadow-sm">
-            <span className="text-[7px] font-mono text-brand-secondary/45 tracking-widest block">ESTRATO / ZONA</span>
-            <span className="text-xs font-mono font-bold text-brand-primary block mt-0.5">ESTRATO 4</span>
-            <span className="text-[7px] font-mono text-brand-gray-cool block">Zona Residencial</span>
-          </div>
-        </div>
-
       </div>
     </section>
   )
