@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
-import { HardHat, Building, Home, UserCheck } from 'lucide-react'
+import { HardHat, Building, Home, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const sectors = [
   {
@@ -88,6 +88,9 @@ export default function Sectors() {
     return () => clearInterval(t)
   }, [paused])
 
+  const goPrev = () => { setCurrent(p => (p - 1 + sectors.length) % sectors.length); setPaused(true) }
+  const goNext = () => { setCurrent(p => (p + 1) % sectors.length); setPaused(true) }
+
   useGSAP(() => {
     ;(async () => {
       const gsapModule = await import('gsap')
@@ -109,7 +112,7 @@ export default function Sectors() {
     <section
       id="sectores"
       ref={containerRef}
-      className="relative overflow-hidden text-white"
+      className="relative overflow-hidden text-white group"
     >
       {/* All background images stacked — crossfade via opacity */}
       <div className="absolute inset-0">
@@ -136,8 +139,11 @@ export default function Sectors() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10">
-
+      <div
+        className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
         {/* Header */}
         <div className="text-center">
           <span className="text-xs font-mono text-brand-secondary/80 tracking-widest uppercase block mb-3">
@@ -239,37 +245,64 @@ export default function Sectors() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation dots with progress bar */}
-        <div className="flex items-end gap-6 pt-2">
-          {sectors.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => { setCurrent(i); setPaused(true) }}
-              onMouseEnter={() => setPaused(true)}
-              onMouseLeave={() => setPaused(false)}
-              className="flex flex-col gap-1.5 items-start group"
-            >
-              <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
-                i === current ? 'text-brand-secondary' : 'text-white/35 group-hover:text-white/60'
-              }`}>
-                {s.name.toUpperCase()}
-              </span>
-              <div className="relative h-0.5 w-14 bg-white/15 rounded-full overflow-hidden">
-                {i === current && (
-                  <motion.div
-                    key={`bar-${current}`}
-                    className="absolute inset-y-0 left-0 bg-brand-secondary rounded-full"
-                    initial={{ width: '0%' }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: paused ? 0 : 10, ease: 'linear' }}
-                  />
-                )}
-                {i < current && (
-                  <div className="absolute inset-0 bg-brand-secondary/40 rounded-full" />
-                )}
-              </div>
-            </button>
-          ))}
+        {/* Navigation dots with progress bar + arrows */}
+        <div className="flex items-center gap-4">
+          {/* Prev arrow */}
+          <button
+            onClick={goPrev}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
+            style={{ opacity: paused ? 1 : undefined }}
+            aria-label="Sector anterior"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Dots */}
+          <div className="flex items-end gap-6">
+            {sectors.map((s, i) => (
+              <button
+                key={i}
+                onClick={() => { setCurrent(i); setPaused(true) }}
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
+                className="flex flex-col gap-1.5 items-start group/dot"
+              >
+                <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
+                  i === current ? 'text-brand-secondary' : 'text-white/35 group-hover/dot:text-white/60'
+                }`}>
+                  {s.name.toUpperCase()}
+                </span>
+                <div className="relative h-0.5 w-14 bg-white/15 rounded-full overflow-hidden">
+                  {i === current && (
+                    <motion.div
+                      key={`bar-${current}`}
+                      className="absolute inset-y-0 left-0 bg-brand-secondary rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: paused ? 0 : 10, ease: 'linear' }}
+                    />
+                  )}
+                  {i < current && (
+                    <div className="absolute inset-0 bg-brand-secondary/40 rounded-full" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Next arrow */}
+          <button
+            onClick={goNext}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
+            style={{ opacity: paused ? 1 : undefined }}
+            aria-label="Sector siguiente"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
 
       </div>

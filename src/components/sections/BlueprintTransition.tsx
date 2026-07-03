@@ -1,310 +1,244 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
 import { Award, Globe, MapPin } from 'lucide-react'
 
 const standards = ['IVSC', 'NIIF', 'NIC', 'ICONTEC-RNA®', 'ISO 9001']
 
+const reasons = [
+  {
+    id: 'experiencia',
+    icon: Award,
+    tag: 'EXPERIENCIA Y TRAYECTORIA',
+    title: 'Experiencia y Trayectoria',
+    body: 'Contamos con 15 años de experiencia en la industria de la valoración de bienes y consultorías inmobiliarias, respaldados por los 35 años de sólida trayectoria y reconocida experiencia del arquitecto SERGIO DELGADO PACHÓN, lo que garantiza un servicio de calidad y confiabilidad en los resultados.',
+    tags: null,
+    highlight: [
+      { value: '5.0K+', label: 'Avalúos realizados' },
+      { value: '40+', label: 'Entidades financieras' },
+      { value: '15+', label: 'Años en el sector' },
+    ],
+    fromLeft: true,
+  },
+  {
+    id: 'normas',
+    icon: Globe,
+    tag: 'NORMAS INTERNACIONALES',
+    title: 'Normas y Estándares Internacionales',
+    body: 'Nuestros servicios se basan en Normas Internacionales de Valuación del IVSC, Normas Técnicas Sectoriales de Valuación ICONTEC-RNA®, Normas Internacionales de Información Financiera NIIF, Normas Internacionales de Contabilidad NIC y/o en el marco de las normas y legislación nacional vigente en Colombia. Esto garantiza que nuestros avalúos se realicen bajo los estándares más rigurosos y actualizados.',
+    tags: standards,
+    highlight: [
+      { value: 'NIIF', label: 'Estándar internacional' },
+      { value: 'IVS', label: 'Metodología aplicada' },
+      { value: 'ISO 9001', label: 'Certificación calidad' },
+    ],
+    fromLeft: false,
+  },
+  {
+    id: 'cobertura',
+    icon: MapPin,
+    tag: 'COBERTURA NACIONAL',
+    title: 'Cobertura Nacional y Local',
+    body: 'Nuestra cobertura se extiende a nivel nacional, gracias a asociados locales en las principales ciudades y regiones del país. Esto asegura que podamos brindar un servicio directo y eficiente en todo el territorio colombiano.',
+    tags: null,
+    highlight: [
+      { value: '120+', label: 'Municipios cubiertos' },
+      { value: 'RAA/RNA', label: 'Certificación oficial' },
+      { value: 'IGAC', label: 'Normativa cumplida' },
+    ],
+    fromLeft: true,
+  },
+]
+
 export default function BlueprintTransition() {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+  useGSAP(() => {
+    ;(async () => {
+      const gsapModule = await import('gsap')
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule
+      const ScrollTriggerModule = await import('gsap/ScrollTrigger')
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger || ScrollTriggerModule.default || ScrollTriggerModule
+      gsap.registerPlugin(ScrollTrigger)
 
-    const observer = new IntersectionObserver(
-      async (entries) => {
-        if (!entries[0].isIntersecting) return
-        observer.disconnect()
+      // Header
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '.why-header',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        }
+      })
+        .from('.why-label', { opacity: 0, y: 18, duration: 0.55, ease: 'power2.out' })
+        .from('.why-title', { opacity: 0, y: 26, duration: 0.7, ease: 'power2.out' }, '-=0.3')
+        .from('.why-subtitle', { opacity: 0, y: 16, duration: 0.6, ease: 'power2.out' }, '-=0.35')
 
-        const gsapModule = await import('gsap')
-        const gsap = gsapModule.gsap || gsapModule.default || gsapModule
-
-        const tl = gsap.timeline()
-
-        // 1. Header
-        tl.fromTo('.why-label',
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
-        )
-        tl.fromTo('.why-title',
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out' },
-          '-=0.35'
-        )
-
-        // 2. Cards arrive together, calmly — no directional slides
-        tl.fromTo(['.why-card-exp', '.why-card-normas', '.why-card-cob'],
-          { opacity: 0, y: 26 },
-          { opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.16 },
-          '-=0.3'
-        )
-
-        // 3. Card 1 — divider draws, then the headline counter arrives
-        tl.fromTo('.why-exp-bar',
-          { scaleX: 0 },
-          { scaleX: 1, duration: 1.3, ease: 'power2.inOut', transformOrigin: 'left' },
-          '-=0.55'
-        )
-
-        const c15 = { v: 0 }
-        tl.to(c15, {
-          v: 15, duration: 1.6, ease: 'power1.out',
-          onUpdate: () => {
-            const el = container.querySelector('#cnt-15')
-            if (el) el.textContent = Math.round(c15.v).toString()
+      // Each card reveals independently on scroll
+      reasons.forEach((r) => {
+        const xFrom = r.fromLeft ? -60 : 60
+        gsap.fromTo(
+          `.why-card-${r.id}`,
+          { opacity: 0, x: xFrom, y: 30 },
+          {
+            opacity: 1, x: 0, y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: `.why-card-${r.id}`,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            }
           }
-        }, '-=1.1')
-
-        const c35 = { v: 0 }
-        tl.to(c35, {
-          v: 35, duration: 1.3, ease: 'power1.out',
-          onUpdate: () => {
-            const el = container.querySelector('#cnt-35')
-            if (el) el.textContent = Math.round(c35.v).toString()
-          }
-        }, '-=1.2')
-
-        const c5k = { v: 0 }
-        tl.to(c5k, {
-          v: 5000, duration: 1.3, ease: 'power1.out',
-          onUpdate: () => {
-            const el = container.querySelector('#cnt-5k')
-            if (el) el.textContent = (Math.round(c5k.v / 100) / 10).toFixed(1) + 'K'
-          }
-        }, '-=0.9')
-
-        const c40 = { v: 0 }
-        tl.to(c40, {
-          v: 40, duration: 1.1, ease: 'power1.out',
-          onUpdate: () => {
-            const el = container.querySelector('#cnt-40')
-            if (el) el.textContent = Math.round(c40.v).toString()
-          }
-        }, '<')
-
-        // 4. Card 2 — standards tags settle in gently, no bounce
-        tl.fromTo('.std-tag',
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.09, ease: 'power2.out' },
-          '-=1.0'
         )
-
-        // 5. Card 3 — coverage counter and dot grid
-        const c120 = { v: 0 }
-        tl.to(c120, {
-          v: 120, duration: 1.3, ease: 'power1.out',
-          onUpdate: () => {
-            const el = container.querySelector('#cnt-120')
-            if (el) el.textContent = Math.round(c120.v).toString()
+        // Stat pills reveal with stagger after card arrives
+        gsap.fromTo(
+          `.why-stat-${r.id}`,
+          { opacity: 0, y: 12, scale: 0.93 },
+          {
+            opacity: 1, y: 0, scale: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: `.why-card-${r.id}`,
+              start: 'top 72%',
+              toggleActions: 'play none none none',
+            }
           }
-        }, '-=0.9')
-
-        tl.fromTo('.cov-dot',
-          { opacity: 0, scale: 0.85 },
-          { opacity: 1, scale: 1, duration: 0.4, stagger: 0.025, ease: 'power2.out' },
-          '-=1.0'
         )
-      },
-      { threshold: 0.1 }
-    )
-
-    observer.observe(container)
-    return () => observer.disconnect()
-  }, [])
+        // Tags (normas card)
+        if (r.tags) {
+          gsap.fromTo(
+            `.why-tag-${r.id}`,
+            { opacity: 0, y: 8 },
+            {
+              opacity: 1, y: 0,
+              duration: 0.4,
+              stagger: 0.07,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: `.why-card-${r.id}`,
+                start: 'top 72%',
+                toggleActions: 'play none none none',
+              }
+            }
+          )
+        }
+      })
+    })()
+  }, { scope: containerRef })
 
   return (
     <section
       ref={containerRef}
       className="relative bg-white py-20 sm:py-28 px-6 overflow-hidden text-brand-primary"
     >
-      {/* ── Backgrounds ── */}
+      {/* Backgrounds */}
       <div className="absolute inset-0 bg-cad-grid opacity-20 pointer-events-none" />
       <div className="absolute inset-0 bg-cad-grid-fine opacity-10 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto relative z-10 flex flex-col gap-10 sm:gap-14">
+      <div className="max-w-6xl mx-auto relative z-10 flex flex-col gap-16 sm:gap-24">
 
-        {/* ── Header ── */}
-        <div className="text-center">
-          <span className="why-label text-[10px] font-mono text-brand-secondary tracking-[0.22em] uppercase block mb-4 opacity-0">
+        {/* Header */}
+        <div className="why-header text-center">
+          <span className="why-label text-[10px] font-mono text-brand-secondary tracking-[0.22em] uppercase block mb-4">
             [ DIFERENCIADORES CLAVE ]
           </span>
-          <h2 className="why-title text-4xl sm:text-5xl lg:text-6xl font-black font-mono leading-tight opacity-0 text-brand-primary">
+          <h2 className="why-title text-4xl sm:text-5xl lg:text-6xl font-black font-mono leading-tight text-brand-primary">
             ¿Por qué elegir{' '}
             <span className="text-brand-secondary">Arquiavalúos?</span>
           </h2>
+          <p className="why-subtitle text-base sm:text-lg text-brand-gray-cool mt-4 max-w-2xl mx-auto leading-relaxed">
+            Tres razones fundamentales que nos distinguen en el sector de la valoración inmobiliaria en Colombia.
+          </p>
         </div>
 
-        {/* ── Bento Grid ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-5">
+        {/* Cards — stacked, each appearing on scroll */}
+        <div className="flex flex-col gap-12 sm:gap-16">
+          {reasons.map((reason, idx) => {
+            const Icon = reason.icon
+            const isEven = idx % 2 === 0
 
-          {/* ━━━ CARD 1: EXPERIENCIA ━━━ */}
-          <div className="why-card-exp relative flex flex-col justify-between bg-gradient-to-br from-brand-secondary/[0.06] to-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/30 transition-colors duration-500 opacity-0 p-6 sm:p-8 lg:p-10 shadow-md">
-            {/* Ambient glow */}
-            <div className="absolute -top-28 -left-28 w-96 h-96 bg-brand-secondary/[0.08] rounded-full blur-3xl pointer-events-none" />
-            {/* Corner marks */}
-            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-brand-secondary/60" />
-            <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-brand-primary/10" />
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-brand-primary/10" />
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-brand-secondary/25" />
+            return (
+              <div
+                key={reason.id}
+                className={`why-card-${reason.id} grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center`}
+              >
+                {/* Number label — alternates sides */}
+                <div className={`flex flex-col gap-6 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                  {/* Tag */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-brand-secondary/15 border border-brand-secondary/30 flex items-center justify-center shrink-0">
+                      <Icon className="w-5 h-5 text-brand-secondary" />
+                    </div>
+                    <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
+                      {reason.tag}
+                    </span>
+                  </div>
 
-            <div>
-              {/* Field label */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
-                  <Award className="w-4 h-4 text-brand-secondary" />
+                  {/* Divider */}
+                  <div className="h-px bg-gradient-to-r from-brand-secondary/50 to-transparent" />
+
+                  {/* Title */}
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black font-mono text-brand-primary leading-snug">
+                    {reason.title}
+                  </h3>
+
+                  {/* Body */}
+                  <p className="text-base text-brand-primary/65 leading-relaxed">
+                    {reason.body}
+                  </p>
+
+                  {/* Standards tags */}
+                  {reason.tags && (
+                    <div className="flex flex-wrap gap-2">
+                      {reason.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`why-tag-${reason.id} text-[10px] font-mono font-bold px-3 py-1.5 rounded-md bg-brand-secondary/15 border border-brand-secondary/30 text-brand-secondary tracking-widest`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
-                  FIELD_01 / EXPERIENCIA & TRAYECTORIA
-                </span>
-              </div>
 
-              {/* Giant counter */}
-              <div className="flex items-start gap-3 mb-3">
-                <span
-                  id="cnt-15"
-                  className="font-black font-mono text-brand-primary leading-none tabular-nums"
-                  style={{ fontSize: 'clamp(3.5rem, 14vw, 9rem)' }}
-                >
-                  0
-                </span>
-                <div className="flex flex-col mt-3">
-                  <span className="text-3xl font-black font-mono text-brand-secondary leading-none">+</span>
-                  <span className="text-[10px] font-mono text-brand-primary/55 tracking-[0.18em] uppercase mt-3 leading-loose">
-                    AÑOS<br />EN EL<br />SECTOR
-                  </span>
+                {/* Stats card — alternates sides */}
+                <div className={`relative bg-gradient-to-br from-brand-secondary/[0.06] to-white border border-brand-primary/10 rounded-2xl p-7 sm:p-10 overflow-hidden shadow-md hover:border-brand-secondary/30 transition-colors duration-500 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+                  {/* Corner marks */}
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-brand-secondary/60" />
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-brand-secondary/25" />
+                  {/* Ambient glow */}
+                  <div className="absolute -top-24 -left-24 w-72 h-72 bg-brand-secondary/[0.08] rounded-full blur-3xl pointer-events-none" />
+
+                  {/* Big number */}
+                  <div className="relative z-10 text-[6rem] sm:text-[8rem] font-black font-mono text-brand-primary/[0.05] leading-none select-none absolute -bottom-4 -right-2">
+                    {String(idx + 1).padStart(2, '0')}
+                  </div>
+
+                  <div className="relative z-10 flex flex-col gap-6">
+                    <span className="text-[10px] font-mono text-brand-secondary/70 tracking-widest uppercase">
+                      [ MÉTRICAS CLAVE ]
+                    </span>
+                    <div className="grid grid-cols-3 gap-4">
+                      {reason.highlight.map((h, i) => (
+                        <div key={i} className={`why-stat-${reason.id} flex flex-col gap-1`}>
+                          <div className="text-xl sm:text-2xl font-black font-mono text-brand-secondary">
+                            {h.value}
+                          </div>
+                          <div className="text-[10px] font-mono text-brand-primary/50 uppercase tracking-widest leading-tight">
+                            {h.label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {/* Animated progress bar */}
-              <div className="relative h-[2px] w-full bg-brand-primary/10 rounded-full mb-6 overflow-hidden">
-                <div
-                  className="why-exp-bar absolute inset-y-0 left-0 w-full rounded-full"
-                  style={{
-                    background: 'linear-gradient(to right, #0094CE, rgba(0,148,206,0.25))',
-                    transform: 'scaleX(0)',
-                    transformOrigin: 'left',
-                  }}
-                />
-              </div>
-
-              <p className="text-sm text-brand-primary/65 leading-relaxed max-w-lg">
-                Respaldados por los{' '}
-                <span className="text-brand-primary/90 font-bold font-mono">
-                  <span id="cnt-35">0</span>+ años
-                </span>{' '}
-                de trayectoria del arquitecto Sergio Delgado Pachón — calidad y confiabilidad garantizadas en cada resultado.
-              </p>
-            </div>
-
-            {/* Bottom stat row */}
-            <div className="flex gap-6 sm:gap-10 mt-8 sm:mt-10 pt-6 border-t border-brand-primary/10">
-              <div>
-                <div className="text-2xl font-black font-mono text-brand-secondary tabular-nums">
-                  <span id="cnt-5k">0</span>+
-                </div>
-                <div className="text-[10px] font-mono text-brand-primary/50 uppercase tracking-widest mt-1">Avalúos realizados</div>
-              </div>
-              <div>
-                <div className="text-2xl font-black font-mono text-brand-secondary tabular-nums">
-                  <span id="cnt-40">0</span>+
-                </div>
-                <div className="text-[10px] font-mono text-brand-primary/50 uppercase tracking-widest mt-1">Entidades financieras</div>
-              </div>
-            </div>
-          </div>
-
-          {/* ━━━ Right column ━━━ */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
-
-            {/* CARD 2: NORMAS */}
-            <div className="why-card-normas relative flex flex-col gap-5 bg-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/25 transition-colors duration-500 opacity-0 p-7 shadow-md">
-              <div className="absolute -top-16 -right-16 w-52 h-52 bg-brand-secondary/[0.06] rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-brand-secondary/55" />
-              <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-brand-secondary/20" />
-
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
-                  <Globe className="w-4 h-4 text-brand-secondary" />
-                </div>
-                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
-                  FIELD_02 / NORMAS INTERNACIONALES
-                </span>
-              </div>
-
-              <div className="h-px bg-gradient-to-r from-brand-secondary/50 to-transparent" />
-
-              <div className="flex flex-wrap gap-2">
-                {standards.map((s) => (
-                  <span
-                    key={s}
-                    className="std-tag text-[10px] font-mono font-bold px-3 py-1.5 rounded-md bg-brand-secondary/15 border border-brand-secondary/30 text-brand-secondary tracking-widest opacity-0"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-
-              <p className="text-xs text-brand-primary/60 leading-relaxed">
-                Avalúos bajo los marcos más rigurosos — auditables y reconocidos internacionalmente en Colombia y el exterior.
-              </p>
-            </div>
-
-            {/* CARD 3: COBERTURA */}
-            <div className="why-card-cob relative flex flex-col gap-5 bg-white border border-brand-primary/10 rounded-2xl overflow-hidden group hover:border-brand-secondary/25 transition-colors duration-500 opacity-0 p-7 shadow-md">
-              <div className="absolute -bottom-16 -left-16 w-52 h-52 bg-brand-secondary/[0.06] rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-brand-secondary/55" />
-              <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-brand-secondary/20" />
-
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-brand-secondary/20 border border-brand-secondary/35 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-brand-secondary" />
-                </div>
-                <span className="text-[10px] font-mono text-brand-secondary tracking-[0.18em] uppercase">
-                  FIELD_03 / COBERTURA NACIONAL
-                </span>
-              </div>
-
-              <div className="h-px bg-gradient-to-r from-brand-secondary/50 to-transparent" />
-
-              <div className="flex items-end gap-3">
-                <div className="flex items-start">
-                  <span
-                    id="cnt-120"
-                    className="font-black font-mono text-brand-primary leading-none tabular-nums"
-                    style={{ fontSize: 'clamp(2.25rem, 9vw, 4.5rem)' }}
-                  >
-                    0
-                  </span>
-                  <span className="text-xl font-black font-mono text-brand-secondary mt-1">+</span>
-                </div>
-                <span className="text-[10px] font-mono text-brand-primary/55 uppercase tracking-widest mb-1 leading-loose">
-                  municipios<br />cubiertos
-                </span>
-              </div>
-
-              {/* Coverage dot grid */}
-              <div className="flex flex-wrap gap-[5px]">
-                {Array.from({ length: 35 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="cov-dot w-[7px] h-[7px] rounded-full opacity-0"
-                    style={{
-                      backgroundColor: i < 14
-                        ? 'rgba(0,148,206,0.85)'
-                        : i < 22
-                          ? 'rgba(0,148,206,0.35)'
-                          : 'rgba(26,62,112,0.12)',
-                    }}
-                  />
-                ))}
-              </div>
-
-              <p className="text-xs text-brand-primary/60 leading-relaxed">
-                Asociados locales en las principales ciudades — servicio directo y eficiente en todo el territorio colombiano.
-              </p>
-            </div>
-          </div>
+            )
+          })}
         </div>
       </div>
     </section>

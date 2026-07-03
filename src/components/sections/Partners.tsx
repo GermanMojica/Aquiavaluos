@@ -108,17 +108,12 @@ export default function Partners() {
           {guilds.map((guild, idx) => (
             <div
               key={idx}
-              className={`relative h-20 w-full max-w-[192px] px-2 py-1 md:col-span-2 md:h-24 md:max-w-[220px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer group ${
+              className={`relative h-20 w-full max-w-[192px] px-2 py-1 md:col-span-2 md:h-24 md:max-w-[220px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer ${
                 idx === guilds.length - 1 ? 'col-span-2 justify-self-center' : ''
               } ${
                 idx === 3 ? 'md:col-start-2' : ''
               }`}
             >
-              {/* Decoración en esquinas estilo plano */}
-              <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-              <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
 
               <Image 
                 src={guild.src} 
@@ -144,13 +139,8 @@ export default function Partners() {
                 {guilds.map((guild, idx) => (
                   <div
                     key={`${setIdx}-${idx}`}
-                    className="relative h-44 w-64 xl:h-52 xl:w-80 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer group"
+                    className="relative h-44 w-64 xl:h-52 xl:w-80 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer"
                   >
-                    {/* Decoración en esquinas estilo plano */}
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-brand-secondary/0 group-hover:border-brand-secondary/40 transition-colors" />
 
                     <Image
                       src={guild.src}
