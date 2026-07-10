@@ -22,7 +22,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
 
   const navLinks = [
     { name: 'Quiénes Somos', href: '#quienes-somos' },
-    { name: 'Servicios', href: '#servicios' },
+    { name: 'Diferenciales', href: '#diferenciales' },
     { name: 'Sectores', href: '#sectores' }
   ]
 

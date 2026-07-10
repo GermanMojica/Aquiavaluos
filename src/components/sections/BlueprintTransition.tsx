@@ -132,6 +132,7 @@ export default function BlueprintTransition() {
   return (
     <section
       ref={containerRef}
+      id="diferenciales"
       className="relative bg-white py-20 sm:py-28 px-6 overflow-hidden text-brand-primary"
     >
       {/* Backgrounds */}

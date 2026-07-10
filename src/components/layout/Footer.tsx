@@ -57,10 +57,9 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {[
                 { name: 'Quiénes Somos', href: '#quienes-somos' },
-                { name: 'Servicios', href: '#servicios' },
+                { name: 'Diferenciales', href: '#diferenciales' },
                 { name: 'Sectores', href: '#sectores' },
-                { name: 'Proceso', href: '#proceso' },
-                { name: 'Diferenciales', href: '#diferenciales' }
+                { name: 'Certificaciones', href: '#certificaciones' }
               ].map((link) => (
                 <li key={link.name}>
                   <a
