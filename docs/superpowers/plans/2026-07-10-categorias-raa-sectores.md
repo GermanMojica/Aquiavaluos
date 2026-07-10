@@ -466,7 +466,7 @@ export default function Sectors() {
 npm run lint
 ```
 
-Expected: no errors (warnings about things unrelated to this file are pre-existing and out of scope).
+Baseline note: this command already exits 1 on a clean checkout, with 6 pre-existing errors/3 warnings in `src/app/page.tsx`, `src/components/sections/Hero.tsx`, `src/components/sections/ProcessTimeline.tsx`, `src/components/ui/CustomCursor.tsx`, and `src/components/ui/SmoothScroll.tsx` — none of these files are touched by this task. Expected: the output contains no line referencing `Sectors.tsx`. Do not fix the pre-existing errors in other files; they are out of scope for this task.
 
 - [ ] **Step 3: Run the production build**
 
