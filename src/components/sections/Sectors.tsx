@@ -1,95 +1,177 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGSAP } from '@gsap/react'
-import { HardHat, Building, Home, UserCheck, ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  Building2,
+  Trees,
+  Mountain,
+  Construction,
+  Landmark,
+  Building,
+  Cog,
+  Plane,
+  Store,
+  PawPrint,
+  Lightbulb,
+  Scale,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  type LucideIcon,
+} from 'lucide-react'
 
-const sectors = [
+type Category = {
+  id: number
+  name: string
+  icon: LucideIcon
+  image: string
+  teaser: string
+  alcance: string
+}
+
+const categories: Category[] = [
   {
-    name: 'Propietarios',
-    key: 'PART',
-    icon: UserCheck,
-    image: '/images/sectors/residential.png',
-    detail: 'Si eres propietario, tomar decisiones sobre tu inmueble sin un avalúo certificado puede costarte mucho más de lo que crees. Nuestros dictámenes periciales te dan la seguridad técnica y legal que necesitas.',
-    bullets: [
-      'Avalúo comercial para compraventa de inmuebles',
-      'Valoración para procesos de sucesión y herencia',
-      'Avalúo para declaración de renta y patrimonio',
-      'Dictamen pericial para procesos legales',
-    ],
-    stats: [
-      { value: '5.000+', label: 'Avalúos realizados' },
-      { value: '15+', label: 'Años de experiencia' },
-    ],
+    id: 1,
+    name: 'Inmuebles Urbanos',
+    icon: Building2,
+    image: '/images/sectors/01-inmuebles-urbanos.jpg',
+    teaser: 'Casas, apartamentos, edificios, oficinas, locales y bodegas en zona urbana.',
+    alcance:
+      'Casas, apartamentos, edificios, oficinas, locales comerciales, terrenos y bodegas situados total o parcialmente en áreas urbanas, lotes no clasificados en la estructura ecológica principal, lotes en suelo de expansión con plan parcial adoptado.',
   },
   {
-    name: 'Constructoras',
-    key: 'CONST',
-    icon: HardHat,
-    image: '/images/sectors/construction.png',
-    detail: 'El éxito de un proyecto depende de cifras reales desde el inicio. Proveemos análisis técnicos rigurosos desde la adquisición del terreno hasta la comercialización.',
-    bullets: [
-      'Estudios de factibilidad inmobiliaria y de mercado',
-      'Avalúos de lotes, terrenos y áreas brutas',
-      'Cálculo de plusvalías urbanas y rurales',
-      'Avalúos para créditos de construcción y preventas',
-    ],
-    stats: [
-      { value: '120+', label: 'Municipios cubiertos' },
-      { value: '40+', label: 'Entidades financieras' },
-    ],
+    id: 2,
+    name: 'Inmuebles Rurales',
+    icon: Trees,
+    image: '/images/sectors/02-inmuebles-rurales.jpg',
+    teaser: 'Fincas, cultivos, viviendas rurales, vías y sistemas de riego.',
+    alcance:
+      'Terrenos rurales con o sin construcciones, como viviendas, edificios, establos, galpones, cercas, sistemas de riego, drenaje, vías, adecuación de suelos, pozos, cultivos, plantaciones, lotes en suelo de expansión sin plan parcial adoptado, lotes para el aprovechamiento agropecuario y demás infraestructura de explotación situados totalmente en áreas rurales.',
   },
   {
-    name: 'Empresas Privadas',
-    key: 'CORP',
+    id: 3,
+    name: 'Recursos Naturales y Suelos de Protección',
+    icon: Mountain,
+    image: '/images/sectors/03-recursos-naturales.jpg',
+    teaser: 'Bienes ambientales, minas, yacimientos y áreas de conservación ecológica.',
+    alcance:
+      'Bienes ambientales, minas, yacimientos y explotaciones minerales. Lotes incluidos en la estructura ecológica principal, lotes definidos o contemplados en el Código de Recursos Naturales Renovables y daños ambientales.',
+  },
+  {
+    id: 4,
+    name: 'Obras de Infraestructura',
+    icon: Construction,
+    image: '/images/sectors/04-obras-infraestructura.jpg',
+    teaser: 'Puentes, túneles, acueductos, presas, aeropuertos y muelles.',
+    alcance:
+      'Estructuras especiales para proceso, puentes, túneles, acueductos y conducciones, presas, aeropuertos, muelles y demás construcciones civiles de infraestructura similar.',
+  },
+  {
+    id: 5,
+    name: 'Conservación Arqueológica y Monumentos Históricos',
+    icon: Landmark,
+    image: '/images/sectors/05-monumentos-historicos.jpg',
+    teaser: 'Edificaciones patrimoniales y monumentos de valor histórico.',
+    alcance: 'Edificaciones de conservación arquitectónica y monumentos históricos.',
+  },
+  {
+    id: 6,
+    name: 'Inmuebles Especiales',
     icon: Building,
-    image: '/images/sectors/corporate.png',
-    detail: 'Las empresas necesitan cifras confiables para sus estados financieros, fusiones y reestructuraciones. Nuestros avalúos cumplen estándares IVS y NIIF requeridos por auditores internacionales.',
-    bullets: [
-      'Valoración de activos fijos bajo NIIF / IFRS',
-      'Peritajes técnicos para seguros y reclamaciones',
-      'Avalúos para fusiones y adquisiciones (M&A)',
-      'Dictámenes para estados financieros auditados',
-    ],
-    stats: [
-      { value: 'NIIF', label: 'Estándar internacional' },
-      { value: 'IVS', label: 'Metodología aplicada' },
-    ],
+    image: '/images/sectors/06-inmuebles-especiales.jpg',
+    teaser: 'Centros comerciales, hoteles, colegios, hospitales y clínicas.',
+    alcance:
+      'Incluye centros comerciales, hoteles, colegios, hospitales, clínicas y avance de obras. Incluye todos los inmuebles que no se clasifiquen dentro de los numerales anteriores.',
   },
   {
-    name: 'Entidades Públicas',
-    key: 'GOB',
-    icon: Home,
-    image: '/images/sectors/government.png',
-    detail: 'El sector público exige transparencia, trazabilidad y cumplimiento normativo. Somos avaluadores certificados RAA/RNA con experiencia en valoraciones estatales y procesos de licitación.',
-    bullets: [
-      'Avalúos catastrales conforme normativa IGAC',
-      'Valoraciones para enajenación voluntaria',
-      'Avalúos para procesos de expropiación',
-      'Dictámenes para licitaciones y contratos públicos',
-    ],
-    stats: [
-      { value: 'RAA/RNA', label: 'Certificación oficial' },
-      { value: 'IGAC', label: 'Normativa cumplida' },
-    ],
+    id: 7,
+    name: 'Maquinaria Fija, Equipos y Maquinaria Móvil',
+    icon: Cog,
+    image: '/images/sectors/07-maquinaria-fija.jpg',
+    teaser: 'Equipos industriales, de cómputo, telefonía y transporte automotor.',
+    alcance:
+      'Equipos eléctricos y mecánicos de uso en la industria, motores, subestaciones de planta, tableros eléctricos, equipos de generación, subestaciones de transmisión y distribución, equipos e infraestructura de transmisión y distribución, maquinaria de construcción, movimiento de tierra, y maquinaria para producción y proceso. Equipos de cómputo: microcomputadores, impresoras, monitores, módems y otros accesorios de estos equipos, redes, mainframes, periféricos especiales y otros equipos accesorios de estos. Equipos de telefonía, electromedicina y radiocomunicación. Transporte automotor: vehículos de transporte terrestre como automóviles, camperos, camiones, buses, tractores, camiones y remolques, motocicletas, motociclos, mototriciclos, cuatrimotos, bicicletas y similares.',
+  },
+  {
+    id: 8,
+    name: 'Maquinaria y Equipos Especiales',
+    icon: Plane,
+    image: '/images/sectors/08-maquinaria-especial.jpg',
+    teaser: 'Naves, aeronaves, trenes y teleféricos.',
+    alcance:
+      'Naves, aeronaves, trenes, locomotoras, vagones, teleféricos y cualquier medio de transporte diferente del automotor descrito en la clase anterior.',
+  },
+  {
+    id: 9,
+    name: 'Activos Operacionales y Establecimientos de Comercio',
+    icon: Store,
+    image: '/images/sectors/09-activos-operacionales.jpg',
+    teaser: 'Revalorización de activos, inventarios y establecimientos de comercio.',
+    alcance:
+      'Revalorización de activos, inventarios, materia prima, producto en proceso y producto terminado. Establecimientos de comercio.',
+  },
+  {
+    id: 10,
+    name: 'Semovientes y Animales',
+    icon: PawPrint,
+    image: '/images/sectors/10-semovientes.jpg',
+    teaser: 'Semovientes, animales y muebles no clasificados en otra especialidad.',
+    alcance: 'Semovientes, animales y muebles no clasificados en otra especialidad.',
+  },
+  {
+    id: 11,
+    name: 'Intangibles',
+    icon: Lightbulb,
+    image: '/images/sectors/11-intangibles.jpg',
+    teaser: 'Marcas, patentes, derechos de autor y fondo de comercio.',
+    alcance:
+      'Marcas, patentes, secretos empresariales, derechos de autor, nombres comerciales, derechos deportivos, espectro radioeléctrico, fondo de comercio, prima comercial y otros similares.',
+  },
+  {
+    id: 12,
+    name: 'Intangibles Especiales',
+    icon: Scale,
+    image: '/images/sectors/12-intangibles-especiales.jpg',
+    teaser: 'Daño emergente, lucro cesante y derechos de indemnización.',
+    alcance:
+      'Daño emergente, lucro cesante, daño moral, servidumbres, derechos herenciales y litigiosos y demás derechos de indemnización o cálculos compensatorios y cualquier otro derecho no contemplado en las clases anteriores.',
   },
 ]
 
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [current, setCurrent] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [activeId, setActiveId] = useState<number | null>(null)
+
+  const activeIndex = categories.findIndex((c) => c.id === activeId)
+  const active = activeIndex >= 0 ? categories[activeIndex] : null
+  const ActiveIcon = active?.icon
+
+  const goPrev = () => {
+    if (activeIndex < 0) return
+    setActiveId(categories[(activeIndex - 1 + categories.length) % categories.length].id)
+  }
+  const goNext = () => {
+    if (activeIndex < 0) return
+    setActiveId(categories[(activeIndex + 1) % categories.length].id)
+  }
 
   useEffect(() => {
-    if (paused) return
-    const t = setInterval(() => setCurrent(p => (p + 1) % sectors.length), 10000)
-    return () => clearInterval(t)
-  }, [paused])
-
-  const goPrev = () => { setCurrent(p => (p - 1 + sectors.length) % sectors.length); setPaused(true) }
-  const goNext = () => { setCurrent(p => (p + 1) % sectors.length); setPaused(true) }
+    if (activeIndex < 0) return
+    document.body.style.overflow = 'hidden'
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveId(null)
+      if (e.key === 'ArrowLeft') setActiveId(categories[(activeIndex - 1 + categories.length) % categories.length].id)
+      if (e.key === 'ArrowRight') setActiveId(categories[(activeIndex + 1) % categories.length].id)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [activeIndex])
 
   useGSAP(() => {
     ;(async () => {
@@ -105,46 +187,11 @@ export default function Sectors() {
     })()
   }, { scope: containerRef })
 
-  const sector = sectors[current]
-  const Icon = sector.icon
-
   return (
-    <section
-      id="sectores"
-      ref={containerRef}
-      className="relative overflow-hidden text-white group"
-    >
-      {/* All background images stacked — crossfade via opacity */}
-      <div className="absolute inset-0">
-        {sectors.map((s, i) => (
-          <motion.div
-            key={i}
-            className="absolute inset-0"
-            initial={{ opacity: i === 0 ? 1 : 0 }}
-            animate={{ opacity: i === current ? 1 : 0 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-          >
-            <Image
-              src={s.image}
-              alt={s.name}
-              fill
-              className="object-cover"
-              priority={i === 0}
-            />
-          </motion.div>
-        ))}
-        {/* Dark overlay — left heavier for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/70 to-brand-dark/40" />
-        <div className="absolute inset-0 bg-cad-grid opacity-[0.04] pointer-events-none" />
-      </div>
+    <section id="sectores" ref={containerRef} className="relative overflow-hidden bg-brand-dark text-white">
+      <div className="absolute inset-0 bg-cad-grid opacity-[0.04] pointer-events-none" />
 
-      {/* Content */}
-      <div
-        className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        {/* Header */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10">
         <div className="text-center">
           <span className="text-xs font-mono text-brand-secondary/80 tracking-widest uppercase block mb-3">
             [ ALCANCE DEL SERVICIO ]
@@ -154,158 +201,121 @@ export default function Sectors() {
           </h2>
         </div>
 
-        {/* Sector detail — animates on sector change */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start"
-          >
-            {/* Left column: text */}
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 border-2 border-brand-secondary/60 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-brand-secondary" />
-                </div>
-                <span className="text-xs font-mono text-brand-secondary/70 tracking-widest uppercase">
-                  [ {sector.key} ]
-                </span>
-              </div>
-
-              <h3 className="text-3xl sm:text-4xl font-black font-mono text-white leading-tight">
-                {sector.name}
-              </h3>
-
-              <p className="text-base text-white/80 leading-relaxed max-w-md">
-                {sector.detail}
-              </p>
-
-              <ul className="space-y-2.5 pt-1">
-                {sector.bullets.map((b, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.15 + i * 0.07, duration: 0.35 }}
-                    className="flex items-start gap-3"
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-brand-secondary mt-[7px] shrink-0" />
-                    <span className="text-sm text-white/75">{b}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Right column: featured image panel + stats */}
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden lg:flex flex-col gap-4"
-            >
-              {/* Image frame */}
-              <div className="relative h-64 xl:h-72 rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
-                <Image src={sector.image} alt={sector.name} fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-transparent" />
-                {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-secondary/60" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-secondary/60" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-brand-secondary/60" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-brand-secondary/60" />
-                {/* Badge */}
-                <div className="absolute top-3 left-3 text-[9px] font-mono text-brand-secondary/90 bg-brand-dark/60 backdrop-blur-sm px-2 py-1 tracking-widest border border-brand-secondary/20 rounded">
-                  [ {sector.key} ]
-                </div>
-              </div>
-
-              {/* Stats row */}
-              <div className="grid grid-cols-2 gap-4">
-                {sector.stats.map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.25 + i * 0.1, duration: 0.4 }}
-                    className="relative border border-white/12 bg-white/8 backdrop-blur-md rounded-xl px-5 py-4 overflow-hidden"
-                  >
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-brand-secondary/30" />
-                    <div className="text-2xl xl:text-3xl font-black font-mono text-white mb-1">
-                      {stat.value}
-                    </div>
-                    <div className="text-[11px] font-mono text-brand-secondary/70 tracking-wider uppercase">
-                      {stat.label}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation dots with progress bar + arrows */}
-        <div className="flex items-center gap-4">
-          {/* Prev arrow */}
-          <button
-            onClick={goPrev}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
-            style={{ opacity: paused ? 1 : undefined }}
-            aria-label="Sector anterior"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Dots */}
-          <div className="flex items-end gap-6">
-            {sectors.map((s, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {categories.map((cat) => {
+            const Icon = cat.icon
+            return (
               <button
-                key={i}
-                onClick={() => { setCurrent(i); setPaused(true) }}
-                onMouseEnter={() => setPaused(true)}
-                onMouseLeave={() => setPaused(false)}
-                className="flex flex-col gap-1.5 items-start group/dot"
+                key={cat.id}
+                onClick={() => setActiveId(cat.id)}
+                className="group/card relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary"
               >
-                <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
-                  i === current ? 'text-brand-secondary' : 'text-white/35 group-hover/dot:text-white/60'
-                }`}>
-                  {s.name.toUpperCase()}
-                </span>
-                <div className="relative h-0.5 w-14 bg-white/15 rounded-full overflow-hidden">
-                  {i === current && (
-                    <motion.div
-                      key={`bar-${current}`}
-                      className="absolute inset-y-0 left-0 bg-brand-secondary rounded-full"
-                      initial={{ width: '0%' }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: paused ? 0 : 10, ease: 'linear' }}
-                    />
-                  )}
-                  {i < current && (
-                    <div className="absolute inset-0 bg-brand-secondary/40 rounded-full" />
-                  )}
+                <Image
+                  src={cat.image}
+                  alt={cat.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover/card:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/40 to-brand-dark/10" />
+                <div className="absolute inset-0 bg-cad-grid opacity-[0.04]" />
+
+                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-brand-secondary/60" />
+                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-brand-secondary/60" />
+
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                  <div className="w-8 h-8 border border-brand-secondary/60 bg-brand-dark/60 backdrop-blur-sm rounded-lg flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4 text-brand-secondary" />
+                  </div>
+                  <span className="text-[10px] font-mono text-brand-secondary/90 bg-brand-dark/60 backdrop-blur-sm px-1.5 py-1 tracking-widest border border-brand-secondary/20 rounded">
+                    [ {String(cat.id).padStart(2, '0')} ]
+                  </span>
+                </div>
+
+                <div className="absolute bottom-0 inset-x-0 p-4">
+                  <h3 className="text-base sm:text-lg font-bold font-mono text-white leading-snug mb-1">
+                    {cat.name}
+                  </h3>
+                  <p className="text-xs text-white/70 leading-relaxed line-clamp-2">{cat.teaser}</p>
                 </div>
               </button>
-            ))}
-          </div>
-
-          {/* Next arrow */}
-          <button
-            onClick={goNext}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
-            style={{ opacity: paused ? 1 : undefined }}
-            aria-label="Sector siguiente"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+            )
+          })}
         </div>
-
       </div>
+
+      <AnimatePresence>
+        {active && ActiveIcon && (
+          <motion.div
+            key="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-brand-dark/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+            onClick={() => setActiveId(null)}
+          >
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto bg-brand-dark border border-white/15 rounded-2xl shadow-2xl"
+            >
+              <div className="relative h-56 sm:h-72 shrink-0">
+                <Image src={active.image} alt={active.name} fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/30 to-transparent" />
+                <div className="absolute inset-0 bg-cad-grid opacity-[0.04]" />
+                <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-secondary/60" />
+
+                <button
+                  onClick={() => setActiveId(null)}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
+                  aria-label="Cerrar"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+
+                <div className="absolute bottom-4 left-6 flex items-center gap-3">
+                  <div className="w-11 h-11 border-2 border-brand-secondary/60 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
+                    <ActiveIcon className="w-5 h-5 text-brand-secondary" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-mono text-brand-secondary/70 tracking-widest uppercase block">
+                      [ {String(active.id).padStart(2, '0')} / {String(categories.length).padStart(2, '0')} ]
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black font-mono text-white leading-tight">
+                      {active.name}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 sm:p-8">
+                <p className="text-sm sm:text-base text-white/80 leading-relaxed">{active.alcance}</p>
+              </div>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); goPrev() }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
+                aria-label="Categoría anterior"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); goNext() }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
+                aria-label="Siguiente categoría"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
