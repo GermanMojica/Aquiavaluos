@@ -17,7 +17,6 @@ import {
   PawPrint,
   Lightbulb,
   Scale,
-  X,
   ChevronLeft,
   ChevronRight,
   type LucideIcon,
@@ -141,37 +140,36 @@ const categories: Category[] = [
   },
 ]
 
+const AUTOPLAY_MS = 8000
+
 export default function Sectors() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [activeId, setActiveId] = useState<number | null>(null)
+  const [current, setCurrent] = useState(0)
+  const [paused, setPaused] = useState(false)
 
-  const activeIndex = categories.findIndex((c) => c.id === activeId)
-  const active = activeIndex >= 0 ? categories[activeIndex] : null
-  const ActiveIcon = active?.icon
+  useEffect(() => {
+    if (paused) return
+    const t = setInterval(() => setCurrent((p) => (p + 1) % categories.length), AUTOPLAY_MS)
+    return () => clearInterval(t)
+  }, [paused])
 
   const goPrev = () => {
-    if (activeIndex < 0) return
-    setActiveId(categories[(activeIndex - 1 + categories.length) % categories.length].id)
+    setCurrent((p) => (p - 1 + categories.length) % categories.length)
+    setPaused(true)
   }
   const goNext = () => {
-    if (activeIndex < 0) return
-    setActiveId(categories[(activeIndex + 1) % categories.length].id)
+    setCurrent((p) => (p + 1) % categories.length)
+    setPaused(true)
   }
 
   useEffect(() => {
-    if (activeIndex < 0) return
-    document.body.style.overflow = 'hidden'
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setActiveId(null)
-      if (e.key === 'ArrowLeft') setActiveId(categories[(activeIndex - 1 + categories.length) % categories.length].id)
-      if (e.key === 'ArrowRight') setActiveId(categories[(activeIndex + 1) % categories.length].id)
+      if (e.key === 'ArrowLeft') goPrev()
+      if (e.key === 'ArrowRight') goNext()
     }
     window.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', onKeyDown)
-    }
-  }, [activeIndex])
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   useGSAP(() => {
     ;(async () => {
@@ -187,11 +185,46 @@ export default function Sectors() {
     })()
   }, { scope: containerRef })
 
-  return (
-    <section id="sectores" ref={containerRef} className="relative overflow-hidden bg-brand-dark text-white">
-      <div className="absolute inset-0 bg-cad-grid opacity-[0.04] pointer-events-none" />
+  const category = categories[current]
+  const Icon = category.icon
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10">
+  return (
+    <section
+      id="sectores"
+      ref={containerRef}
+      className="relative overflow-hidden text-white group"
+    >
+      {/* All background images stacked — crossfade via opacity */}
+      <div className="absolute inset-0">
+        {categories.map((cat, i) => (
+          <motion.div
+            key={cat.id}
+            className="absolute inset-0"
+            initial={{ opacity: i === 0 ? 1 : 0 }}
+            animate={{ opacity: i === current ? 1 : 0 }}
+            transition={{ duration: 1, ease: 'easeInOut' }}
+          >
+            <Image
+              src={cat.image}
+              alt={cat.name}
+              fill
+              className="object-cover"
+              priority={i === 0}
+            />
+          </motion.div>
+        ))}
+        {/* Dark overlay — left heavier for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark/90 via-brand-dark/70 to-brand-dark/40" />
+        <div className="absolute inset-0 bg-cad-grid opacity-[0.04] pointer-events-none" />
+      </div>
+
+      {/* Content */}
+      <div
+        className="relative z-10 max-w-7xl mx-auto px-6 py-16 sm:py-24 flex flex-col gap-10"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* Header */}
         <div className="text-center">
           <span className="text-xs font-mono text-brand-secondary/80 tracking-widest uppercase block mb-3">
             [ ALCANCE DEL SERVICIO ]
@@ -201,121 +234,126 @@ export default function Sectors() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {categories.map((cat) => {
-            const Icon = cat.icon
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveId(cat.id)}
-                className="group/card relative aspect-[4/3] rounded-xl overflow-hidden border border-white/15 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary"
-              >
-                <Image
-                  src={cat.image}
-                  alt={cat.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover/card:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/40 to-brand-dark/10" />
-                <div className="absolute inset-0 bg-cad-grid opacity-[0.04]" />
-
-                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-brand-secondary/60" />
-                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-brand-secondary/60" />
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-brand-secondary/60" />
-                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-brand-secondary/60" />
-
-                <div className="absolute top-3 left-3 flex items-center gap-2">
-                  <div className="w-8 h-8 border border-brand-secondary/60 bg-brand-dark/60 backdrop-blur-sm rounded-lg flex items-center justify-center shrink-0">
-                    <Icon className="w-4 h-4 text-brand-secondary" />
-                  </div>
-                  <span className="text-[10px] font-mono text-brand-secondary/90 bg-brand-dark/60 backdrop-blur-sm px-1.5 py-1 tracking-widest border border-brand-secondary/20 rounded">
-                    [ {String(cat.id).padStart(2, '0')} ]
-                  </span>
-                </div>
-
-                <div className="absolute bottom-0 inset-x-0 p-4">
-                  <h3 className="text-base sm:text-lg font-bold font-mono text-white leading-snug mb-1">
-                    {cat.name}
-                  </h3>
-                  <p className="text-xs text-white/70 leading-relaxed line-clamp-2">{cat.teaser}</p>
-                </div>
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {active && ActiveIcon && (
+        {/* Category detail — animates on category change */}
+        <AnimatePresence mode="wait">
           <motion.div
-            key="modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-brand-dark/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
-            onClick={() => setActiveId(null)}
+            key={category.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start"
           >
+            {/* Left column: text */}
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 border-2 border-brand-secondary/60 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-brand-secondary" />
+                </div>
+                <span className="text-xs font-mono text-brand-secondary/70 tracking-widest uppercase">
+                  [ {String(category.id).padStart(2, '0')} / {String(categories.length).padStart(2, '0')} ]
+                </span>
+              </div>
+
+              <h3 className="text-3xl sm:text-4xl font-black font-mono text-white leading-tight">
+                {category.name}
+              </h3>
+
+              <p className="text-base font-semibold text-white/90 leading-relaxed max-w-md">
+                {category.teaser}
+              </p>
+
+              <p className="text-sm text-white/70 leading-relaxed max-w-md">
+                {category.alcance}
+              </p>
+            </div>
+
+            {/* Right column: featured image panel */}
             <motion.div
-              key={active.id}
-              initial={{ opacity: 0, y: 24, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.98 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto bg-brand-dark border border-white/15 rounded-2xl shadow-2xl"
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden lg:block"
             >
-              <div className="relative h-56 sm:h-72 shrink-0">
-                <Image src={active.image} alt={active.name} fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/30 to-transparent" />
-                <div className="absolute inset-0 bg-cad-grid opacity-[0.04]" />
+              <div className="relative h-64 xl:h-80 rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+                <Image src={category.image} alt={category.name} fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/70 via-transparent to-transparent" />
+                {/* Corner accents */}
                 <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-secondary/60" />
                 <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-secondary/60" />
-
-                <button
-                  onClick={() => setActiveId(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
-                  aria-label="Cerrar"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-
-                <div className="absolute bottom-4 left-6 flex items-center gap-3">
-                  <div className="w-11 h-11 border-2 border-brand-secondary/60 bg-white/10 rounded-xl flex items-center justify-center shrink-0">
-                    <ActiveIcon className="w-5 h-5 text-brand-secondary" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono text-brand-secondary/70 tracking-widest uppercase block">
-                      [ {String(active.id).padStart(2, '0')} / {String(categories.length).padStart(2, '0')} ]
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-black font-mono text-white leading-tight">
-                      {active.name}
-                    </h3>
-                  </div>
+                <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-brand-secondary/60" />
+                <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-brand-secondary/60" />
+                {/* Badge */}
+                <div className="absolute top-3 left-3 text-[9px] font-mono text-brand-secondary/90 bg-brand-dark/60 backdrop-blur-sm px-2 py-1 tracking-widest border border-brand-secondary/20 rounded">
+                  [ {String(category.id).padStart(2, '0')} ]
                 </div>
               </div>
-
-              <div className="p-6 sm:p-8">
-                <p className="text-sm sm:text-base text-white/80 leading-relaxed">{active.alcance}</p>
-              </div>
-
-              <button
-                onClick={(e) => { e.stopPropagation(); goPrev() }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
-                aria-label="Categoría anterior"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); goNext() }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-colors"
-                aria-label="Siguiente categoría"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+
+        {/* Navigation: arrows + scrollable progress tabs (01–12) */}
+        <div className="flex items-center gap-4">
+          {/* Prev arrow */}
+          <button
+            onClick={goPrev}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
+            style={{ opacity: paused ? 1 : undefined }}
+            aria-label="Categoría anterior"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Tabs */}
+          <div className="flex-1 flex items-end gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {categories.map((cat, i) => (
+              <button
+                key={cat.id}
+                onClick={() => { setCurrent(i); setPaused(true) }}
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
+                className="flex flex-col gap-1.5 items-center shrink-0 group/dot px-0.5"
+                aria-label={cat.name}
+                title={cat.name}
+              >
+                <span className={`text-[10px] font-mono tracking-wider transition-colors duration-300 ${
+                  i === current ? 'text-brand-secondary' : 'text-white/35 group-hover/dot:text-white/60'
+                }`}>
+                  {String(cat.id).padStart(2, '0')}
+                </span>
+                <div className="relative h-0.5 w-8 bg-white/15 rounded-full overflow-hidden">
+                  {i === current && (
+                    <motion.div
+                      key={`bar-${current}`}
+                      className="absolute inset-y-0 left-0 bg-brand-secondary rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: paused ? 0 : AUTOPLAY_MS / 1000, ease: 'linear' }}
+                    />
+                  )}
+                  {i < current && (
+                    <div className="absolute inset-0 bg-brand-secondary/40 rounded-full" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Next arrow */}
+          <button
+            onClick={goNext}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            className="w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-brand-secondary hover:border-brand-secondary transition-all duration-300 opacity-0 group-hover:opacity-100 shrink-0 shadow-md"
+            style={{ opacity: paused ? 1 : undefined }}
+            aria-label="Siguiente categoría"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </section>
   )
 }
