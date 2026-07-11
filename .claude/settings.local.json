@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import os; print\\(os.path.getsize\\('public/images/logos/favicon.webp'\\), 'bytes'\\)\")",
+      "Skill(run)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000 --max-time 15)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(find docs *)",
+      "Bash(grep -rn \"Sectores\\\\|sectores\" src/components/layout/Navbar.tsx)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "WebSearch",
+      "WebFetch(domain:www.pexels.com)",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(grep -oE \"\\\\{ X\\\\b[^}]{0,30}\" node_modules/lucide-react/dist/lucide-react.d.ts)",
+      "Bash(ls -la .superpowers/sdd/progress.md)",
+      "Bash(mkdir -p .superpowers/sdd)",
+      "Bash(cat)",
+      "Bash(git check-ignore *)"
+    ]
+  }
+}
