@@ -41,10 +41,10 @@ export default function Footer() {
                 <Image src="/images/logos/rna.webp" alt="Registro Nacional de Avaluadores (RNA)" width={90} height={35} className="object-contain max-h-full max-w-full" />
               </div>
               <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
-                <Image src="/images/logos/iso9001.png" alt="Certificación ISO 9001" width={100} height={40} className="object-contain max-h-full max-w-full" />
+                <Image src="/images/logos/iso9001-icontec.png" alt="Certificación ISO 9001" width={49} height={80} className="object-contain w-auto h-auto max-h-full max-w-full" />
               </div>
               <div className="relative h-10 w-24 flex items-center justify-start filter brightness-0 invert opacity-50 hover:opacity-100 transition-all duration-300">
-                <Image src="/images/logos/Certifiediqnet.png" alt="IQNet Certified" width={100} height={40} className="object-contain max-h-full max-w-full" />
+                <Image src="/images/logos/iqnet-certified.png" alt="IQNet Certified" width={81} height={80} className="object-contain w-auto h-auto max-h-full max-w-full" />
               </div>
             </div>
           </div>

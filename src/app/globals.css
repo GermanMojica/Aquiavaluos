@@ -234,3 +234,12 @@ div[class*="track"] {
   will-change: stroke-dashoffset;
   transform: translateZ(0);
 }
+
+/* Hero certification seals sit directly on the background video (no white card),
+   so a soft halo keeps the navy marks legible over both sky and shadow. */
+.hero-cert-logo {
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 2px 12px rgba(255, 255, 255, 0.45))
+    drop-shadow(0 4px 16px rgba(11, 19, 43, 0.35));
+}

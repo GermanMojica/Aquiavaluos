@@ -129,7 +129,7 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
                 className="font-black tracking-tight leading-[1.1] sm:leading-[1.1] font-mono text-white"
                 style={{ fontSize: 'clamp(2.5rem, 3vw + 2.6vh, 5rem)' }}
               >
-                {['Avalúos', 'certificados', 'con', 'respaldo', 'técnico,', 'normativo', 'y', 'experiencia.'].map((word, idx) => (
+                {['Avalúos', 'con', 'respaldo', 'técnico,', 'normativo', 'y', 'experiencia.'].map((word, idx) => (
                   <span key={idx} className="hero-title-word inline-block mr-3">
                     {word === 'técnico,' || word === 'normativo' ? (
                       <span className="text-brand-secondary">{word}</span>
@@ -144,7 +144,7 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
                 className="hero-subtitle text-white/80 max-w-[560px] leading-relaxed font-medium"
                 style={{ fontSize: 'clamp(1rem, 0.8vw + 0.8vh, 1.2rem)' }}
               >
-                Más de 15 años de trayectoria en el mercado inmobiliario, ofreciendo dictámenes periciales precisos para la toma de decisiones estratégicas.
+                Más de 15 años de trayectoria en el mercado avaluatorio, ofreciendo servicios precisos para la toma de decisiones estratégicas.
               </p>
             </div>
 
@@ -175,30 +175,26 @@ export default function Hero({ onOpenDrawer }: HeroProps) {
 
             {/* IQNet */}
             <div className="flex flex-col items-center gap-2">
-              <div className="bg-white/15 backdrop-blur-md border border-white/30 p-5 flex items-center justify-center w-36 h-36 shadow-2xl">
-                <Image
-                  src="/images/logos/Certifiediqnet.png"
-                  alt="IQNet Certified"
-                  width={110}
-                  height={110}
-                  className="object-contain brightness-0 invert"
-                />
-              </div>
-              <span className="text-white/60 text-[10px] font-mono tracking-widest">CO–SC–2000670</span>
+              <Image
+                src="/images/logos/iqnet-certified.png"
+                alt="IQNet Certified Management System"
+                width={140}
+                height={139}
+                className="object-contain hero-cert-logo"
+              />
+              <span className="text-white/70 text-[10px] font-mono tracking-widest">CO–SC–2000670</span>
             </div>
 
             {/* ISO 9001 */}
             <div className="flex flex-col items-center gap-2">
-              <div className="bg-white/15 backdrop-blur-md border border-white/30 p-5 flex items-center justify-center w-36 h-36 shadow-2xl">
-                <Image
-                  src="/images/logos/iso9001.png"
-                  alt="ISO 9001 Icontec"
-                  width={100}
-                  height={100}
-                  className="object-contain brightness-0 invert"
-                />
-              </div>
-              <span className="text-white/60 text-[10px] font-mono tracking-widest">SC–2000670</span>
+              <Image
+                src="/images/logos/iso9001-icontec.png"
+                alt="ISO 9001 Icontec Internacional"
+                width={95}
+                height={155}
+                className="object-contain hero-cert-logo"
+              />
+              <span className="text-white/70 text-[10px] font-mono tracking-widest">SC–2000670</span>
             </div>
           </div>
 

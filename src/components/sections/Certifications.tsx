@@ -76,7 +76,7 @@ export default function Certifications() {
           {/* IQNet */}
           <div className="cert-logo-card flex flex-col items-center gap-4">
             <Image
-              src="/images/logos/Certifiediqnet.png"
+              src="/images/logos/iqnet-certified.png"
               alt="IQNet Certified Management System"
               width={160}
               height={160}
@@ -90,9 +90,9 @@ export default function Certifications() {
           {/* ISO 9001 Icontec */}
           <div className="cert-logo-card flex flex-col items-center gap-4">
             <Image
-              src="/images/logos/iso9001.png"
+              src="/images/logos/iso9001-icontec.png"
               alt="ISO 9001 Icontec Internacional"
-              width={150}
+              width={92}
               height={150}
               className="object-contain hover:scale-105 transition-transform duration-300"
             />
