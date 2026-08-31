@@ -12,7 +12,7 @@ const reasons = [
     icon: Award,
     tag: 'EXPERIENCIA Y TRAYECTORIA',
     title: 'Experiencia y Trayectoria',
-    body: 'Contamos con 15 años de experiencia en la industria de la valoración de bienes y consultorías inmobiliarias, respaldados por los 35 años de sólida trayectoria y reconocida experiencia del arquitecto SERGIO DELGADO PACHÓN, lo que garantiza un servicio de calidad y confiabilidad en los resultados.',
+    body: 'Contamos con 15 años de experiencia en la industria de la valoración de bienes y consultorías inmobiliarias, respaldados por los 40 años de sólida trayectoria y reconocida experiencia del arquitecto SERGIO DELGADO PACHÓN, lo que garantiza un servicio de calidad y confiabilidad en los resultados.',
     tags: null,
     highlight: [
       { value: '5.0K+', label: 'Avalúos realizados' },

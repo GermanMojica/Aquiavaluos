@@ -18,8 +18,8 @@ const clients = [
 const specialties = [
   {
     heading: 'Experiencia Profesional',
-    body: 'Más de 15 años liderando avalúos comerciales, industriales y rurales para las principales bancas del país.',
-    bullets: ['Avalúos comerciales e industriales', 'Valoración de infraestructura', 'Dictámenes para banca'],
+    body: 'Más de 15 años liderando avalúos comerciales, industriales y rurales para entidades financieras, empresas y organismos públicos de todo el país.',
+    bullets: ['Avalúos comerciales e industriales', 'Valoración de infraestructura', 'Consultoría inmobiliaria'],
   },
   {
     heading: 'Especialización Técnica',
@@ -148,7 +148,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
 
               {/* Bio */}
               <p className="screen-2-text text-base sm:text-lg text-brand-primary/65 leading-relaxed max-w-lg">
-                Arquitecto con más de 15 años de trayectoria en el sector inmobiliario, respaldado por los 35 años de sólida experiencia, garantizando calidad y confiabilidad en cada resultado.
+                Arquitecto con más de 15 años de trayectoria en el sector valuatorio, respaldado por 40 años de experiencia profesional, garantizando calidad y confiabilidad en cada resultado.
               </p>
 
               {/* CTA */}
