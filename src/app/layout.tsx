@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "ARQUIAVALÚOS | Valoración y Avalúos Premium",
+  title: "ARQUIAVALÚOS® | Valoración y Avalúos Premium",
   description: "Especialistas en avalúos, consultoría inmobiliaria y soluciones de valoración técnica certificada para empresas, entidades financieras y particulares en Colombia.",
 };
 

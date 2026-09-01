@@ -2,9 +2,9 @@
 
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
-import { Award, Globe, MapPin } from 'lucide-react'
+import { Award, ScanSearch, MapPin } from 'lucide-react'
 
-const standards = ['IVSC', 'NIIF', 'NIC', 'ICONTEC-RNA®', 'ISO 9001']
+const method = ['Inspección en sitio', 'Contraste de métodos', 'Fuentes verificables', 'Criterio independiente']
 
 const reasons = [
   {
@@ -12,7 +12,7 @@ const reasons = [
     icon: Award,
     tag: 'EXPERIENCIA Y TRAYECTORIA',
     title: 'Experiencia y Trayectoria',
-    body: 'Contamos con 15 años de experiencia en la industria de la valoración de bienes y consultorías inmobiliarias, respaldados por los 35 años de sólida trayectoria y reconocida experiencia del arquitecto SERGIO DELGADO PACHÓN, lo que garantiza un servicio de calidad y confiabilidad en los resultados.',
+    body: 'Contamos con 15 años de experiencia en la industria de la valoración de bienes y consultorías inmobiliarias, respaldados por los 40 años de sólida trayectoria y reconocida experiencia del arquitecto SERGIO DELGADO PACHÓN, lo que garantiza un servicio de calidad y confiabilidad en los resultados.',
     tags: null,
     highlight: [
       { value: '5.0K+', label: 'Avalúos realizados' },
@@ -22,16 +22,16 @@ const reasons = [
     fromLeft: true,
   },
   {
-    id: 'normas',
-    icon: Globe,
-    tag: 'NORMAS INTERNACIONALES',
-    title: 'Normas y Estándares Internacionales',
-    body: 'Nuestros servicios se basan en Normas Internacionales de Valuación del IVSC, Normas Técnicas Sectoriales de Valuación ICONTEC-RNA®, Normas Internacionales de Información Financiera NIIF, Normas Internacionales de Contabilidad NIC y/o en el marco de las normas y legislación nacional vigente en Colombia. Esto garantiza que nuestros avalúos se realicen bajo los estándares más rigurosos y actualizados.',
-    tags: standards,
+    id: 'rigor',
+    icon: ScanSearch,
+    tag: 'RIGOR TÉCNICO E INDEPENDENCIA',
+    title: 'Cifras que resisten cualquier revisión',
+    body: 'Un avalúo solo vale lo que puede sostener. Cada cifra que entregamos nace de la inspección en sitio del activo, se contrasta con varios métodos de valoración y queda documentada con su fuente. Por eso nuestros informes se sostienen frente a un banco, un auditor o una autoridad, y no frente a los intereses de ninguna de las partes.',
+    tags: method,
     highlight: [
-      { value: 'NIIF', label: 'Estándar internacional' },
-      { value: 'IVS', label: 'Metodología aplicada' },
-      { value: 'ISO 9001', label: 'Certificación calidad' },
+      { value: '100%', label: 'Trazabilidad documental' },
+      { value: '3', label: 'Métodos de contraste' },
+      { value: '0', label: 'Vínculo con las partes' },
     ],
     fromLeft: false,
   },
@@ -39,7 +39,7 @@ const reasons = [
     id: 'cobertura',
     icon: MapPin,
     tag: 'COBERTURA NACIONAL',
-    title: 'Cobertura Nacional y Local',
+    title: 'Cobertura Nacional',
     body: 'Nuestra cobertura se extiende a nivel nacional, gracias a asociados locales en las principales ciudades y regiones del país. Esto asegura que podamos brindar un servicio directo y eficiente en todo el territorio colombiano.',
     tags: null,
     highlight: [
@@ -107,7 +107,7 @@ export default function BlueprintTransition() {
             }
           }
         )
-        // Tags (normas card)
+        // Method chips (rigor card)
         if (r.tags) {
           gsap.fromTo(
             `.why-tag-${r.id}`,
@@ -148,10 +148,10 @@ export default function BlueprintTransition() {
           </span>
           <h2 className="why-title text-4xl sm:text-5xl lg:text-6xl font-black font-mono leading-tight text-brand-primary">
             ¿Por qué elegir{' '}
-            <span className="text-brand-secondary">Arquiavalúos?</span>
+            <span className="text-brand-secondary">Arquiavalúos<span className="align-super text-[0.35em] font-bold">®</span>?</span>
           </h2>
           <p className="why-subtitle text-base sm:text-lg text-brand-gray-cool mt-4 max-w-2xl mx-auto leading-relaxed">
-            Tres razones fundamentales que nos distinguen en el sector de la valoración inmobiliaria en Colombia.
+            Entendemos sus necesidades, valoramos sus activos con rigor y le brindamos la certeza que necesita para tomar decisiones estratégicas.
           </p>
         </div>
 
@@ -197,7 +197,7 @@ export default function BlueprintTransition() {
                       {reason.tags.map((tag) => (
                         <span
                           key={tag}
-                          className={`why-tag-${reason.id} text-[10px] font-mono font-bold px-3 py-1.5 rounded-md bg-brand-secondary/15 border border-brand-secondary/30 text-brand-secondary tracking-widest`}
+                          className={`why-tag-${reason.id} text-[10px] font-mono font-bold px-3 py-1.5 rounded-md bg-brand-secondary/15 border border-brand-secondary/30 text-brand-secondary tracking-[0.08em] uppercase`}
                         >
                           {tag}
                         </span>

@@ -35,6 +35,17 @@ html, body {
   font-family: var(--font-sans);
 }
 
+/* Anchor targets clear the fixed navbar when jumped to from the nav/footer */
+#quienes-somos,
+#clientes,
+#certificaciones,
+#diferenciales,
+#sectores,
+#respaldo,
+#contacto {
+  scroll-margin-top: 96px;
+}
+
 /* Base custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

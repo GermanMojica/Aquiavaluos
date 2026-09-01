@@ -8,42 +8,52 @@ export default function Partners() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
 
+  // Los logos vienen recortados y con fondo transparente, así que el alto máximo
+  // se ajusta por logo para que todos pesen ópticamente igual (área similar,
+  // no altura similar): los apaisados van más bajos, los verticales más altos.
   const guilds = [
     {
-      src: '/images/logos/gremio-1.webp',
-      alt: 'Gremio 1',
-      width: 200,
-      height: 200,
-      logoClass: 'max-h-[75px] max-w-[192px] scale-[1.18] md:max-h-[88px] md:max-w-[216px]',
+      src: '/images/logos/gremio-lonja-barranquilla.webp',
+      alt: 'Lonja de Barranquilla — El gremio inmobiliario',
+      width: 294,
+      height: 266,
+      logoClass: 'max-h-[64px] md:max-h-[82px] lg:max-h-[124px] xl:max-h-[145px]',
     },
     {
-      src: '/images/logos/gremio-2.webp',
-      alt: 'Gremio 2',
+      src: '/images/logos/gremio-sociedad-arquitectos.webp',
+      alt: 'Sociedad Colombiana de Arquitectos',
       width: 200,
-      height: 200,
-      logoClass: 'max-h-[73px] max-w-[140px] md:max-h-[85px] md:max-w-[154px]',
+      height: 280,
+      logoClass: 'max-h-[72px] md:max-h-[92px] lg:max-h-[140px] xl:max-h-[164px]',
     },
     {
-      src: '/images/logos/gremio-3.webp',
-      alt: 'Gremio 3',
-      width: 200,
-      height: 200,
-      logoClass: 'max-h-[75px] max-w-[179px] scale-[1.14] md:max-h-[88px] md:max-w-[200px]',
+      src: '/images/logos/gremio-sociedad-avaluadores.webp',
+      alt: 'Sociedad Colombiana de Avaluadores',
+      width: 194,
+      height: 147,
+      logoClass: 'max-h-[58px] md:max-h-[76px] lg:max-h-[115px] xl:max-h-[135px]',
     },
     {
-      src: '/images/logos/gremio-4.webp',
-      alt: 'Gremio 4',
-      width: 200,
-      height: 200,
-      logoClass: 'max-h-[75px] max-w-[182px] scale-[1.06] md:max-h-[88px] md:max-w-[205px]',
+      src: '/images/logos/gremio-upav.webp',
+      alt: 'UPAV — Unión Panamericana de Asociaciones de Valuación',
+      width: 479,
+      height: 480,
+      logoClass: 'max-h-[72px] md:max-h-[92px] lg:max-h-[140px] xl:max-h-[164px]',
     },
     {
-      src: '/images/logos/gremio-5.webp',
-      alt: 'Gremio 5',
-      width: 200,
-      height: 200,
-      logoClass: 'max-h-[81px] max-w-[195px] scale-[1.14] md:max-h-[93px] md:max-w-[218px]',
-    }
+      src: '/images/logos/gremio-ana.webp',
+      alt: 'A.N.A. — Autorregulador Nacional de Avaluadores',
+      width: 480,
+      height: 347,
+      logoClass: 'max-h-[58px] md:max-h-[74px] lg:max-h-[112px] xl:max-h-[132px]',
+    },
+    {
+      src: '/images/logos/gremio-rna.webp',
+      alt: 'RNA — Registro Nacional de Avaluadores',
+      width: 475,
+      height: 303,
+      logoClass: 'max-h-[55px] md:max-h-[70px] lg:max-h-[107px] xl:max-h-[126px]',
+    },
   ]
 
   useGSAP(() => {
@@ -86,6 +96,7 @@ export default function Partners() {
   return (
     <section
       ref={containerRef}
+      id="respaldo"
       className="py-16 md:py-[72px] lg:py-20 bg-white border-t border-b border-brand-primary/10 relative overflow-hidden"
     >
       {/* CAD grids para estética técnica */}
@@ -99,20 +110,16 @@ export default function Partners() {
             [ RESPALDO INSTITUCIONAL ]
           </span>
           <h3 className="text-2xl sm:text-3xl font-bold font-mono text-brand-primary dark:text-brand-primary uppercase tracking-wider">
-            Gremios y Asociaciones del Sector
+            Entidades que nos Respaldan
           </h3>
           <div className="w-16 h-[2px] bg-brand-secondary mx-auto mt-6" />
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-6 lg:hidden items-center justify-items-center gap-x-6 gap-y-4 md:gap-x-5 md:gap-y-6 w-full max-w-4xl px-6 sm:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:hidden items-center justify-items-center gap-x-6 gap-y-8 md:gap-x-8 md:gap-y-10 w-full max-w-4xl px-6 sm:px-8">
           {guilds.map((guild, idx) => (
             <div
               key={idx}
-              className={`relative h-20 w-full max-w-[192px] px-2 py-1 md:col-span-2 md:h-24 md:max-w-[220px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer ${
-                idx === guilds.length - 1 ? 'col-span-2 justify-self-center' : ''
-              } ${
-                idx === 3 ? 'md:col-start-2' : ''
-              }`}
+              className="relative h-24 w-full max-w-[192px] px-2 py-1 md:h-28 md:max-w-[220px] flex items-center justify-center hover:scale-110 transition-all duration-500 cursor-pointer"
             >
 
               <Image 
@@ -122,14 +129,14 @@ export default function Partners() {
                 height={guild.height}
                 sizes="(max-width: 767px) 192px, 220px"
                 style={{ width: 'auto', height: 'auto' }}
-                className={`object-contain drop-shadow-md ${guild.logoClass}`}
+                className={`object-contain drop-shadow-md max-w-full ${guild.logoClass}`}
               />
             </div>
           ))}
         </div>
 
         {/* Carrusel / Marquee Animado */}
-        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-56 xl:h-64 mask-image-fade">
+        <div className="relative w-full overflow-hidden hidden lg:flex items-center h-64 xl:h-72 mask-image-fade">
           <div
             ref={trackRef}
             className="flex items-center w-max"
@@ -139,7 +146,7 @@ export default function Partners() {
                 {guilds.map((guild, idx) => (
                   <div
                     key={`${setIdx}-${idx}`}
-                    className="relative h-44 w-64 xl:h-52 xl:w-80 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer"
+                    className="relative h-52 w-64 xl:h-60 xl:w-80 flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-500 cursor-pointer"
                   >
 
                     <Image
@@ -149,7 +156,7 @@ export default function Partners() {
                       height={guild.height}
                       sizes="(max-width: 1279px) 256px, 320px"
                       style={{ width: 'auto', height: 'auto' }}
-                      className="object-contain drop-shadow-md max-h-[190px] xl:max-h-[220px] max-w-[95%]"
+                      className={`object-contain drop-shadow-md max-w-[95%] ${guild.logoClass}`}
                     />
                   </div>
                 ))}

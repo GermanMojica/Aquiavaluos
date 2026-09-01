@@ -20,10 +20,14 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Listed in the same order the sections appear on the page
   const navLinks = [
-    { name: 'Quiénes Somos', href: '#quienes-somos' },
-    { name: 'Diferenciales', href: '#diferenciales' },
-    { name: 'Sectores', href: '#sectores' }
+    { name: 'Quiénes Somos',  href: '#quienes-somos' },
+    { name: 'Clientes',        href: '#clientes' },
+    { name: 'Certificaciones', href: '#certificaciones' },
+    { name: 'Diferenciales',   href: '#diferenciales' },
+    { name: 'Sectores',        href: '#sectores' },
+    { name: 'Respaldo',        href: '#respaldo' },
   ]
 
   return (
@@ -79,12 +83,12 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-10 xl:gap-12">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-7">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className={`text-base font-bold font-mono transition-colors py-2 tracking-wider relative group hover:text-brand-secondary ${
+              className={`text-[13px] xl:text-[15px] font-bold font-mono whitespace-nowrap transition-colors py-2 tracking-wide relative group hover:text-brand-secondary ${
                 scrolled ? 'text-brand-primary' : 'text-brand-primary'
               }`}
             >
@@ -95,10 +99,10 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-4 xl:gap-6 shrink-0">
           <a
             href="tel:+573001234567"
-            className={`flex items-center gap-2 text-base font-bold font-mono whitespace-nowrap transition-colors hover:text-brand-secondary ${
+            className={`hidden xl:flex items-center gap-2 text-[15px] font-bold font-mono whitespace-nowrap transition-colors hover:text-brand-secondary ${
               scrolled ? 'text-brand-primary' : 'text-brand-primary'
             }`}
           >
@@ -107,7 +111,7 @@ export default function Navbar({ onOpenDrawer }: NavbarProps) {
           </a>
           <button
             onClick={onOpenDrawer}
-            className="bg-brand-primary hover:bg-brand-primary-light dark:bg-brand-primary dark:hover:bg-brand-primary-light text-white font-bold font-mono text-base px-6 py-3.5 tracking-wider whitespace-nowrap transition-all cursor-pointer hover:shadow-lg"
+            className="bg-brand-primary hover:bg-brand-primary-light dark:bg-brand-primary dark:hover:bg-brand-primary-light text-white font-bold font-mono text-[13px] xl:text-[15px] px-4 xl:px-6 py-3.5 tracking-wider whitespace-nowrap transition-all cursor-pointer hover:shadow-lg"
           >
             SOLICITAR AVALÚO
           </button>

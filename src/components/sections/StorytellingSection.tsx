@@ -7,22 +7,33 @@ import { ArrowUpRight } from 'lucide-react'
 
 interface Props { onOpenDrawer: () => void }
 
+// Every logo is pre-normalized to an identical 640x240 transparent canvas
+// (see scripts/normalize-logos.cjs), so no logo reads as bigger than another.
+const LOGO_W = 640
+const LOGO_H = 240
+
 const clients = [
-  { src: '/images/clients/GRUPO-_SURA.png', alt: 'Grupo Sura',         w: 3509, h: 1411, cls: 'max-h-[48px] max-w-[160px]' },
-  { src: '/images/clients/camara.webp',      alt: 'Cámara de Comercio', w: 1024, h: 415,  cls: 'max-h-[48px] max-w-[160px]' },
-  { src: '/images/clients/dian.webp',        alt: 'DIAN',               w: 194,  h: 51,   cls: 'max-h-[44px] max-w-[140px]' },
-  { src: '/images/clients/alcaldia.webp',    alt: 'Alcaldía',           w: 409,  h: 123,  cls: 'max-h-[46px] max-w-[152px]' },
-  { src: '/images/clients/afinia.webp',      alt: 'Afinia',             w: 512,  h: 323,  cls: 'max-h-[50px] max-w-[130px]' },
+  { src: '/images/clients/norm/sura.webp',                   alt: 'Grupo Sura' },
+  { src: '/images/clients/norm/gases-del-caribe.webp',       alt: 'Gases del Caribe' },
+  { src: '/images/clients/norm/dian.webp',                   alt: 'DIAN' },
+  { src: '/images/clients/norm/air-e.webp',                  alt: 'Air-e' },
+  { src: '/images/clients/norm/camara.webp',                 alt: 'Cámara de Comercio de Barranquilla' },
+  { src: '/images/clients/norm/promigas.webp',               alt: 'Promigas' },
+  { src: '/images/clients/norm/alcaldia.webp',               alt: 'Alcaldía de Barranquilla' },
+  { src: '/images/clients/norm/banco-agrario.webp',          alt: 'Banco Agrario de Colombia' },
+  { src: '/images/clients/norm/children-international.webp', alt: 'Children International' },
+  { src: '/images/clients/norm/afinia.webp',                 alt: 'Afinia — Grupo EPM' },
+  { src: '/images/clients/norm/oleoflores.webp',             alt: 'Grupo Empresarial Oleoflores' },
 ]
 
 const specialties = [
   {
     heading: 'Experiencia Profesional',
-    body: 'Más de 15 años liderando avalúos comerciales, industriales y rurales para las principales bancas del país.',
-    bullets: ['Avalúos comerciales e industriales', 'Valoración de infraestructura', 'Dictámenes para banca'],
+    body: 'Más de 15 años liderando avalúos comerciales, industriales y rurales para entidades financieras, empresas y organismos públicos en todo el país.',
+    bullets: ['Avalúos comerciales e industriales', 'Valoración de infraestructura', 'Informes para entidades financieras'],
   },
   {
-    heading: 'Especialización Técnica',
+    heading: 'Consultoría Inmobiliaria',
     body: 'Avaluador certificado RAA/RNA. Experto en estándares IVS y metodologías NIIF para fondos internacionales.',
     bullets: ['Certificación RAA / RNA oficial', 'Estándares IVS y NIIF', 'Consultor fondos inmobiliarios'],
   },
@@ -32,13 +43,19 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
   const containerRef  = useRef<HTMLDivElement>(null)
   const clientsSectionRef = useRef<HTMLDivElement>(null)
   const trackRef      = useRef<HTMLDivElement>(null)
+  const viewportRef   = useRef<HTMLDivElement>(null)
   const marqueeRef    = useRef<unknown>(null)
+  const spotlightRef  = useRef<{ tick: () => void; ticker: { remove: (fn: () => void) => void } } | null>(null)
 
-  // Cleanup marquee animation
+  // Cleanup marquee animation + spotlight ticker
   useEffect(() => {
     return () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(marqueeRef.current as any)?.kill?.()
+      if (spotlightRef.current) {
+        spotlightRef.current.ticker.remove(spotlightRef.current.tick)
+        spotlightRef.current = null
+      }
     }
   }, [])
 
@@ -70,19 +87,54 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
         }
       })
         .from('.clients-header', { opacity: 0, y: 30, duration: 0.8, ease: 'power2.out' })
-        .from('.stat-item', { opacity: 0, y: 25, stagger: 0.06, duration: 0.6, ease: 'power2.out' }, '-=0.4')
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
       // Infinite marquee for client logos
-      if (trackRef.current) {
+      if (trackRef.current && !reduced) {
         const marquee = gsap.to(trackRef.current, {
           xPercent: -25,
-          duration: 28,
+          duration: 44,
           ease: 'none',
           repeat: -1,
         })
         marqueeRef.current = marquee
         trackRef.current.addEventListener('mouseenter', () => marquee.pause(), { passive: true })
         trackRef.current.addEventListener('mouseleave', () => marquee.play(),  { passive: true })
+      }
+
+      // Spotlight — a logo swells as it reaches the center of the strip
+      // and settles back down on its way out.
+      if (viewportRef.current && !reduced) {
+        const viewport = viewportRef.current
+        const slots = Array.from(viewport.querySelectorAll<HTMLElement>('.logo-slot'))
+
+        const tick = () => {
+          const vb = viewport.getBoundingClientRect()
+          if (!vb.width) return
+          const centerX = vb.left + vb.width / 2
+          const falloff = Math.max(240, vb.width * 0.28)
+
+          // read every rect first, then write — no layout thrashing
+          const rects = slots.map((el) => el.getBoundingClientRect())
+
+          for (let i = 0; i < slots.length; i++) {
+            const r = rects[i]
+            if (r.right < vb.left - 100 || r.left > vb.right + 100) continue
+            const dist = Math.abs(r.left + r.width / 2 - centerX)
+            const t = Math.min(1, Math.max(0, 1 - dist / falloff))
+            const e = t * t * (3 - 2 * t) // smoothstep
+
+            const el = slots[i]
+            el.style.transform = `scale(${(1 + 0.26 * e).toFixed(4)}) translateZ(0)`
+            el.style.opacity   = (0.4 + 0.6 * e).toFixed(3)
+            el.style.filter    = `grayscale(${((1 - e) * 0.8).toFixed(3)}) saturate(${(0.55 + 0.45 * e).toFixed(3)})`
+          }
+        }
+
+        gsap.ticker.add(tick)
+        spotlightRef.current = { tick, ticker: gsap.ticker }
+        tick()
       }
     })()
   }, { scope: containerRef })
@@ -148,7 +200,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
 
               {/* Bio */}
               <p className="screen-2-text text-base sm:text-lg text-brand-primary/65 leading-relaxed max-w-lg">
-                Arquitecto con más de 15 años de trayectoria en el sector inmobiliario, respaldado por los 35 años de sólida experiencia, garantizando calidad y confiabilidad en cada resultado.
+                Arquitecto con más de 15 años de trayectoria en el sector valuatorio, respaldado por 40 años de experiencia profesional, garantizando calidad y confiabilidad en cada resultado.
               </p>
 
               {/* CTA */}
@@ -184,6 +236,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
 
       {/* ──────────── PANTALLA 2: CLIENTES ──────────── */}
       <section
+        id="clientes"
         ref={clientsSectionRef}
         className="relative min-h-screen bg-white flex items-center justify-center py-20 sm:py-28 overflow-hidden text-brand-primary border-t border-brand-primary/5"
       >
@@ -191,7 +244,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
         <div className="absolute inset-0 bg-cad-grid opacity-25 pointer-events-none" />
         <div className="absolute inset-0 bg-cad-grid-fine opacity-15 pointer-events-none" />
         <div className="absolute top-0 right-0 p-6 text-[9px] font-mono text-brand-secondary tracking-widest pointer-events-none">
-          [ SECCIÓN: RESPALDO CORPORATIVO ]
+          [ SECCIÓN: CLIENTES ]
         </div>
 
         <div className="relative w-full z-30 overflow-hidden flex flex-col justify-center gap-10">
@@ -205,28 +258,33 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
               Confianza que <span className="text-brand-secondary">respalda resultados.</span>
             </h3>
             <p className="text-base sm:text-lg text-brand-primary/50 mt-3 max-w-2xl font-mono leading-relaxed">
-              Empresas del sector financiero, entidades públicas y conglomerados confían en ARQUIAVALÚOS para sus decisiones de valoración.
+              Empresas del sector financiero, entidades públicas y conglomerados confían en ARQUIAVALÚOS® para sus decisiones de valoración.
             </p>
           </div>
 
-          {/* ── Infinite marquee (identical to Partners) ── */}
-          <div className="relative w-full overflow-hidden flex items-center h-36">
+          {/* -- Infinite marquee with center spotlight -- */}
+          <div ref={viewportRef} className="relative w-full overflow-hidden flex items-center h-40 sm:h-44">
             <div ref={trackRef} className="flex items-center w-max">
               {[...Array(4)].map((_, setIdx) => (
-                <div key={setIdx} className="flex items-center gap-10 sm:gap-16 px-5 sm:px-8">
+                <div key={setIdx} className="flex items-center gap-14 sm:gap-20 px-7 sm:px-10">
                   {clients.map((client, idx) => (
                     <div
                       key={`${setIdx}-${idx}`}
-                      className="relative h-[92px] w-[200px] sm:w-[220px] flex items-center justify-center shrink-0 hover:scale-110 transition-all duration-300 cursor-pointer"
+                      className="logo-slot relative h-[104px] w-[190px] sm:w-[210px] flex items-center justify-center shrink-0"
+                      style={{
+                        opacity: 0.4,
+                        filter: 'grayscale(0.8) saturate(0.55)',
+                        willChange: 'transform, opacity, filter',
+                      }}
                     >
                       <Image
                         src={client.src}
                         alt={client.alt}
-                        width={client.w}
-                        height={client.h}
-                        sizes="220px"
-                        style={{ width: 'auto', height: 'auto' }}
-                        className={`object-contain px-4 ${client.cls}`}
+                        width={LOGO_W}
+                        height={LOGO_H}
+                        sizes="210px"
+                        className="h-[58px] sm:h-[64px] w-auto object-contain select-none pointer-events-none"
+                        draggable={false}
                       />
                     </div>
                   ))}
@@ -234,27 +292,9 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
               ))}
             </div>
             {/* Fade edges */}
-            <div className="absolute inset-y-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-white to-transparent pointer-events-none z-20" />
-            <div className="absolute inset-y-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-white to-transparent pointer-events-none z-20" />
+            <div className="absolute inset-y-0 left-0 w-20 sm:w-40 bg-gradient-to-r from-white via-white/80 to-transparent pointer-events-none z-20" />
+            <div className="absolute inset-y-0 right-0 w-20 sm:w-40 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none z-20" />
           </div>
-
-          {/* Stats */}
-          <div className="max-w-6xl w-full mx-auto px-6 sm:px-10 mt-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-brand-primary/10 pt-7">
-              {[
-                { label: 'Avalúos realizados',    value: '5.000+' },
-                { label: 'Entidades financieras', value: '40+'    },
-                { label: 'Municipios cubiertos',  value: '120+'   },
-                { label: 'Años de experiencia',   value: '15+'    },
-              ].map((s, idx) => (
-                <div key={idx} className="stat-item text-center space-y-1">
-                  <div className="text-4xl lg:text-5xl font-bold font-mono text-brand-primary">{s.value}</div>
-                  <span className="text-xs font-mono text-brand-secondary uppercase tracking-widest block">{s.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
       </section>
     </div>

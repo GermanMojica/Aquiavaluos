@@ -91,7 +91,7 @@ export default function RequestValuationDrawer({ isOpen, onClose }: DrawerProps)
               {!formSubmitted ? (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <p className="text-sm text-brand-gray-cool">
-                    Complete los siguientes detalles técnicos de su requerimiento. Un perito especializado del equipo de ARQUIAVALÚOS se pondrá en contacto con usted en menos de 24 horas.
+                    Complete los siguientes detalles técnicos de su requerimiento. Un perito especializado del equipo de ARQUIAVALÚOS® se pondrá en contacto con usted en menos de 24 horas.
                   </p>
 
                   {/* Nombre */}

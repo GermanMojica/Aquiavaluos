@@ -56,10 +56,13 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5">
               {[
-                { name: 'Quiénes Somos', href: '#quienes-somos' },
-                { name: 'Diferenciales', href: '#diferenciales' },
-                { name: 'Sectores', href: '#sectores' },
-                { name: 'Certificaciones', href: '#certificaciones' }
+                { name: 'Quiénes Somos',  href: '#quienes-somos' },
+                { name: 'Clientes',        href: '#clientes' },
+                { name: 'Certificaciones', href: '#certificaciones' },
+                { name: 'Diferenciales',   href: '#diferenciales' },
+                { name: 'Sectores',        href: '#sectores' },
+                { name: 'Respaldo',        href: '#respaldo' },
+                { name: 'Contacto',        href: '#contacto' }
               ].map((link) => (
                 <li key={link.name}>
                   <a
@@ -103,7 +106,7 @@ export default function Footer() {
         {/* Bottom copyright & legal declarations */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-brand-gray-cool/50 gap-4">
           <div className="text-center sm:text-left">
-            &copy; {currentYear} ARQUIAVALÚOS. Todos los derechos reservados. Nit: 900.567.891-2
+            &copy; {currentYear} ARQUIAVALÚOS®. Todos los derechos reservados. Nit: 900.567.891-2
           </div>
           <div className="flex gap-4">
             <a href="#" className="hover:text-white transition-colors">Términos de Servicio</a>

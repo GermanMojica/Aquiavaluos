@@ -53,7 +53,7 @@ export default function Home() {
 
         {/* 5. Nuestro Proceso Técnico — (sección eliminada por rendimiento) */}
 
-        {/* 6. Aliados y Gremios */}
+        {/* 6. Entidades que nos respaldan */}
         <Partners />
 
         {/* 7. CTA Final — Llamado a la acción */}
