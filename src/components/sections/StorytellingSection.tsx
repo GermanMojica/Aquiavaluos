@@ -75,7 +75,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
           toggleActions: 'play none none none',
         }
       })
-        .to('.executive-mask', { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' })
+        .from('.executive-mask', { opacity: 0, scale: 0.95, duration: 1, ease: 'power2.out' })
         .from('.screen-2-text', { opacity: 0, x: 30, stagger: 0.12, duration: 0.8, ease: 'power2.out' }, '-=0.6')
 
       // Entrance animation for Clients section
@@ -159,9 +159,8 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
             {/* LEFT — Photo */}
             <div className="md:col-span-5 flex justify-center">
               <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-none">
-                <div className="absolute top-2 left-2 text-[8px] font-mono text-brand-secondary/40 z-10">[ IMG_REF: SD_08 ]</div>
                 <div className="absolute inset-0 bg-cad-grid-fine opacity-30 z-10 pointer-events-none" />
-                <div className="executive-mask opacity-0 scale-95">
+                <div className="executive-mask">
                   <Image
                     src="/images/Arquiavaluoss-1-1-1.png"
                     alt="Sergio Delgado — Gerente General de ARQUIAVALÚOS"
@@ -238,7 +237,7 @@ export default function StorytellingSection({ onOpenDrawer }: Props) {
       <section
         id="clientes"
         ref={clientsSectionRef}
-        className="relative min-h-screen bg-white flex items-center justify-center py-20 sm:py-28 overflow-hidden text-brand-primary border-t border-brand-primary/5"
+        className="relative bg-white flex items-center justify-center py-20 sm:py-24 overflow-hidden text-brand-primary border-t border-brand-primary/5"
       >
         {/* Grid backdrops */}
         <div className="absolute inset-0 bg-cad-grid opacity-25 pointer-events-none" />
